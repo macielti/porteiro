@@ -3,7 +3,7 @@
             [schema.core :as s]))
 
 (s/defn str->keyword-kebab-case :- s/Keyword
-        [k :- s/Str]
-        (-> k
-            ->kebab-case
-            keyword))
+  [k :- s/Str]
+  (-> k
+      ->kebab-case
+      keyword))

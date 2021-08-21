@@ -5,7 +5,11 @@
 
   :plugins [[lein-cloverage "1.2.2"]]
 
-  :dependencies [[cheshire "5.10.0"]
+  :dependencies [[io.pedestal/pedestal.service-tools "0.5.7"]
+                 [io.pedestal/pedestal.service "0.5.7"]
+                 [io.pedestal/pedestal.jetty "0.5.7"]
+                 [io.pedestal/pedestal.route "0.5.7"]
+                 [cheshire "5.10.0"]
                  [prismatic/schema "1.1.12"]
                  [camel-snake-kebab "0.4.2"]
                  [org.clojure/clojure "1.10.1"]

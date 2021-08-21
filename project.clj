@@ -10,6 +10,7 @@
                  [io.pedestal/pedestal.jetty "0.5.7"]
                  [io.pedestal/pedestal.route "0.5.7"]
                  [cheshire "5.10.0"]
+                 [siili/humanize "0.1.1"]
                  [prismatic/schema "1.1.12"]
                  [camel-snake-kebab "0.4.2"]
                  [org.clojure/clojure "1.10.1"]

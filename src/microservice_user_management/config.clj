@@ -11,7 +11,6 @@
       (assoc this :config config)))
 
   (stop [this]
-    (println "Stop Config")
     (assoc this :config nil)))
 
 (defn new-config []

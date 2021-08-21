@@ -5,7 +5,8 @@
 
   :plugins [[lein-cloverage "1.2.2"]]
 
-  :dependencies [[org.clojure/clojure "1.10.1"]]
+  :dependencies [[org.clojure/clojure "1.10.1"]
+                 [com.stuartsierra/component "1.0.0"]]
 
   :test-paths ["test/unit" "test/integration" "test/helpers"]
 

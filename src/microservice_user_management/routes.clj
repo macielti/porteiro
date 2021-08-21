@@ -4,6 +4,7 @@
             [io.pedestal.http.route :as route]
             [io.pedestal.http :as http]
             [microservice-user-management.interceptors.common :as interceptors.common]
+            [microservice-user-management.interceptors.user :as interceptors.user]
             [microservice-user-management.diplomatic.http-in :as diplomatic.http-in]))
 
 (defrecord Routes [datomic]
@@ -17,6 +18,7 @@
           routes              (route/expand-routes
                                 #{["/users" :post (conj common-interceptors
                                                         (interceptors.common/components-interceptor components)
+                                                        interceptors.user/username-already-in-use-interceptor
                                                         diplomatic.http-in/create-user!)
                                    :route-name :registry-new-user]})]
       (assoc this :routes routes)))

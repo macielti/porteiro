@@ -8,7 +8,8 @@
   :dependencies [[org.clojure/clojure "1.10.1"]
                  [com.stuartsierra/component "1.0.0"]]
 
+  :repl-options {:init-ns microservice-user-management.core}
+
   :test-paths ["test/unit" "test/integration" "test/helpers"]
 
-  :repl-options {:init-ns microservice-user-management.core}
-  :main microservice-user-management.core/foo)
+  :main microservice-user-management.components/start-system!)

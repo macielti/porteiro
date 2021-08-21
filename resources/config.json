@@ -1,3 +1,3 @@
 {
-  "datomicUri": "datomic:mem://service"
+  "datomicUri": "datomic:mem://example"
 }

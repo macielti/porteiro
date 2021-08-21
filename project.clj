@@ -10,7 +10,9 @@
                  [camel-snake-kebab "0.4.2"]
                  [org.clojure/clojure "1.10.1"]
                  [com.stuartsierra/component "1.0.0"]
-                 [com.datomic/datomic-free "0.9.5697"]]
+                 [com.datomic/datomic-free "0.9.5697"]
+                 [nubank/matcher-combinators "3.2.1"]
+                 [buddy/buddy-hashers "1.8.1"]]
 
   :repl-options {:init-ns microservice-user-management.core}
 

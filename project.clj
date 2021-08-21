@@ -5,7 +5,10 @@
 
   :plugins [[lein-cloverage "1.2.2"]]
 
-  :dependencies [[org.clojure/clojure "1.10.1"]
+  :dependencies [[cheshire "5.10.0"]
+                 [prismatic/schema "1.1.12"]
+                 [camel-snake-kebab "0.4.2"]
+                 [org.clojure/clojure "1.10.1"]
                  [com.stuartsierra/component "1.0.0"]]
 
   :repl-options {:init-ns microservice-user-management.core}

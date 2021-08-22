@@ -16,7 +16,7 @@
     :db/valueType   :db.type/string
     :db/cardinality :db.cardinality/one
     :db/doc         "E-mail address"}
-   {:db/ident       :user/password
+   {:db/ident       :user/hashed-password
     :db/valueType   :db.type/string
     :db/cardinality :db.cardinality/one
     :db/doc         "Hashed password"}])
@@ -26,4 +26,4 @@
   #:user {:id       s/Uuid
           :username s/Str
           :email    s/Str
-          :password s/Str})
+          :hashed-password s/Str})

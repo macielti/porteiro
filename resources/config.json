@@ -1,3 +1,4 @@
 {
-  "datomicUri": "datomic:mem://example"
+  "datomicUri": "datomic:mem://example",
+  "JWTokenSecret": "ey5CWUnp9YvYmsZZ66J1IM90LOzuP721"
 }

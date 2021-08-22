@@ -21,10 +21,10 @@
                                                               :name     "Ednaldo Pereira"})))))
 (s/deftest internal->datomic-test
   (testing "that we can convert from internal model to datomic schema"
-    (is (match? #:user {:id       uuid?
-                        :username "ednaldo-pereira"
-                        :email    "example@example.com"
-                        :password string?}
+    (is (match? #:user {:id              uuid?
+                        :username        "ednaldo-pereira"
+                        :email           "example@example.com"
+                        :hashed-password string?}
                 (adapters.user/internal->datomic {:username "ednaldo-pereira"
                                                   :email    "example@example.com"
                                                   :password "a-very-strong-password"})))))
@@ -34,7 +34,7 @@
     (is (match? {:id       string?
                  :username "ednaldo-pereira"
                  :email    "example@example.com"}
-                (adapters.user/datomic->wire #:user{:id       (UUID/randomUUID)
-                                                    :username "ednaldo-pereira"
-                                                    :email    "example@example.com"
-                                                    :password ""})))))
+                (adapters.user/datomic->wire #:user{:id              (UUID/randomUUID)
+                                                    :username        "ednaldo-pereira"
+                                                    :email           "example@example.com"
+                                                    :hashed-password ""})))))

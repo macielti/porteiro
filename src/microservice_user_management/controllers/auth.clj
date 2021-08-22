@@ -11,9 +11,10 @@
       adapters.auth/wire->internal))
 
 (s/defn auth
-  [{:keys [username password]} :- wire.in.auth/Auth
+  [{:keys [username password] :as auth} :- wire.in.auth/Auth
    {{:keys [jw-token-secret]} :config}
    database]
+  (adapters.auth/wire->internal auth)
   (let [{:user/keys [password] :as user} (datomic.user/by-username username database)]
     (if (and user
              (:valid (hashers/verify password hashed-password)))

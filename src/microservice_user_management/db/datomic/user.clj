@@ -15,3 +15,12 @@
   (d/q '[:find (pull ?user [:user/id :user/username :user/hashed-password])
          :in $ ?username
          :where [?user :user/username ?username]] (d/db datomic) username))
+
+(s/defn user-by-username-and-password
+  [username :- s/Str
+   hashed-password :- s/Str
+   datomic]
+  (-> (d/q '[:find (pull ?user [:user/id :user/username :user/email])
+             :in $ ?username ?hashed-password
+             :where [?user :user/username]] (d/db datomic) username hashed-password)
+      ffirst))

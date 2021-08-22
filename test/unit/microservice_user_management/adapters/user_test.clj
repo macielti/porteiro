@@ -3,7 +3,8 @@
             [microservice-user-management.adapters.user :as adapters.user]
             [matcher-combinators.test :refer [match?]]
             [schema.test :as s])
-  (:import (clojure.lang ExceptionInfo)))
+  (:import (clojure.lang ExceptionInfo)
+           (java.util UUID)))
 
 (use-fixtures :once s/validate-schemas)
 
@@ -27,3 +28,13 @@
                 (adapters.user/internal->datomic {:username "ednaldo-pereira"
                                                   :email    "example@example.com"
                                                   :password "a-very-strong-password"})))))
+
+(s/deftest datomic->wire-test
+  (testing "externalize datomic query result for user entity"
+    (is (match? {:id       string?
+                 :username "ednaldo-pereira"
+                 :email    "example@example.com"}
+                (adapters.user/datomic->wire #:user{:id       (UUID/randomUUID)
+                                                    :username "ednaldo-pereira"
+                                                    :email    "example@example.com"
+                                                    :password ""})))))

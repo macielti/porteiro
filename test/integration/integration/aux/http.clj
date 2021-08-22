@@ -13,3 +13,13 @@
                                                  :body (json/encode user))]
     {:status status
      :body   (json/decode body true)}))
+
+(defn auth
+  [auth
+   service-fn]
+  (let [{:keys [body status]} (test/response-for service-fn
+                                                 :post "/auth"
+                                                 :headers {"Content-Type" "application/json"}
+                                                 :body (json/encode auth))]
+    {:status status
+     :body   (json/decode body true)}))

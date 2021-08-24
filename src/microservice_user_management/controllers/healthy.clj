@@ -7,7 +7,7 @@
                                     :is-healthy (try (:jw-token-secret config)
                                                      true
                                                      (catch Exception _ false))}
-                                   {:name       :datomic
+                                   {:component       :datomic
                                     :is-healthy (try (datomic.user/by-username "" datomic)
                                                      true
                                                      (catch Exception _ false))}]}]

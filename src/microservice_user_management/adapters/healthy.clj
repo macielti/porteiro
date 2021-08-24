@@ -11,7 +11,7 @@
 
 (s/defn component-healthy-check-result->wire :- wire.out.healthy/ComponentHealthyCheckResult
   [{:keys [component is-healthy]} :- models.healthy/ComponentHealthyCheckResult]
-  {:component component
+  {:component (name component)
    :isHealthy is-healthy})
 
 (s/defn ->wire :- wire.out.healthy/HealthyCheckResult

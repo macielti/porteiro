@@ -9,7 +9,7 @@
     200
     503))
 
-(defn ^:private component-healthy-check-result->wire :- wire.out.healthy/ComponentHealthyCheckResult
+(s/defn component-healthy-check-result->wire :- wire.out.healthy/ComponentHealthyCheckResult
   [{:keys [component is-healthy]} :- models.healthy/ComponentHealthyCheckResult]
   {:component component
    :isHealthy is-healthy})

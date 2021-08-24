@@ -3,7 +3,8 @@
   (:require [schema.core :as s]
             [microservice-user-management.controllers.user :as controllers.user]
             [microservice-user-management.controllers.auth :as controllers.auth]
-            [microservice-user-management.controllers.healthy :as controllers.healthy]))
+            [microservice-user-management.controllers.healthy :as controllers.healthy]
+            [microservice-user-management.adapters.healthy :as adapters.healthy]))
 
 (s/defn create-user!
   [{user              :json-params
@@ -18,4 +19,4 @@
 (s/defn healthy-check
   [{{:keys [datomic config]} :components}]
   (let [check-result (controllers.healthy/healthy-check datomic config)]
-    {:status (if (:is-healthy check-result) 200 503) :body check-result}))
+    {:status (adapters.healthy/healthy-check-result->status-code check-result) :body check-result}))

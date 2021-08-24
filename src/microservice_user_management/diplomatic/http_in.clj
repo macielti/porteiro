@@ -19,4 +19,5 @@
 (s/defn healthy-check
   [{{:keys [datomic config]} :components}]
   (let [check-result (controllers.healthy/healthy-check datomic config)]
-    {:status (adapters.healthy/healthy-check-result->status-code check-result) :body check-result}))
+    {:status (adapters.healthy/healthy-check-result->status-code check-result)
+     :body   check-result}))

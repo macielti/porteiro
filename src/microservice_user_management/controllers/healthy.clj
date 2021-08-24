@@ -1,5 +1,6 @@
 (ns microservice-user-management.controllers.healthy
-  (:require [microservice-user-management.db.datomic.user :as datomic.user]))
+  (:require [microservice-user-management.db.datomic.user :as datomic.user]
+            [microservice-user-management.logic.healthy :as logic.healthy]))
 
 (defn healthy-check
   [datomic config]
@@ -7,9 +8,8 @@
                                     :is-healthy (try (:jw-token-secret config)
                                                      true
                                                      (catch Exception _ false))}
-                                   {:component       :datomic
+                                   {:component  :datomic
                                     :is-healthy (try (datomic.user/by-username "" datomic)
                                                      true
                                                      (catch Exception _ false))}]}]
-    (assoc dependencies :is-healthy (every? :is-healthy
-                                            (:components dependencies)))))
+    (assoc dependencies :is-healthy (logic.healthy/system-healthy? dependencies))))

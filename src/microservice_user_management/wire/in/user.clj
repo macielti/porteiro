@@ -6,3 +6,8 @@
   {:username s/Str
    :password s/Str
    :email    s/Str})
+
+(s/defschema PasswordUpdate
+  "Schema for password update request"
+  {:old-password s/Str
+   :new-password s/Str})

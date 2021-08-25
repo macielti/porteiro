@@ -18,7 +18,11 @@
           components          {:datomic (:datomic datomic)
                                :config  (:config config)}
           routes              (route/expand-routes
-                                #{["/auth" :post (conj common-interceptors
+                                #{["/healthy" :get (conj common-interceptors
+                                                         (interceptors.common/components-interceptor components)
+                                                         diplomatic.http-in/healthy-check)
+                                   :route-name :healthy-check]
+                                  ["/auth" :post (conj common-interceptors
                                                        (interceptors.common/components-interceptor components)
                                                        diplomatic.http-in/auth)
                                    :route-name :auth]

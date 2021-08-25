@@ -2,7 +2,9 @@
   (:use [clojure pprint])
   (:require [schema.core :as s]
             [microservice-user-management.controllers.user :as controllers.user]
-            [microservice-user-management.controllers.auth :as controllers.auth]))
+            [microservice-user-management.controllers.auth :as controllers.auth]
+            [microservice-user-management.controllers.healthy :as controllers.healthy]
+            [microservice-user-management.adapters.healthy :as adapters.healthy]))
 
 (s/defn create-user!
   [{user              :json-params
@@ -13,3 +15,9 @@
   [{auth                     :json-params
     {:keys [datomic config]} :components}]
   {:status 200 :body (controllers.auth/auth auth config datomic)})
+
+(s/defn healthy-check
+  [{{:keys [datomic config]} :components}]
+  (let [healthy-check-result (controllers.healthy/healthy-check datomic config)]
+    {:status (adapters.healthy/healthy-check-result->status-code healthy-check-result)
+     :body   (adapters.healthy/->wire healthy-check-result)}))

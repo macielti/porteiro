@@ -10,7 +10,7 @@
   [user :- wire.in.user/User
    datomic]
   (-> user
-      adapters.user/wire->internal
-      adapters.user/internal->datomic
+      adapters.user/wire->create-user-internal
+      adapters.user/internal->create-user-datomic
       (datomic.user/insert! datomic)
       adapters.user/datomic->wire))

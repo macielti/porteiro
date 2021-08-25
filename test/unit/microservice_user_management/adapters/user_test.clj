@@ -13,21 +13,21 @@
     (is (= {:username "ednaldo-pereira"
             :email    "example@example.com"
             :password "a-very-strong-password"}
-           (adapters.user/wire->internal {:username "ednaldo-pereira"
-                                          :email    "example@example.com"
-                                          :password "a-very-strong-password"}))))
+           (adapters.user/wire->create-user-internal {:username "ednaldo-pereira"
+                                          :email                "example@example.com"
+                                          :password             "a-very-strong-password"}))))
   (testing "that a invalid input will throws a exception"
-    (is (thrown? ExceptionInfo (adapters.user/wire->internal {:username "ednaldo-pereira"
-                                                              :name     "Ednaldo Pereira"})))))
+    (is (thrown? ExceptionInfo (adapters.user/wire->create-user-internal {:username "ednaldo-pereira"
+                                                              :name                 "Ednaldo Pereira"})))))
 (s/deftest internal->datomic-test
   (testing "that we can convert from internal model to datomic schema"
     (is (match? #:user {:id              uuid?
                         :username        "ednaldo-pereira"
                         :email           "example@example.com"
                         :hashed-password string?}
-                (adapters.user/internal->datomic {:username "ednaldo-pereira"
-                                                  :email    "example@example.com"
-                                                  :password "a-very-strong-password"})))))
+                (adapters.user/internal->create-user-datomic {:username "ednaldo-pereira"
+                                                  :email                "example@example.com"
+                                                  :password             "a-very-strong-password"})))))
 
 (s/deftest datomic->wire-test
   (testing "externalize datomic query result for user entity"

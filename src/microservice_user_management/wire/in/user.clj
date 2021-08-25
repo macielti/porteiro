@@ -9,5 +9,5 @@
 
 (s/defschema PasswordUpdate
   "Schema for password update request"
-  {:old-password s/Str
-   :new-password s/Str})
+  {:oldPassword s/Str
+   :newPassword s/Str})

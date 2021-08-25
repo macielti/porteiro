@@ -21,8 +21,11 @@
   [{:keys [old-password new-password] :as password-update} :- models.user/PasswordUpdate
    user-id :- s/Uuid
    datomic]
-  (let [password-update (-> (adapters.user/wire->password-update-internal password-update))
-        {:user/keys [hashed-password] :as user-datomic} (datomic.user/by-id user-id datomic)]
-    (if (:valid (hashers/verify old-password hashed-password))
-      (-> (assoc user-datomic :hashed-password (hashers/derive new-password))
-          (datomic.user/insert! datomic)))))
+  (let [{:user/keys [hashed-password] :as user-datomic} (datomic.user/by-id user-id datomic)]
+    (if (and user-datomic
+             (:valid (hashers/verify old-password hashed-password)))
+      (-> (assoc user-datomic :user/hashed-password (hashers/derive new-password))
+          (datomic.user/insert! datomic))
+      (throw (ex-info "Incorrect old password"
+                      {:status 403
+                       :reason "The old password you have entered is incorrect"})))))

@@ -22,10 +22,6 @@
                         {:status 422
                          :cause  (get-in (h/ex->err e) [:unknown :error])}))))))
 
-(s/defn internal->password-update-datomic
-  [{:keys [new-password]} :- models.user/PasswordUpdate]
-  #:user {:hashed-password (hashers/derive new-password)})
-
 (s/defn wire->create-user-internal :- wire.in.user/User
   [user :- wire.in.user/User]
   (try

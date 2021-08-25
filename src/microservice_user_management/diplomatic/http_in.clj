@@ -4,12 +4,22 @@
             [microservice-user-management.controllers.user :as controllers.user]
             [microservice-user-management.controllers.auth :as controllers.auth]
             [microservice-user-management.controllers.healthy :as controllers.healthy]
-            [microservice-user-management.adapters.healthy :as adapters.healthy]))
+            [microservice-user-management.adapters.healthy :as adapters.healthy]
+            [microservice-user-management.adapters.user :as adapters.user]))
 
 (s/defn create-user!
   [{user              :json-params
     {:keys [datomic]} :components}]
   {:status 201 :body (controllers.user/create-user! user datomic)})
+
+(s/defn update-password!
+  [{password-update   :json-params
+    {:keys [datomic]} :components
+    {:keys [id]}      :user-identity}]
+  {:status 204 :body (controllers.user/update-password!
+                       (adapters.user/wire->password-update-internal password-update)
+                       id
+                       datomic)})
 
 (s/defn auth
   [{auth                     :json-params

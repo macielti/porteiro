@@ -26,11 +26,16 @@
                                                        (interceptors.common/components-interceptor components)
                                                        diplomatic.http-in/auth)
                                    :route-name :auth]
-                                  ["/users" :post (conj common-interceptors
-                                                        (interceptors.common/components-interceptor components)
-                                                        interceptors.user/username-already-in-use-interceptor
-                                                        diplomatic.http-in/create-user!)
-                                   :route-name :registry-new-user]})]
+                                  ["/user" :post (conj common-interceptors
+                                                       (interceptors.common/components-interceptor components)
+                                                       interceptors.user/username-already-in-use-interceptor
+                                                       diplomatic.http-in/create-user!)
+                                   :route-name :registry-new-user]
+                                  ["/user/password" :put (conj common-interceptors
+                                                               (interceptors.common/components-interceptor components)
+                                                               interceptors.user/auth-interceptor
+                                                               diplomatic.http-in/update-password!)
+                                   :route-name :update-password]})]
       (assoc this :routes routes)))
 
   (stop [this]

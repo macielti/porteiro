@@ -9,7 +9,7 @@
   (:import (java.util UUID)
            (clojure.lang ExceptionInfo)))
 
-(s/defn wire->update-password-internal :- models.user/PasswordUpdate
+(s/defn wire->password-update-internal :- models.user/PasswordUpdate
   [{:keys [oldPassword newPassword] :as password-update} :- wire.in.user/PasswordUpdate]
   (try
     (s/validate wire.in.user/PasswordUpdate password-update)
@@ -21,6 +21,10 @@
         (throw (ex-info "Schema error"
                         {:status 422
                          :cause  (get-in (h/ex->err e) [:unknown :error])}))))))
+
+(s/defn internal->password-update-datomic
+  [{:keys [new-password]} :- models.user/PasswordUpdate]
+  #:user {:hashed-password (hashers/derive new-password)})
 
 (s/defn wire->create-user-internal :- wire.in.user/User
   [user :- wire.in.user/User]

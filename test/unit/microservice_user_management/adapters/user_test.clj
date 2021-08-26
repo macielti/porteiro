@@ -14,11 +14,11 @@
             :email    "example@example.com"
             :password "a-very-strong-password"}
            (adapters.user/wire->create-user-internal {:username "ednaldo-pereira"
-                                          :email                "example@example.com"
-                                          :password             "a-very-strong-password"}))))
+                                                      :email    "example@example.com"
+                                                      :password "a-very-strong-password"}))))
   (testing "that a invalid input will throws a exception"
     (is (thrown? ExceptionInfo (adapters.user/wire->create-user-internal {:username "ednaldo-pereira"
-                                                              :name                 "Ednaldo Pereira"})))))
+                                                                          :name     "Ednaldo Pereira"})))))
 (s/deftest internal->datomic-test
   (testing "that we can convert from internal model to datomic schema"
     (is (match? #:user {:id              uuid?
@@ -26,8 +26,8 @@
                         :email           "example@example.com"
                         :hashed-password string?}
                 (adapters.user/internal->create-user-datomic {:username "ednaldo-pereira"
-                                                  :email                "example@example.com"
-                                                  :password             "a-very-strong-password"})))))
+                                                              :email    "example@example.com"
+                                                              :password "a-very-strong-password"})))))
 
 (s/deftest datomic->wire-test
   (testing "externalize datomic query result for user entity"
@@ -38,3 +38,13 @@
                                                     :username        "ednaldo-pereira"
                                                     :email           "example@example.com"
                                                     :hashed-password ""})))))
+
+(s/deftest wire->password-update-internal-test
+  (testing "that we can internalise the password update input"
+    (is (match? {:old-password "my-strong-and-secure-old-password"
+                 :new-password "my-strong-and-secure-new-password"}
+                (adapters.user/wire->password-update-internal {:oldPassword "my-strong-and-secure-old-password"
+                                                               :newPassword "my-strong-and-secure-new-password"}))))
+  (testing "input that does not match the input schema throws exception"
+    (is (thrown? ExceptionInfo (adapters.user/wire->password-update-internal {:password    "wrong-one"
+                                                                                 :newPassword "i-do-not-know-what-i-am-doing"})))))

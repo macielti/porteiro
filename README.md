@@ -13,7 +13,7 @@ It's not read for producition yet, but you can run a local version:
 
 - Clone this repository and in your terminal run: `lein run`
 - If you want to check unit and integrations test run: `lein test`
-- If you want to see the cloverage test report run: `lein cloverage`
+- If you want to see the coverage test report run: `lein cloverage`
 
 ## License
 

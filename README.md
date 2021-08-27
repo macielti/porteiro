@@ -1,16 +1,23 @@
 ![Clojure CI - Unit and Integration Tests](https://github.com/macielti/todo-list-api-clojure/actions/workflows/github_actions.yml/badge.svg)
 
-# microservice-user-management
+# Microservice user management
 
-A Clojure library designed to ... well, that part is up to you.
+I am tired of having to rewrite the user management component 
+for every CRUD based service 😠!
+
+So I made this microservice to reuse in future projects.
 
 ## Usage
 
-FIXME
+It's not read for producition yet, but you can run a local version:
+
+- Clone this repository and in your terminal run: `lein run`
+- If you want to check unit and integrations test run: `lein test`
+- If you want to see the coverage test report run: `lein cloverage`
 
 ## License
 
-Copyright © 2021 FIXME
+Copyright © 2021 Bruno do Nascimento Maciel
 
 This program and the accompanying materials are made available under the terms of the Eclipse Public License 2.0 which
 is available at

@@ -1,34 +1,27 @@
 (ns integration.auth
   (:require [clojure.test :refer :all]
+            [fixtures.user]
             [microservice-user-management.components :as components]
             [integration.aux.http :as http]
             [matcher-combinators.test :refer [match?]]
             [com.stuartsierra.component :as component]))
 
-;TODO: this could go to fixtures, we use it also in the create user integration tests
-(def user {:username "ednaldo-pereira"
-           :email    "example@example.com"
-           :password "some-strong-password"})
-
-(def user-auth (dissoc user :email))
-
 (deftest auth-test
   (let [system     (components/start-system!)
         service-fn (-> system :server :server :io.pedestal.http/service-fn)
-        _          (http/create-user user
+        _          (http/create-user fixtures.user/user
                                      service-fn)]
 
     (testing "that users can be authenticated"
       (is (match? {:status 200
                    :body   {:token string?}}
-                  (http/auth user-auth
+                  (http/auth fixtures.user/user-auth
                              service-fn))))
 
     (testing "that users can't be authenticated with wrong credentials"
       (is (match? {:status 403
                    :body   {:cause "Wrong username or/and password"}}
-                  (http/auth {:username "ednaldo-pereira"
-                              :password "wrong-password"}
+                  (http/auth (assoc fixtures.user/user-auth :password "wrong-password")
                              service-fn))))
 
     (testing "that invalid credential schema input return a nice and readable error"

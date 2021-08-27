@@ -18,7 +18,7 @@
   (let [{:user/keys [hashed-password] :as user} (datomic.user/by-username username database)]
     (if (and user
              (:valid (hashers/verify password hashed-password)))
-      {:token (jwt/sign (adapters.user/datomic->wire user)
+      {:token (jwt/sign (adapters.user/datomic->wire user)  ;TODO: abstract it to a separated function
                         jw-token-secret
                         {:exp (-> (t/plus (t/now) (t/days 1))
                                   c/to-timestamp)})}

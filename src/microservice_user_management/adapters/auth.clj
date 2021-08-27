@@ -20,7 +20,10 @@
 
 (defn jwt-wire->internal
   [authorization jwt-secret]
-  (let [{:keys [id] :as user} (-> (str/split authorization #" ")
-                                  last
-                                  (jwt/unsign jwt-secret))]
+  (let [{:keys [id] :as user} (try (-> (str/split authorization #" ")
+                                       last
+                                       (jwt/unsign jwt-secret))
+                                   (catch ExceptionInfo _ (throw (ex-info "Invalid token"
+                                                                          {:status 422
+                                                                           :cause  "Invalid token"}))))]
     (assoc user :id (UUID/fromString id))))

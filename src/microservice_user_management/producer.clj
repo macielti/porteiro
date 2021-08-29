@@ -17,6 +17,7 @@
 
 (s/defn mock-produced-messages [producer :- MockProducer]
   (->> (.history producer)
+       seq
        (map (fn [record]
               {:topic (keyword (.topic record))
                :value (json/decode (.value record) true)}))))

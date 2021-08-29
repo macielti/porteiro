@@ -22,9 +22,9 @@
 (s/defn by-email :- wire.datomic.user/User
   [email :- s/Str
    datomic]
-  (-> (d/q '[:find (pull ?user [:user/id :user/username :user/hashed-password])
+  (-> (d/q '[:find (pull ?user [*])
              :in $ ?email
-             :where [?user :user/email ?emailw]] (d/db datomic) email)
+             :where [?user :user/email ?email]] (d/db datomic) email)
       ffirst))
 
 (s/defn by-id :- wire.datomic.user/User

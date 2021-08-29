@@ -6,6 +6,8 @@
             [microservice-user-management.adapters.user :as adapters.user]
             [microservice-user-management.db.datomic.user :as datomic.user]
             [microservice-user-management.models.user :as models.user]
+            [microservice-user-management.db.datomic.password-reset :as datomic.password-reset]
+            [microservice-user-management.diplomatic.producer :as diplomatic.producer]
             [buddy.hashers :as hashers]))
 
 (s/defn create-user! :- wire.datomic.user/User
@@ -31,7 +33,12 @@
                        :reason "The old password you have entered is incorrect"})))))
 
 (s/defn reset-password!
-  [{:keys [email]} :- wire.in.user/PasswordReset
+  [{:keys [email] :as password-reset} :- wire.in.user/PasswordReset
    producer
    datomic]
-  )
+  (let [{:user/keys [id email] :as user} (datomic.user/by-email email datomic)
+        password-reset (adapters.user/internal->password-reset-datomic id)]
+    (when user
+      (some-> (datomic.password-reset/insert! password-reset datomic)
+              :password-reset/id
+              (diplomatic.producer/send-notification! email producer)))))

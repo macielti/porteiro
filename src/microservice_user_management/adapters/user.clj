@@ -5,8 +5,9 @@
             [microservice-user-management.wire.datomic.user :as wire.datomic.user]
             [microservice-user-management.wire.out.user :as wire.out.user]
             [microservice-user-management.models.user :as models.user]
-            [buddy.hashers :as hashers])
-  (:import (java.util UUID)
+            [buddy.hashers :as hashers]
+            [microservice-user-management.wire.datomic.password-reset :as wire.datomic.password-reset])
+  (:import (java.util UUID Date)
            (clojure.lang ExceptionInfo)))
 
 (s/defn wire->password-update-internal :- models.user/PasswordUpdate
@@ -32,6 +33,12 @@
         (throw (ex-info "Schema error"
                         {:status 422
                          :cause  (get-in (h/ex->err e) [:unknown :error])}))))))
+
+(s/defn internal->password-reset-datomic :- wire.datomic.password-reset/PasswordReset
+  [user-id :- s/Uuid]
+  {:password-reset/id         (UUID/randomUUID)
+   :password-reset/user-id    user-id
+   :password-reset/created-at (Date.)})
 
 (s/defn wire->create-user-internal :- wire.in.user/User
   [user :- wire.in.user/User]

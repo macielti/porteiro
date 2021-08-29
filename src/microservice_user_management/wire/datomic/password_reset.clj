@@ -8,7 +8,7 @@
     :db/cardinality :db.cardinality/one
     :db/unique      :db.unique/identity
     :db/doc         "Password reset registry Id"}
-   {:db/ident       :user/id
+   {:db/ident       :password-reset/user-id
     :db/valueType   :db.type/uuid
     :db/cardinality :db.cardinality/one
     :db/unique      :db.unique/identity
@@ -20,5 +20,5 @@
 
 (s/defschema PasswordReset
   {:password-reset/id         s/Uuid
-   :user/id                   s/Uuid
+   :password-reset/user-id    s/Uuid
    :password-reset/created-at Date})

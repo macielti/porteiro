@@ -9,6 +9,8 @@
                  [io.pedestal/pedestal.service "0.5.7"]
                  [io.pedestal/pedestal.jetty "0.5.7"]
                  [io.pedestal/pedestal.route "0.5.7"]
+                 [org.apache.kafka/kafka-clients "2.8.0"]
+                 [fundingcircle/jackdaw "0.8.0"]
                  [cheshire "5.10.0"]
                  [buddy/buddy-sign "3.4.1"]
                  [siili/humanize "0.1.1"]

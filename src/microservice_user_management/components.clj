@@ -3,6 +3,7 @@
             [microservice-user-management.config :as config]
             [microservice-user-management.datomic :as datomic]
             [microservice-user-management.server :as server]
+            [microservice-user-management.producer :as producer]
             [microservice-user-management.routes :as routes]))
 
 (defn component-system []
@@ -10,6 +11,7 @@
     :config (config/new-config)
     :datomic (component/using (datomic/new-datomic) [:config])
     :routes (component/using (routes/new-routes) [:datomic :config])
+    :producer (component/using (producer/new-producer) [:config])
     :server (component/using (server/new-server) [:routes])))
 
 (defn start-system! []

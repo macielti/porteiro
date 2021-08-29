@@ -29,3 +29,9 @@
       (throw (ex-info "Incorrect old password"
                       {:status 403
                        :reason "The old password you have entered is incorrect"})))))
+
+(s/defn reset-password!
+  [{:keys [email]} :- wire.in.user/PasswordReset
+   producer
+   datomic]
+  )

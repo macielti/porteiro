@@ -11,3 +11,7 @@
   "Schema for password update request"
   {:oldPassword s/Str
    :newPassword s/Str})
+
+(s/defschema PasswordReset
+  "Schema for password reset request"
+  {:email s/Str})

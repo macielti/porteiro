@@ -22,6 +22,17 @@
                         {:status 422
                          :cause  (get-in (h/ex->err e) [:unknown :error])}))))))
 
+(s/defn wire->password-reset-internal :- wire.in.user/PasswordReset
+  [password-reset :- wire.in.user/PasswordReset]
+  (try
+    (s/validate wire.in.user/PasswordReset password-reset)
+    (catch ExceptionInfo e
+      (if (= (-> e ex-data :type)
+             :schema.core/error)
+        (throw (ex-info "Schema error"
+                        {:status 422
+                         :cause  (get-in (h/ex->err e) [:unknown :error])}))))))
+
 (s/defn wire->create-user-internal :- wire.in.user/User
   [user :- wire.in.user/User]
   (try

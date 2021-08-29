@@ -3,10 +3,10 @@
             [microservice-user-management.producer :as producer]))
 
 (s/defn send-notification!
-  [{:keys [email title content]}
+  [email
+   reset-link
    producer]
   (producer/produce! {:topic   "NOTIFICATION"
                       :message {:email   email
-                                :title   title
-                                :content content}}
-                     producer))
+                                :title   "Password Reset Solicitation"
+                                :content (str "")}} producer))

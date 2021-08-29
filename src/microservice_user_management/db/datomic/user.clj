@@ -19,6 +19,14 @@
              :where [?user :user/username ?username]] (d/db datomic) username)
       ffirst))
 
+(s/defn by-email :- wire.datomic.user/User
+  [email :- s/Str
+   datomic]
+  (-> (d/q '[:find (pull ?user [:user/id :user/username :user/hashed-password])
+             :in $ ?email
+             :where [?user :user/email ?emailw]] (d/db datomic) email)
+      ffirst))
+
 (s/defn by-id :- wire.datomic.user/User
   [user-id :- s/Uuid
    datomic]

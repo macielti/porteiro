@@ -21,6 +21,14 @@
                        id
                        datomic)})
 
+(s/defn reset-password!
+  [{password-reset             :json-params
+    {:keys [producer datomic]} :components}]
+  (some-> (adapters.user/wire->password-reset-internal password-reset) ;TODO: move this to a controller
+          )
+  {:status 202 :body {:message (str "If you email is on our system, you should "
+                                    "receive a password reset link soon")}})
+
 (s/defn auth
   [{auth                     :json-params
     {:keys [datomic config]} :components}]

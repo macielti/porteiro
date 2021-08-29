@@ -18,7 +18,7 @@
     :db/cardinality :db.cardinality/one
     :db/doc         "Instant emission of the password request"}])
 
-(s/defschema PasswordRequest
+(s/defschema PasswordReset
   {:password-reset/id         s/Uuid
    :user/id                   s/Uuid
    :password-reset/created-at Date})

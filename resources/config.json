@@ -1,6 +1,5 @@
 {
   "datomicUri": "datomic:mem://example",
   "JWTokenSecret": "ey5CWUnp9YvYmsZZ66J1IM90LOzuP721",
-  "bootstrapServer": "http://localhost:9092",
-  "kafkaTopics": {"topic":  "EMAIL_NOTIFICATION" }
+  "bootstrapServer": "http://localhost:9092"
 }

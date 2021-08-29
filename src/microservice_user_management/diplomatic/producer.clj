@@ -7,7 +7,7 @@
   [password-reset-id :- s/Uuid
    email :- s/Str
    producer]
-  (producer/produce! {:topic   "NOTIFICATION"
+  (producer/produce! {:topic   :notification
                       :message {:email   email
                                 :title   "Password Reset Solicitation"
                                 :content (str "You request the password reset operation. "

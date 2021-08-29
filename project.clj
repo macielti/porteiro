@@ -11,6 +11,7 @@
                  [io.pedestal/pedestal.route "0.5.7"]
                  [org.apache.kafka/kafka-clients "2.8.0"]
                  [fundingcircle/jackdaw "0.8.0"]
+                 [spyscope "0.1.6"]
                  [cheshire "5.10.0"]
                  [buddy/buddy-sign "3.4.1"]
                  [siili/humanize "0.1.1"]
@@ -21,6 +22,8 @@
                  [com.datomic/datomic-free "0.9.5697"]
                  [nubank/matcher-combinators "3.2.1"]
                  [buddy/buddy-hashers "1.8.1"]]
+
+  :injections [(require 'spyscope.core)]
 
   :repl-options {:init-ns microservice-user-management.core}
 

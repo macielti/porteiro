@@ -6,7 +6,7 @@
 
 ;TODO: So much repeated code 🤮. This namespace code stinks!
 
-(defn create-user
+(defn create-user!
   [user
    service-fn]
   (let [{:keys [body status]} (test/response-for service-fn
@@ -33,12 +33,21 @@
     {:status status
      :body   (json/decode body true)}))
 
-(defn update-password
+(defn update-password!
   [password-update token service-fn]
   (let [{:keys [body status]} (test/response-for service-fn
                                                  :put "/user/password"
                                                  :headers {"Content-Type"  "application/json"
                                                            "Authorization" (str "Bearer " token)}
                                                  :body (json/encode password-update))]
+    {:status status
+     :body   (json/decode body true)}))
+
+(defn reset-password!
+  [password-reset service-fn]
+  (let [{:keys [body status]} (test/response-for service-fn
+                                                 :post "/user/password-reset"
+                                                 :headers {"Content-Type" "application/json"}
+                                                 :body (json/encode password-reset))]
     {:status status
      :body   (json/decode body true)}))

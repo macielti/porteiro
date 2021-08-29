@@ -9,7 +9,7 @@
 (deftest auth-test
   (let [system     (components/start-system!)
         service-fn (-> system :server :server :io.pedestal.http/service-fn)
-        _          (http/create-user fixtures.user/user
+        _          (http/create-user! fixtures.user/user
                                      service-fn)]
 
     (testing "that users can be authenticated"

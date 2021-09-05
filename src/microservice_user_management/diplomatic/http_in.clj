@@ -16,10 +16,8 @@
   [{password-update   :json-params
     {:keys [datomic]} :components
     {:keys [id]}      :user-identity}]
-  {:status 204 :body (controllers.user/update-password!
-                       (adapters.user/wire->password-update-internal password-update)
-                       id
-                       datomic)})
+  (controllers.user/update-password! (adapters.user/wire->password-update-internal password-update) id datomic)
+  {:status 204 :body nil})
 
 (s/defn reset-password!
   [{password-reset             :json-params

@@ -20,7 +20,7 @@
              (:valid (hashers/verify password hashed-password)))
       {:token (jwt/sign (adapters.user/datomic->wire user)  ;TODO: abstract it to a separated function
                         jw-token-secret
-                        {:exp (-> (t/plus (t/now) (t/days 1))
+                        {:exp (-> (t/plus (t/now) (t/days 1)) ;TODO: get the expiration time from config component
                                   c/to-timestamp)})}
       (throw (ex-info "Wrong username or/and password"
                       {:status 403

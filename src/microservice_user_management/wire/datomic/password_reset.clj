@@ -11,7 +11,6 @@
    {:db/ident       :password-reset/user-id
     :db/valueType   :db.type/uuid
     :db/cardinality :db.cardinality/one
-    :db/unique      :db.unique/identity
     :db/doc         "User id that own this password reset request"}
    {:db/ident       :password-reset/created-at
     :db/valueType   :db.type/instant

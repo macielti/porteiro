@@ -12,6 +12,7 @@
                       :message {:email             email
                                 :title             "Password Reset Solicitation"
                                 :password-reset-id password-reset-id
-                                :content           (str "You request the password reset operation. "
-                                                        "Here is your reset-password key: " password-reset-id)}} producer)
-  (log/info :produce :notification :email email :password-reset-id password-reset-id))
+                                :content           (str "You requested a password reset operation. \n"
+                                                        "The reset password key is valid only for today. \n"
+                                                        "Here is your reset password key: " password-reset-id)}} producer)
+  (log/info :produce :notification :email email))

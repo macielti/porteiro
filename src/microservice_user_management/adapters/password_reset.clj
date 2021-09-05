@@ -4,8 +4,8 @@
             [microservice-user-management.models.password-reset :as models.password]
             [humanize.schema :as h]
             [buddy.hashers :as hashers])
-  (:import (clojure.lang ExceptionInfo)
-           (java.util UUID)))
+  (:import (java.util UUID)
+           (clojure.lang ExceptionInfo)))
 
 (s/defn wire->password-reset-consolidation-internal :- models.password/PasswordResetConsolidation
   [{:keys [token newPassword] :as password-reset-consolidation} :- wire.in.password-reset/PasswordResetConsolidation]

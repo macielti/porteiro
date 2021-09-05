@@ -9,8 +9,9 @@
    email :- s/Str
    producer]
   (producer/produce! {:topic   :notification
-                      :message {:email   email
-                                :title   "Password Reset Solicitation"
-                                :content (str "You request the password reset operation. "
-                                              "Here is your reset-password key: " password-reset-id)}} producer)
+                      :message {:email             email
+                                :title             "Password Reset Solicitation"
+                                :password-reset-id password-reset-id
+                                :content           (str "You request the password reset operation. "
+                                                        "Here is your reset-password key: " password-reset-id)}} producer)
   (log/info :produce :notification :email email :password-reset-id password-reset-id))

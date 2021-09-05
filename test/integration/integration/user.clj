@@ -41,9 +41,7 @@
 
     (testing "that we can update password"
       (is (match? {:status 204
-                   :body   #:user{:id              string?
-                                  :username        "ednaldo-pereira"
-                                  :hashed-password string?}}
+                   :body   nil?}
                   (http/update-password! fixtures.user/password-update token service-fn))))
 
     (testing "that i can't update a password if the old one is incorrect"

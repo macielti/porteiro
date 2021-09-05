@@ -1,4 +1,4 @@
-(ns microservice-user-management.wire.in.password
+(ns microservice-user-management.wire.in.password-reset
   (:require [schema.core :as s]))
 
 (s/defschema PasswordResetConsolidation

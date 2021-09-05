@@ -6,4 +6,4 @@
   [{password-reset    :json-params
     {:keys [datomic]} :components}]
   (controllers.password-reset/consolidate-password-reset! password-reset datomic)
-  {:status 200 :body nil})
+  {:status 204 :body nil})

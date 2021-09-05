@@ -12,14 +12,14 @@
   (d/transact datomic [password-reset])
   password-reset)
 
-(s/defn valid-password-reset-by-token
+(s/defn valid-and-free-password-reset-by-token
   [{:keys [token]} :- models.password/PasswordResetConsolidation
    datomic]
   (let [expiration (c/to-local-date (Date.))
         {:password-reset/keys [created-at] :as result} (-> (d/q '[:find (pull ?password-reset [*])
                                                                   :in $ ?token
                                                                   :where [?password-reset :password-reset/id ?token]
-                                                                  [?password-reset :password-reset/created-at ?created-at]] (d/db datomic) token)
+                                                                  [?password-reset :password-reset/state :free]] (d/db datomic) token)
                                                            ffirst)]
     (when (= (c/to-local-date created-at) expiration)
       result)))

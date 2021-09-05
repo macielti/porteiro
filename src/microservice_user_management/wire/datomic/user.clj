@@ -9,8 +9,8 @@
     :db/doc         "User Id"}
    {:db/ident       :user/username
     :db/valueType   :db.type/string
-    :db/cardinality :db.cardinality/one
     :db/unique      :db.unique/identity
+    :db/cardinality :db.cardinality/one
     :db/doc         "User username"}
    {:db/ident       :user/email
     :db/valueType   :db.type/string

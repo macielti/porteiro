@@ -3,7 +3,7 @@
   (:require [schema.core :as s]
             [microservice-user-management.producer :as producer]))
 
-(s/defn send-notification!
+(s/defn send-password-reset-notification!
   [password-reset-id :- s/Uuid
    email :- s/Str
    producer]

@@ -41,4 +41,4 @@
     (when user
       (some-> (datomic.password-reset/insert! password-reset datomic)
               :password-reset/id
-              (diplomatic.producer/send-notification! email producer)))))
+              (diplomatic.producer/send-password-reset-notification! email producer)))))

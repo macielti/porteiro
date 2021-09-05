@@ -2,6 +2,7 @@
   (:use [clojure pprint])
   (:require [com.stuartsierra.component :as component]
             [cheshire.core :as json]
+            [environ.core :as environ]
             [schema.core :as s])
   (:import (org.apache.kafka.clients.producer KafkaProducer ProducerRecord MockProducer)
            (org.apache.kafka.common.serialization StringSerializer)))
@@ -17,7 +18,6 @@
 
 (s/defn mock-produced-messages [producer :- MockProducer]
   (->> (.history producer)
-       seq
        (map (fn [record]
               {:topic (keyword (.topic record))
                :value (json/decode (.value record) true)}))))
@@ -32,7 +32,7 @@
                             "bootstrap.servers" bootstrap-server}
           producer         (KafkaProducer. producer-props)
           mock-producer    (MockProducer. true (StringSerializer.) (StringSerializer.))
-          env              (keyword (get-in config [:config :env]))]
+          env              (keyword (environ/env :clj-env))]
       (cond-> this
               true (assoc :producer producer)
               (= env :test) (assoc :producer mock-producer))))

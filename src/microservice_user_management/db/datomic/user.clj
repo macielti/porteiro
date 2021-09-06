@@ -2,8 +2,7 @@
   (:use [clojure pprint])
   (:require [schema.core :as s]
             [microservice-user-management.wire.datomic.user :as wire.datomic.user]
-            [datomic.api :as d]
-            [microservice-user-management.models.user :as models.user]))
+            [datomic.api :as d]))
 
 (s/defn insert! :- wire.datomic.user/User
   [user :- wire.datomic.user/User

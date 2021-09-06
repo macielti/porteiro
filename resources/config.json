@@ -1,5 +1,6 @@
 {
   "datomicUri": "datomic:mem://example",
   "JWTokenSecret": "ey5CWUnp9YvYmsZZ66J1IM90LOzuP721",
-  "bootstrapServer": "http://localhost:9092"
+  "bootstrapServer": "http://localhost:9092",
+  "passwordResetExpirationDays": 1
 }

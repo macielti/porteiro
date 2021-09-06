@@ -6,7 +6,9 @@
             [io.pedestal.http :as http]
             [microservice-user-management.interceptors.common :as interceptors.common]
             [microservice-user-management.interceptors.user :as interceptors.user]
-            [microservice-user-management.diplomatic.http-in :as diplomatic.http-in]))
+            [microservice-user-management.interceptors.password-reset :as interceptors.password-reset]
+            [microservice-user-management.diplomatic.http-in :as diplomatic.http-in]
+            [microservice-user-management.diplomatic.http-server.password-reset :as diplomatic.http-server.password]))
 
 (defrecord Routes [datomic producer config]
   component/Lifecycle
@@ -40,7 +42,12 @@
                                   ["/user/password-reset" :post (conj common-interceptors
                                                                       (interceptors.common/components-interceptor components)
                                                                       diplomatic.http-in/reset-password!)
-                                   :route-name :password-reset]})]
+                                   :route-name :reset-password]
+                                  ["/user/password-reset" :put (conj common-interceptors
+                                                                     (interceptors.common/components-interceptor components)
+                                                                     interceptors.password-reset/valid-password-reset-consolidation-token
+                                                                     diplomatic.http-server.password/consolidate-reset-password!)
+                                   :route-name :consolidate-password-reset]})]
       (assoc this :routes routes)))
 
   (stop [this]

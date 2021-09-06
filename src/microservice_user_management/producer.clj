@@ -30,12 +30,10 @@
           producer-props   {"value.serializer"  StringSerializer
                             "key.serializer"    StringSerializer
                             "bootstrap.servers" bootstrap-server}
-          producer         (KafkaProducer. producer-props)
-          mock-producer    (MockProducer. true (StringSerializer.) (StringSerializer.))
           env              (keyword (environ/env :clj-env))]
       (cond-> this
-              true (assoc :producer producer)
-              (= env :test) (assoc :producer mock-producer))))
+              (not (= env :test)) (assoc :producer (KafkaProducer. producer-props))
+              (= env :test) (assoc :producer (MockProducer. true (StringSerializer.) (StringSerializer.))))))
 
   (stop [this]
     (assoc this :producer nil)))

@@ -51,3 +51,12 @@
                                                  :body (json/encode password-reset))]
     {:status status
      :body   (json/decode body true)}))
+
+(defn consolidate-reset-password!
+  [password-reset service-fn]
+  (let [{:keys [status]} (test/response-for service-fn
+                                            :put "/user/password-reset"
+                                            :headers {"Content-Type" "application/json"}
+                                            :body (json/encode password-reset))]
+    {:status status
+     :body   nil}))

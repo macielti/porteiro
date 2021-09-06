@@ -1,7 +1,8 @@
 (ns microservice-user-management.interceptors.common
   (:use [clojure pprint])
   (:require [schema.core :as s]
-            [io.pedestal.interceptor.error :as error]))
+            [io.pedestal.interceptor.error :as error]
+            [clojure.tools.logging :as log]))
 
 (def error-handler-interceptor
   (error/error-dispatch [ctx ex]
@@ -11,8 +12,8 @@
                                                 :body   {:cause (or cause reason)}}))
 
                         :else
-                        (let []
-                          (assoc ctx :response {:status 500 :body (str ex)}))))
+                        (do (log/error ex)
+                            (assoc ctx :response {:status 500 :body nil}))))
 
 (s/defn components-interceptor [system-components]
   {:name  ::components-interceptor

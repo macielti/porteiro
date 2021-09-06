@@ -38,6 +38,7 @@
   [user-id :- s/Uuid]
   {:password-reset/id         (UUID/randomUUID)
    :password-reset/user-id    user-id
+   :password-reset/state      :free
    :password-reset/created-at (Date.)})
 
 (s/defn wire->create-user-internal :- wire.in.user/User

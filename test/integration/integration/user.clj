@@ -5,8 +5,7 @@
             [integration.aux.http :as http]
             [matcher-combinators.test :refer [match?]]
             [com.stuartsierra.component :as component]
-            [microservice-user-management.components :as components]
-            [microservice-user-management.producer :as producer]))
+            [microservice-user-management.components :as components]))
 
 (deftest create-user-test
   (let [system     (components/start-system!)
@@ -41,9 +40,7 @@
 
     (testing "that we can update password"
       (is (match? {:status 204
-                   :body   #:user{:id              string?
-                                  :username        "ednaldo-pereira"
-                                  :hashed-password string?}}
+                   :body   nil?}
                   (http/update-password! fixtures.user/password-update token service-fn))))
 
     (testing "that i can't update a password if the old one is incorrect"
@@ -65,38 +62,3 @@
 
     (component/stop system)))
 
-(deftest reset-password-test
-
-  (testing "that reset password request will produce a message when existent"
-    (let [{{kafka-producer :producer} :producer
-           :as                        system} (components/start-system!)
-          service-fn (-> system :server :server :io.pedestal.http/service-fn)
-          {{:keys [email]} :body} (http/create-user! fixtures.user/user service-fn)]
-
-      (is (match? {:status 202
-                   :body   {:message
-                            "If you email is on our system, you should receive a password reset link soon"}}
-                  (http/reset-password! {:email email} service-fn)))
-
-      (is (match? [{:topic :notification
-                    :value {:email   email
-                            :title   "Password Reset Solicitation"
-                            :content string?}}]
-                  (producer/mock-produced-messages kafka-producer)))
-
-      (component/stop system)))
-
-  (testing "that trying to reset password with a nonexistent email will not produce any message"
-    (let [{{kafka-producer :producer} :producer
-           :as                        system} (components/start-system!)
-          service-fn (-> system :server :server :io.pedestal.http/service-fn)]
-
-      (is (match? {:status 202
-                   :body   {:message
-                            "If you email is on our system, you should receive a password reset link soon"}}
-                  (http/reset-password! {:email "nonexistent@example.com"} service-fn)))
-
-      (is (match? []
-                  (producer/mock-produced-messages kafka-producer)))
-
-      (component/stop system))))

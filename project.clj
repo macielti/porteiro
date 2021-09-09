@@ -8,6 +8,7 @@
 
 
   :dependencies [[io.pedestal/pedestal.service-tools "0.5.7"]
+                 [de.ubercode.clostache/clostache "1.4.0"]
                  [ch.qos.logback/logback-classic "1.2.3"]
                  [org.apache.kafka/kafka-clients "2.8.0"]
                  [io.pedestal/pedestal.service "0.5.7"]

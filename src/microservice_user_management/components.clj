@@ -12,7 +12,7 @@
     :datomic (component/using (datomic/new-datomic) [:config])
     :producer (component/using (producer/new-producer) [:config])
     :routes (component/using (routes/new-routes) [:datomic :producer :config])
-    :server (component/using (server/new-server) [:routes])))
+    :server (component/using (server/new-server) [:routes :config])))
 
 (defn start-system! []
   (component/start (component-system)))

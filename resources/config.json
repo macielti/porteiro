@@ -2,5 +2,9 @@
   "datomicUri": "datomic:mem://example",
   "JWTokenSecret": "ey5CWUnp9YvYmsZZ66J1IM90LOzuP721",
   "bootstrapServer": "http://localhost:9092",
-  "passwordResetExpirationDays": 1
+  "passwordResetExpirationDays": 1,
+  "server": {
+    "host": "0.0.0.0",
+    "port": 8888
+  }
 }

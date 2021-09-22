@@ -45,4 +45,8 @@
                  :username "ednaldo-pereira",
                  :email    nil,
                  :exp      1631752834}
-                (adapters.auth/decoded-jwt jw-token-wire)))))
+                (adapters.auth/decoded-jwt jw-token-wire))))
+
+  (testing "that invalid token throws an exception"
+    (is (thrown? ExceptionInfo (adapters.auth/decoded-jwt "ednaldo-pereira")))
+    (is (thrown? ExceptionInfo (adapters.auth/decoded-jwt "invalid.jwt.token")))))

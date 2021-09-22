@@ -5,7 +5,8 @@
             [humanize.schema :as h]
             [clojure.string :as str]
             [buddy.sign.jwt :as jwt]
-            [cheshire.core :as json])
+            [cheshire.core :as json]
+            [clojure.tools.logging :as log])
   (:import (clojure.lang ExceptionInfo)
            (java.util UUID Base64)))
 
@@ -30,13 +31,15 @@
      (assoc user :id (UUID/fromString id)))))
 
 (defn decoded-jwt
-  [jw-token]
+  [jwt-token]
   (try
-    (let [[_ payload _] (str/split jw-token #"\." 3)
+    (let [[_ payload _] (str/split jwt-token #"\." 3)
           clj-payload (-> (.decode (Base64/getDecoder) ^String payload)
                           (String.)
                           (json/decode true))]
       (assoc clj-payload :id (UUID/fromString (:id clj-payload))))
-    (catch Exception _ (throw (ex-info "Invalid token"
-                                           {:status 422
-                                            :cause  "Invalid token"})))))
+    (catch Exception e (do
+                         (log/warn :invalid-token :exception e {:jwt-token jwt-token})
+                         (throw (ex-info "Invalid token"
+                                         {:status 422
+                                          :cause  "Invalid token"}))))))

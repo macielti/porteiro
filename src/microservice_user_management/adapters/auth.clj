@@ -31,8 +31,12 @@
 
 (defn decoded-jwt
   [jw-token]
-  (let [[_ payload __] (str/split jw-token #"\." 3)
-        clj-payload (-> (.decode (Base64/getDecoder) ^String payload)
-                        (String.)
-                        (json/decode true))]
-    (assoc clj-payload :id (UUID/fromString (:id clj-payload)))))
+  (try
+    (let [[_ payload _] (str/split jw-token #"\." 3)
+          clj-payload (-> (.decode (Base64/getDecoder) ^String payload)
+                          (String.)
+                          (json/decode true))]
+      (assoc clj-payload :id (UUID/fromString (:id clj-payload))))
+    (catch Exception _ (throw (ex-info "Invalid token"
+                                           {:status 422
+                                            :cause  "Invalid token"})))))

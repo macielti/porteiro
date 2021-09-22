@@ -41,7 +41,7 @@
 
 (s/deftest decoded-jwt-test
   (testing "that we can internalize jwt tokens"
-    (is (match? {:id       "38d40aac-b7be-41c0-8d56-4e8bbac1d2ed",
+    (is (match? {:id       #uuid "38d40aac-b7be-41c0-8d56-4e8bbac1d2ed",
                  :username "ednaldo-pereira",
                  :email    nil,
                  :exp      1631752834}

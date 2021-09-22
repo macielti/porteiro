@@ -12,6 +12,9 @@
 (use-fixtures :once s/validate-schemas)
 
 (def jwt-secret "ey5CWUnp9YvYmsZZ66J1IM90LOzuP721")
+(def jw-token-wire (str "Bearer eyJhbGciOiJIUzI1NiJ9.eyJpZCI6IjM4ZDQwYWFjLWI3YmUtNDFjMC04ZDU2LTRlOGJiYWMx"
+                        "ZDJlZCIsInVzZXJuYW1lIjoiZWRuYWxkby1wZXJlaXJhIiwiZW1haWwiOm51bGwsImV4cCI6MTYzMTc1"
+                        "MjgzNH0.oDgZ5rmx4E60klnvXZTlDL54j-rFXNwohYO9ZZZPZy0"))
 (def user-entity {:id       (UUID/randomUUID)
                   :username "ednaldo-pereira"
                   :email    "example@example.com"})
@@ -35,3 +38,15 @@
                  :email    "example@example.com"
                  :exp      int?}
                 (adapters.auth/jwt-wire->internal jwt-token jwt-secret)))))
+
+(s/deftest decoded-jwt-test
+  (testing "that we can internalize jwt tokens"
+    (is (match? {:id       #uuid "38d40aac-b7be-41c0-8d56-4e8bbac1d2ed",
+                 :username "ednaldo-pereira",
+                 :email    nil,
+                 :exp      1631752834}
+                (adapters.auth/decoded-jwt jw-token-wire))))
+
+  (testing "that invalid token throws an exception"
+    (is (thrown? ExceptionInfo (adapters.auth/decoded-jwt "ednaldo-pereira")))
+    (is (thrown? ExceptionInfo (adapters.auth/decoded-jwt "invalid.jwt.token")))))

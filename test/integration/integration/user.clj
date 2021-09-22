@@ -55,7 +55,7 @@
 
     ;TODO: This could be separated in to an isolated test for the auth interceptor
     ;but for now i think it is ok
-    (testing "shouldn't be able to change update a password with a inavalid jwt token"
+    (testing "shouldn't be able to change update a password with a invalid jwt token"
       (is (match? {:status 422
                    :body   {:cause "Invalid token"}}
                   (http/update-password! fixtures.user/password-update "invalid-jwt-token" service-fn))))

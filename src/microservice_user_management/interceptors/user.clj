@@ -1,7 +1,9 @@
 (ns microservice-user-management.interceptors.user
   (:use [clojure pprint])
   (:require [microservice-user-management.db.datomic.user :as datomic.user]
-            [microservice-user-management.adapters.auth :as adapters.auth]))
+            [microservice-user-management.db.datomic.session :as datomic.session]
+            [microservice-user-management.adapters.auth :as adapters.auth]
+            [clojure.string :as str]))
 
 (def username-already-in-use-interceptor
   {:name  ::user-already-in-use-interceptor
@@ -15,9 +17,12 @@
 
 (def auth-interceptor
   {:name  ::auth-interceptor
-   :enter (fn [{{{:keys [config]} :components
-                 headers          :headers} :request :as context}]
+   :enter (fn [{{{:keys [datomic]} :components
+                 headers           :headers} :request :as context}]
             (assoc-in context [:request :user-identity]
-                      (-> (get headers "authorization")
-                          (adapters.auth/jwt-wire->internal (get config
-                                                                 :jw-token-secret)))))})
+                      (let [jw-token (-> (get headers "authorization")
+                                         (str/split #" ")
+                                         last)
+                            {:keys [id]} (adapters.auth/decoded-jwt jw-token)
+                            {:session/keys [secret]} (datomic.session/valid-session-by-user-id id datomic)]
+                        (adapters.auth/jwt-wire->internal jw-token (str secret)))))})

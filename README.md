@@ -11,8 +11,8 @@ So I made this microservice to reuse in future projects.
 It's not read for producition yet, but you can run a local version:
 
 - Clone this repository and in your terminal run (with mocked kafka producer): `lein with-profile test run`
-- If you want to check unit and integrations test run: `lein with-profile test test`
-- If you want to see the coverage test report run (with mocked kafka producer): `lein with-profile test cloverage`
+- If you want to check unit and integrations test run: `lein test`
+- If you want to see the coverage test report run (with mocked kafka producer): `lein cloverage`
 
 ## License
 

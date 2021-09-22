@@ -57,7 +57,8 @@
   #:user {:id              (UUID/randomUUID)
           :username        username
           :email           email
-          :hashed-password (hashers/derive password)})
+          :hashed-password (hashers/derive password)
+          :roles           []})
 
 (s/defn datomic->wire :- wire.out.user/User
   [{:user/keys [id username email]} :- wire.datomic.user/User]

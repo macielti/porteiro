@@ -37,7 +37,8 @@
                 (adapters.user/datomic->wire #:user{:id              (UUID/randomUUID)
                                                     :username        "ednaldo-pereira"
                                                     :email           "example@example.com"
-                                                    :hashed-password ""})))))
+                                                    :hashed-password ""
+                                                    :roles           []})))))
 
 (s/deftest wire->password-update-internal-test
   (testing "that we can internalise the password update input"
@@ -47,4 +48,4 @@
                                                                :newPassword "my-strong-and-secure-new-password"}))))
   (testing "input that does not match the input schema throws exception"
     (is (thrown? ExceptionInfo (adapters.user/wire->password-update-internal {:password    "wrong-one"
-                                                                                 :newPassword "i-do-not-know-what-i-am-doing"})))))
+                                                                              :newPassword "i-do-not-know-what-i-am-doing"})))))

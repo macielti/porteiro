@@ -4,19 +4,28 @@
             [microservice-user-management.components :as components]
             [integration.aux.http :as http]
             [matcher-combinators.test :refer [match?]]
-            [com.stuartsierra.component :as component]))
+            [com.stuartsierra.component :as component]
+            [microservice-user-management.producer :as producer]))
 
 (deftest auth-test
-  (let [system     (components/start-system!)
+  (let [{{kafka-producer :producer} :producer
+         :as                        system} (components/start-system!)
         service-fn (-> system :server :server :io.pedestal.http/service-fn)
         _          (http/create-user! fixtures.user/user
-                                     service-fn)]
+                                      service-fn)]
 
     (testing "that users can be authenticated"
       (is (match? {:status 200
                    :body   {:token string?}}
                   (http/auth fixtures.user/user-auth
                              service-fn))))
+
+    (testing "that successful authentication notifications the user"
+      (is (match? [{:topic :notification
+                    :value {:email   (:email fixtures.user/user)
+                            :title   "Authentication Confirmation"
+                            :content string?}}]
+                  (producer/mock-produced-messages kafka-producer))))
 
     (testing "that users can't be authenticated with wrong credentials"
       (is (match? {:status 403

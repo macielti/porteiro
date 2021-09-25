@@ -4,5 +4,5 @@
 
 (s/defn auth
         [{auth                     :json-params
-          {:keys [datomic]} :components}]
-  {:status 200 :body (controllers.auth/auth auth datomic)})
+          {:keys [datomic producer]} :components}]
+  {:status 200 :body (controllers.auth/auth auth producer datomic)})

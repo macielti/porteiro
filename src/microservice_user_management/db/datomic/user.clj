@@ -13,7 +13,7 @@
 (s/defn by-username :- wire.datomic.user/User
   [username :- s/Str
    datomic]
-  (-> (d/q '[:find (pull ?user [:user/id :user/username :user/hashed-password])
+  (-> (d/q '[:find (pull ?user [:user/id :user/username :user/email :user/hashed-password])
              :in $ ?username
              :where [?user :user/username ?username]] (d/db datomic) username)
       ffirst))

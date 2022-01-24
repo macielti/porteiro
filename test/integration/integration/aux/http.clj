@@ -1,5 +1,4 @@
 (ns integration.aux.http
-  (:use [clojure pprint])
   (:require [clojure.test :refer :all]
             [io.pedestal.test :as test]
             [cheshire.core :as json]))

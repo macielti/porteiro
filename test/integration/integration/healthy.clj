@@ -1,8 +1,8 @@
 (ns integration.healthy
   (:require [clojure.test :refer :all]
-            [integration.aux.http :as http]
             [com.stuartsierra.component :as component]
-            [microservice-user-management.components :as components]))
+            [integration.aux.http :as http]
+            [porteiro.components :as components]))
 
 (deftest create-user-test
   (let [system     (components/start-system!)

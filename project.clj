@@ -1,4 +1,4 @@
-(defproject microservice-user-management "0.1.0-SNAPSHOT"
+(defproject porteiro "0.1.0-SNAPSHOT"
   :description "A microservice for users and authentication management"
   :license {:name "EPL-2.0 OR GPL-2.0-or-later WITH Classpath-exception-2.0"
             :url  "https://www.eclipse.org/legal/epl-2.0/"}
@@ -32,8 +32,8 @@
 
   :profiles {:test {:env {:clj-env "test"}}}
 
-  :repl-options {:init-ns microservice-user-management.components}
+  :repl-options {:init-ns porteiro.components}
 
   :test-paths ["test/unit" "test/integration" "test/helpers"]
 
-  :main microservice-user-management.components/start-system!)
+  :main prteiro.components/start-system!)

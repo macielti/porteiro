@@ -1,7 +1,7 @@
-(ns microservice-user-management.adapters.password-reset
+(ns porteiro.adapters.password-reset
   (:require [schema.core :as s]
-            [microservice-user-management.wire.in.password-reset :as wire.in.password-reset]
-            [microservice-user-management.models.password-reset :as models.password]
+            [porteiro.wire.in.password-reset :as wire.in.password-reset]
+            [porteiro.models.password-reset :as models.password]
             [humanize.schema :as h]
             [buddy.hashers :as hashers])
   (:import (java.util UUID)

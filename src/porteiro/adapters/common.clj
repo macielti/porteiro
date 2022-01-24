@@ -1,4 +1,4 @@
-(ns microservice-user-management.adapters.common
+(ns porteiro.adapters.common
   (:require [camel-snake-kebab.core :refer [->kebab-case]]
             [schema.core :as s]))
 

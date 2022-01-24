@@ -1,7 +1,7 @@
-(ns microservice-user-management.adapters.auth
+(ns porteiro.adapters.auth
   (:use [clojure pprint])
   (:require [schema.core :as s]
-            [microservice-user-management.wire.in.auth :as wire.in.auth]
+            [porteiro.wire.in.auth :as wire.in.auth]
             [humanize.schema :as h]
             [clojure.string :as str]
             [buddy.sign.jwt :as jwt]

@@ -1,18 +1,10 @@
-![Clojure CI - Unit and Integration Tests](https://github.com/macielti/todo-list-api-clojure/actions/workflows/github_actions.yml/badge.svg)
+# Porteiro
 
-# Microservice user management
+![Porteiro](https://user-images.githubusercontent.com/13934379/150688989-664c2756-4779-4e43-a109-446d3f7f497b.png)
 
-I am tired of having to rewrite the user management component for every CRUD based service 😠!
+<cite>"clift cloft Still, a porta se abriu!"</cite> - Porteiro
 
-So I made this microservice to reuse in future projects.
-
-## Usage
-
-It's not read for producition yet, but you can run a local version:
-
-- Clone this repository and in your terminal run (with mocked kafka producer): `lein with-profile test run`
-- If you want to check unit and integrations test run: `lein test`
-- If you want to see the coverage test report run (with mocked kafka producer): `lein cloverage`
+This service is responsible to managing and authenticate users.
 
 ## License
 

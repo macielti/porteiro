@@ -1,4 +1,4 @@
-(ns microservice-user-management.wire.out.notification
+(ns porteiro.wire.out.notification
   (:require [schema.core :as s]))
 
 (s/defschema Notification

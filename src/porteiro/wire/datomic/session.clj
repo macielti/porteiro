@@ -1,4 +1,4 @@
-(ns microservice-user-management.wire.datomic.session
+(ns porteiro.wire.datomic.session
   (:require [schema.core :as s])
   (:import (java.util Date)))
 

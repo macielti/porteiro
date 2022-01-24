@@ -1,5 +1,4 @@
-(ns microservice-user-management.interceptors.common
-  (:use [clojure pprint])
+(ns porteiro.interceptors.common
   (:require [schema.core :as s]
             [io.pedestal.interceptor.error :as error]
             [clojure.tools.logging :as log]))

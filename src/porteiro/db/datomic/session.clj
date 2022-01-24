@@ -1,7 +1,7 @@
-(ns microservice-user-management.db.datomic.session
+(ns porteiro.db.datomic.session
   (:use [clojure pprint])
   (:require [schema.core :as s]
-            [microservice-user-management.wire.datomic.session :as wire.datomic.session]
+            [porteiro.wire.datomic.session :as wire.datomic.session]
             [datomic.api :as d]))
 
 (s/defn insert! :- wire.datomic.session/Session

@@ -1,6 +1,6 @@
-(ns microservice-user-management.datomic
+(ns porteiro.datomic
   (:require [com.stuartsierra.component :as component]
-            [microservice-user-management.db.datomic.config :as datomic.config]
+            [porteiro.db.datomic.config :as datomic.config]
             [datomic.api :as d]))
 
 (defrecord Datomic [config]

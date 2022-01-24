@@ -1,4 +1,4 @@
-(ns microservice-user-management.models.user
+(ns porteiro.models.user
   (:require [schema.core :as s]))
 
 (s/defschema PasswordUpdate

@@ -1,6 +1,6 @@
-(ns microservice-user-management.adapters.user-test
+(ns porteiro.adapters.user-test
   (:require [clojure.test :refer :all]
-            [microservice-user-management.adapters.user :as adapters.user]
+            [porteiro.adapters.user :as adapters.user]
             [matcher-combinators.test :refer [match?]]
             [schema.test :as s])
   (:import (clojure.lang ExceptionInfo)

@@ -1,8 +1,8 @@
-(ns microservice-user-management.interceptors.user
+(ns porteiro.interceptors.user
   (:use [clojure pprint])
-  (:require [microservice-user-management.db.datomic.user :as datomic.user]
-            [microservice-user-management.db.datomic.session :as datomic.session]
-            [microservice-user-management.adapters.auth :as adapters.auth]
+  (:require [porteiro.db.datomic.user :as datomic.user]
+            [porteiro.db.datomic.session :as datomic.session]
+            [porteiro.adapters.auth :as adapters.auth]
             [clojure.string :as str]))
 
 (def username-already-in-use-interceptor

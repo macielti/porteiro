@@ -1,7 +1,7 @@
-(ns microservice-user-management.adapters.common-test
+(ns porteiro.adapters.common-test
   (:require [clojure.test :refer :all]
             [schema.test :as s]
-            [microservice-user-management.adapters.common :as adapters.common]))
+            [porteiro.adapters.common :as adapters.common]))
 
 (use-fixtures :once s/validate-schemas)
 

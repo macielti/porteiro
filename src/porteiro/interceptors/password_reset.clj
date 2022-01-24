@@ -1,8 +1,6 @@
-(ns microservice-user-management.interceptors.password-reset
-  (:use [clojure pprint])
-  (:require [microservice-user-management.db.datomic.password-reset :as datomic.password-reset]
-            [microservice-user-management.adapters.password-reset :as adapters.password-reset]
-            ))
+(ns porteiro.interceptors.password-reset
+  (:require [porteiro.db.datomic.password-reset :as datomic.password-reset]
+            [porteiro.adapters.password-reset :as adapters.password-reset]))
 
 (def invalid-password-reset-token-exception
   (ex-info "Invalid/Expired password reset token" {:status 401

@@ -1,7 +1,6 @@
-(ns microservice-user-management.adapters.session
-  (:use [clojure pprint])
+(ns porteiro.adapters.session
   (:require [schema.core :as s]
-            [microservice-user-management.wire.datomic.session :as wire.datomic.session])
+            [porteiro.wire.datomic.session :as wire.datomic.session])
   (:import (java.util UUID Date)))
 
 (s/defn ->datomic :- wire.datomic.session/Session

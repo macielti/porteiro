@@ -1,11 +1,10 @@
 (ns integration.user
-  (:use [clojure pprint])
   (:require [clojure.test :refer :all]
-            [fixtures.user]
-            [integration.aux.http :as http]
             [matcher-combinators.test :refer [match?]]
             [com.stuartsierra.component :as component]
-            [microservice-user-management.components :as components]))
+            [integration.aux.http :as http]
+            [fixtures.user]
+            [porteiro.components :as components]))
 
 (deftest create-user-test
   (let [system     (components/start-system!)

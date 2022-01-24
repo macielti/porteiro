@@ -1,7 +1,7 @@
-(ns microservice-user-management.logic.healthy-test
+(ns porteiro.logic.healthy-test
   (:require [clojure.test :refer :all]
             [schema.test :as s]
-            [microservice-user-management.logic.healthy :as logic.healthy]))
+            [porteiro.logic.healthy :as logic.healthy]))
 
 
 (s/deftest system-healthy?-test

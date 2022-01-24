@@ -1,4 +1,4 @@
-(ns microservice-user-management.models.healthy
+(ns porteiro.models.healthy
   (:require [schema.core :as s]))
 
 (s/def ComponentHealthyCheckResult

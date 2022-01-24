@@ -1,6 +1,6 @@
-(ns microservice-user-management.db.datomic.password-reset
-  (:require [microservice-user-management.wire.datomic.password-reset :as wire.datomic.password-reset]
-            [microservice-user-management.models.password-reset :as models.password]
+(ns porteiro.db.datomic.password-reset
+  (:require [porteiro.wire.datomic.password-reset :as wire.datomic.password-reset]
+            [porteiro.models.password-reset :as models.password]
             [clj-time.coerce :as c]
             [schema.core :as s]
             [datomic.api :as d])

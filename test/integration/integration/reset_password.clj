@@ -1,11 +1,11 @@
 (ns integration.reset-password
   (:require [clojure.test :refer :all]
-            [fixtures.user]
-            [integration.aux.http :as http]
             [matcher-combinators.test :refer [match?]]
             [com.stuartsierra.component :as component]
-            [microservice-user-management.components :as components]
-            [microservice-user-management.producer :as producer]))
+            [integration.aux.http :as http]
+            [fixtures.user]
+            [porteiro.components :as components]
+            [porteiro.producer :as producer]))
 
 (deftest reset-password-test
   (testing "request body must respect the schema"

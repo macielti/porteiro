@@ -1,4 +1,4 @@
-(ns microservice-user-management.producer
+(ns porteiro.producer
   (:use [clojure pprint])
   (:require [com.stuartsierra.component :as component]
             [cheshire.core :as json]

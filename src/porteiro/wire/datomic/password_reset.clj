@@ -1,4 +1,4 @@
-(ns microservice-user-management.wire.datomic.password-reset
+(ns porteiro.wire.datomic.password-reset
   (:require [schema.core :as s])
   (:import (java.util Date)))
 

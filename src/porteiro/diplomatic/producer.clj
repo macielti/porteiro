@@ -1,7 +1,6 @@
-(ns microservice-user-management.diplomatic.producer
-  (:use [clojure pprint])
+(ns porteiro.diplomatic.producer
   (:require [schema.core :as s]
-            [microservice-user-management.producer :as producer]
+            [porteiro.producer :as producer]
             [clojure.tools.logging :as log]
             [clostache.parser :as parser])
   (:import (java.util Date)))

@@ -1,4 +1,4 @@
-(ns microservice-user-management.wire.in.user
+(ns porteiro.wire.in.user
   (:require [schema.core :as s]))
 
 (s/defschema User

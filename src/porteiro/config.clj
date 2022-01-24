@@ -1,5 +1,5 @@
-(ns microservice-user-management.config
-  (:require [microservice-user-management.adapters.common :as adapters.common]
+(ns porteiro.config
+  (:require [porteiro.adapters.common :as adapters.common]
             [com.stuartsierra.component :as component]
             [cheshire.core :as json]))
 

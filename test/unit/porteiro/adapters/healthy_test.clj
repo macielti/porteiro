@@ -1,7 +1,7 @@
-(ns microservice-user-management.adapters.healthy-test
+(ns porteiro.adapters.healthy-test
   (:require [clojure.test :refer :all]
             [schema.test :as s]
-            [microservice-user-management.adapters.healthy :as adapters.healthy]))
+            [porteiro.adapters.healthy :as adapters.healthy]))
 
 (use-fixtures :once s/validate-schemas)
 

@@ -1,9 +1,9 @@
-(ns microservice-user-management.controllers.password-reset
+(ns porteiro.controllers.password-reset
   (:require [schema.core :as s]
-            [microservice-user-management.adapters.password-reset :as adapters.password-reset]
-            [microservice-user-management.wire.in.password-reset :as wire.in.password-reset]
-            [microservice-user-management.db.datomic.password-reset :as datomic.password-reset]
-            [microservice-user-management.db.datomic.user :as datomic.user]))
+            [porteiro.adapters.password-reset :as adapters.password-reset]
+            [porteiro.wire.in.password-reset :as wire.in.password-reset]
+            [porteiro.db.datomic.password-reset :as datomic.password-reset]
+            [porteiro.db.datomic.user :as datomic.user]))
 
 
 (s/defn consolidate-password-reset!

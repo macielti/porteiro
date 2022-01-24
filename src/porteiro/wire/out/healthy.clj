@@ -1,4 +1,4 @@
-(ns microservice-user-management.wire.out.healthy
+(ns porteiro.wire.out.healthy
   (:require [schema.core :as s]))
 
 (s/defschema ComponentHealthyCheckResult

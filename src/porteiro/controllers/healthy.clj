@@ -1,6 +1,6 @@
-(ns microservice-user-management.controllers.healthy
-  (:require [microservice-user-management.db.datomic.user :as datomic.user]
-            [microservice-user-management.logic.healthy :as logic.healthy]))
+(ns porteiro.controllers.healthy
+  (:require [porteiro.db.datomic.user :as datomic.user]
+            [porteiro.logic.healthy :as logic.healthy]))
 
 (defn healthy-check
   [datomic config]

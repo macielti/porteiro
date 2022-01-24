@@ -1,8 +1,8 @@
-(ns microservice-user-management.diplomatic.http-server.password
+(ns porteiro.diplomatic.http-server.password
   (:require [schema.core :as s]
-            [microservice-user-management.controllers.password-reset :as controllers.password-reset]
-            [microservice-user-management.controllers.user :as controllers.user]
-            [microservice-user-management.adapters.user :as adapters.user]))
+            [porteiro.controllers.password-reset :as controllers.password-reset]
+            [porteiro.controllers.user :as controllers.user]
+            [porteiro.adapters.user :as adapters.user]))
 
 (s/defn consolidate-reset-password!
   [{password-reset    :json-params

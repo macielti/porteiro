@@ -1,13 +1,12 @@
-(ns microservice-user-management.controllers.user
-  (:use [clojure pprint])
+(ns porteiro.controllers.user
   (:require [schema.core :as s]
-            [microservice-user-management.wire.datomic.user :as wire.datomic.user]
-            [microservice-user-management.wire.in.user :as wire.in.user]
-            [microservice-user-management.adapters.user :as adapters.user]
-            [microservice-user-management.db.datomic.user :as datomic.user]
-            [microservice-user-management.models.user :as models.user]
-            [microservice-user-management.db.datomic.password-reset :as datomic.password-reset]
-            [microservice-user-management.diplomatic.producer :as diplomatic.producer]
+            [porteiro.wire.datomic.user :as wire.datomic.user]
+            [porteiro.wire.in.user :as wire.in.user]
+            [porteiro.adapters.user :as adapters.user]
+            [porteiro.db.datomic.user :as datomic.user]
+            [porteiro.models.user :as models.user]
+            [porteiro.db.datomic.password-reset :as datomic.password-reset]
+            [porteiro.diplomatic.producer :as diplomatic.producer]
             [buddy.hashers :as hashers]))
 
 (s/defn create-user! :- wire.datomic.user/User

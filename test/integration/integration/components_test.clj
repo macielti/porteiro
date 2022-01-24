@@ -1,8 +1,7 @@
 (ns integration.components-test
-  (:use [clojure pprint])
   (:require [clojure.test :refer :all]
             [com.stuartsierra.component :as component]
-            [microservice-user-management.components :as components])
+            [porteiro.components :as components])
   (:import (com.stuartsierra.component SystemMap)))
 
 (deftest start-system!-test

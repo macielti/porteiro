@@ -1,4 +1,4 @@
-(ns microservice-user-management.wire.datomic.user
+(ns porteiro.wire.datomic.user
   (:require [schema.core :as s]))
 
 (def user

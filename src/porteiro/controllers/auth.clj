@@ -1,13 +1,12 @@
-(ns microservice-user-management.controllers.auth
-  (:use [clojure pprint])
+(ns porteiro.controllers.auth
   (:require [schema.core :as s]
-            [microservice-user-management.adapters.auth :as adapters.auth]
-            [microservice-user-management.wire.in.auth :as wire.in.auth]
-            [microservice-user-management.db.datomic.user :as datomic.user]
-            [microservice-user-management.adapters.user :as adapters.user]
-            [microservice-user-management.adapters.session :as adapters.session]
-            [microservice-user-management.db.datomic.session :as datomic.session]
-            [microservice-user-management.diplomatic.producer :as diplomatic.producer]
+            [porteiro.adapters.auth :as adapters.auth]
+            [porteiro.wire.in.auth :as wire.in.auth]
+            [porteiro.db.datomic.user :as datomic.user]
+            [porteiro.adapters.user :as adapters.user]
+            [porteiro.adapters.session :as adapters.session]
+            [porteiro.db.datomic.session :as datomic.session]
+            [porteiro.diplomatic.producer :as diplomatic.producer]
             [buddy.sign.jwt :as jwt]
             [clj-time.core :as t]
             [clj-time.coerce :as c]

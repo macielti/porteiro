@@ -1,7 +1,7 @@
-(ns microservice-user-management.diplomatic.http-server.healthy
+(ns porteiro.diplomatic.http-server.healthy
   (:require [schema.core :as s]
-            [microservice-user-management.controllers.healthy :as controllers.healthy]
-            [microservice-user-management.adapters.healthy :as adapters.healthy]))
+            [porteiro.controllers.healthy :as controllers.healthy]
+            [porteiro.adapters.healthy :as adapters.healthy]))
 
 (s/defn healthy-check
         [{{:keys [datomic config]} :components}]

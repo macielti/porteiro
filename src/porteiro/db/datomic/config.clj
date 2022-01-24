@@ -1,7 +1,7 @@
-(ns microservice-user-management.db.datomic.config
-  (:require [microservice-user-management.wire.datomic.user :as wire.datomic.user]
-            [microservice-user-management.wire.datomic.password-reset :as wire.datomic.password-reset]
-            [microservice-user-management.wire.datomic.session :as wire.datomic.session]))
+(ns porteiro.db.datomic.config
+  (:require [porteiro.wire.datomic.user :as wire.datomic.user]
+            [porteiro.wire.datomic.password-reset :as wire.datomic.password-reset]
+            [porteiro.wire.datomic.session :as wire.datomic.session]))
 
 (def schemas (concat []
                      wire.datomic.user/user

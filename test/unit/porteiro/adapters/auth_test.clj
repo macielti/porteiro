@@ -1,6 +1,6 @@
-(ns microservice-user-management.adapters.auth-test
+(ns porteiro.adapters.auth-test
   (:require [clojure.test :refer :all]
-            [microservice-user-management.adapters.auth :as adapters.auth]
+            [porteiro.adapters.auth :as adapters.auth]
             [matcher-combinators.test :refer [match?]]
             [schema.test :as s]
             [buddy.sign.jwt :as jwt]

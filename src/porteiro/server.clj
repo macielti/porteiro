@@ -1,5 +1,4 @@
-(ns microservice-user-management.server
-  (:use [clojure pprint])
+(ns porteiro.server
   (:require [io.pedestal.http :as http]
             [com.stuartsierra.component :as component]))
 

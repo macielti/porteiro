@@ -1,6 +1,6 @@
-(ns microservice-user-management.diplomatic.http-server.auth
+(ns porteiro.diplomatic.http-server.auth
   (:require [schema.core :as s]
-            [microservice-user-management.controllers.auth :as controllers.auth]))
+            [porteiro.controllers.auth :as controllers.auth]))
 
 (s/defn auth
         [{auth                     :json-params

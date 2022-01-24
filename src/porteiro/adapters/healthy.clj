@@ -1,7 +1,7 @@
-(ns microservice-user-management.adapters.healthy
+(ns porteiro.adapters.healthy
   (:require [schema.core :as s]
-            [microservice-user-management.wire.out.healthy :as wire.out.healthy]
-            [microservice-user-management.models.healthy :as models.healthy]))
+            [porteiro.wire.out.healthy :as wire.out.healthy]
+            [porteiro.models.healthy :as models.healthy]))
 
 (s/defn healthy-check-result->status-code :- s/Num
   [healthy-check-result]

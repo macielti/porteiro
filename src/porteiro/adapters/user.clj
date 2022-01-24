@@ -1,12 +1,12 @@
-(ns microservice-user-management.adapters.user
+(ns porteiro.adapters.user
   (:require [schema.core :as s]
             [humanize.schema :as h]
-            [microservice-user-management.wire.in.user :as wire.in.user]
-            [microservice-user-management.wire.datomic.user :as wire.datomic.user]
-            [microservice-user-management.wire.out.user :as wire.out.user]
-            [microservice-user-management.models.user :as models.user]
+            [porteiro.wire.in.user :as wire.in.user]
+            [porteiro.wire.datomic.user :as wire.datomic.user]
+            [porteiro.wire.out.user :as wire.out.user]
+            [porteiro.models.user :as models.user]
             [buddy.hashers :as hashers]
-            [microservice-user-management.wire.datomic.password-reset :as wire.datomic.password-reset])
+            [porteiro.wire.datomic.password-reset :as wire.datomic.password-reset])
   (:import (java.util UUID Date)
            (clojure.lang ExceptionInfo)))
 

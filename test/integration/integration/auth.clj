@@ -1,11 +1,11 @@
 (ns integration.auth
   (:require [clojure.test :refer :all]
             [fixtures.user]
-            [microservice-user-management.components :as components]
+            [porteiro.components :as components]
             [integration.aux.http :as http]
             [matcher-combinators.test :refer [match?]]
             [com.stuartsierra.component :as component]
-            [microservice-user-management.producer :as producer]))
+            [porteiro.producer :as producer]))
 
 (deftest auth-test
   (let [{{kafka-producer :producer} :producer

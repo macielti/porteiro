@@ -1,4 +1,4 @@
-(ns microservice-user-management.models.password-reset
+(ns porteiro.models.password-reset
   (:require [schema.core :as s]))
 
 (s/defschema PasswordResetConsolidation

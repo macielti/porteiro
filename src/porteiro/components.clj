@@ -1,10 +1,10 @@
-(ns microservice-user-management.components
+(ns porteiro.components
   (:require [com.stuartsierra.component :as component]
-            [microservice-user-management.config :as config]
-            [microservice-user-management.datomic :as datomic]
-            [microservice-user-management.server :as server]
-            [microservice-user-management.producer :as producer]
-            [microservice-user-management.routes :as routes]))
+            [porteiro.config :as config]
+            [porteiro.datomic :as datomic]
+            [porteiro.server :as server]
+            [porteiro.producer :as producer]
+            [porteiro.routes :as routes]))
 
 (defn component-system []
   (component/system-map

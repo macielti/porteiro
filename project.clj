@@ -9,7 +9,7 @@
   :exclusions [log4j]
 
   :dependencies [[io.pedestal/pedestal.service-tools "0.5.10"]
-                 [net.clojars.macielti/common-clj "5.10.4"]
+                 [net.clojars.macielti/common-clj "5.11.6"]
                  [de.ubercode.clostache/clostache "1.4.0"]
                  [ch.qos.logback/logback-classic "1.2.10"]
                  [org.apache.kafka/kafka-clients "2.8.0"]
@@ -38,4 +38,4 @@
 
   :test-paths ["test/unit" "test/integration" "test/helpers"]
 
-  :main prteiro.components/start-system!)
+  :main porteiro.components/start-system!)

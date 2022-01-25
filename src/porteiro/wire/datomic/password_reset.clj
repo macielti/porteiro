@@ -1,5 +1,6 @@
 (ns porteiro.wire.datomic.password-reset
-  (:require [schema.core :as s]))
+  (:require [schema.core :as s])
+  (:import (java.util Date)))
 
 (def password-reset
   [{:db/ident       :password-reset/id

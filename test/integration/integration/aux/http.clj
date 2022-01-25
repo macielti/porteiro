@@ -25,10 +25,10 @@
     {:status status
      :body   (json/decode body true)}))
 
-(defn healthy-check
+(defn health-check
   [service-fn]
   (let [{:keys [body status]} (test/response-for service-fn
-                                                 :get "/healthy")]
+                                                 :get "/health")]
     {:status status
      :body   (json/decode body true)}))
 

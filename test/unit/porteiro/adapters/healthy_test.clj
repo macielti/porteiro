@@ -24,17 +24,17 @@
 (s/deftest component-healthy-check-result->wire-test
   (testing "that we can externalize healthy check component results"
     (is (= {:component "datomic"
-            :isHealthy true}
+            :isHealth  true}
            (adapters.healthy/component-healthy-check-result->wire {:component  :datomic
                                                                    :is-healthy true})))))
 
 (s/deftest ->wire-test
   (testing "that we can externalize healthy check results"
-    (is (= {:isHealthy  true
+    (is (= {:isHealth   true
             :components [{:component "datomic"
-                          :isHealthy true}
+                          :isHealth  true}
                          {:component "config"
-                          :isHealthy true}]}
+                          :isHealth  true}]}
            (adapters.healthy/->wire {:is-healthy true
                                      :components [{:component  :datomic
                                                    :is-healthy true}

@@ -1,7 +1,7 @@
 (ns porteiro.controllers.user
   (:require [schema.core :as s]
-            [porteiro.wire.datomic.user :as wire.datomic.user]
             [porteiro.wire.in.user :as wire.in.user]
+            [porteiro.wire.out.user :as wire.out.user]
             [porteiro.adapters.user :as adapters.user]
             [porteiro.db.datomic.user :as datomic.user]
             [porteiro.models.user :as models.user]
@@ -9,7 +9,8 @@
             [porteiro.diplomatic.producer :as diplomatic.producer]
             [buddy.hashers :as hashers]))
 
-(s/defn create-user! :- wire.datomic.user/User
+;TODO: Refact this to receive a internal model
+(s/defn create-user! :- wire.out.user/User
   [user :- wire.in.user/User
    datomic]
   (-> user

@@ -3,16 +3,17 @@
   (:require [porteiro.db.datomic.user :as datomic.user]
             [porteiro.db.datomic.session :as datomic.session]
             [porteiro.adapters.auth :as adapters.auth]
-            [clojure.string :as str]))
+            [clojure.string :as str]
+            [taoensso.timbre :as timbre]))
 
 (def username-already-in-use-interceptor
   {:name  ::user-already-in-use-interceptor
    :enter (fn [{{{:keys [username] :or {username ""}} :json-params
                  {:keys [datomic]}                    :components} :request :as context}]
-            (let [user (datomic.user/by-username username datomic)]
+            (let [user (datomic.user/by-username username (:connection datomic))]
               (if-not (empty? user)
                 (throw (ex-info "Username already in use" {:status 409
-                                                           :reason "username already in use by other user"}))))
+                                                           :cause  "username already in use by other user"}))))
             context)})
 
 (def auth-interceptor

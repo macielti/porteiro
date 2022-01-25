@@ -9,7 +9,7 @@
   (d/transact datomic [user])
   user)
 
-(s/defn by-username :- wire.datomic.user/User
+(s/defn by-username :- (s/maybe wire.datomic.user/User)
   [username :- s/Str
    datomic]
   (-> (d/q '[:find (pull ?user [:user/id :user/username :user/email :user/hashed-password])

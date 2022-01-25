@@ -1,5 +1,4 @@
 (ns porteiro.adapters.auth
-  (:use [clojure pprint])
   (:require [schema.core :as s]
             [porteiro.wire.in.auth :as wire.in.auth]
             [humanize.schema :as h]

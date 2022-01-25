@@ -5,4 +5,4 @@
 (s/defn create-user!
   [{user              :json-params
     {:keys [datomic]} :components}]
-  {:status 201 :body (controllers.user/create-user! user datomic)})
+  {:status 201 :body (controllers.user/create-user! user (:connection datomic))})

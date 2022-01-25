@@ -1,9 +1,11 @@
 {
-  "datomicUri": "datomic:mem://example",
-  "bootstrapServer": "http://localhost:9092",
-  "passwordResetExpirationDays": 1,
-  "server": {
-    "host": "0.0.0.0",
-    "port": 8888
+  "prod": {
+    "datomicUri": "datomic:mem://example",
+    "bootstrapServer": "http://localhost:9092",
+    "passwordResetExpirationDays": 1,
+    "server": {
+      "host": "0.0.0.0",
+      "port": 8888
+    }
   }
 }

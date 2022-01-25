@@ -1,15 +1,16 @@
 (ns porteiro.components
   (:require [com.stuartsierra.component :as component]
-            [porteiro.config :as config]
-            [porteiro.datomic :as datomic]
+            [common-clj.component.config :as component.config]
+            [common-clj.component.datomic :as component.datomic]
             [porteiro.server :as server]
             [porteiro.producer :as producer]
-            [porteiro.routes :as routes]))
+            [porteiro.routes :as routes]
+            [porteiro.db.datomic.config :as database.config]))
 
 (defn component-system []
   (component/system-map
-    :config (config/new-config)
-    :datomic (component/using (datomic/new-datomic) [:config])
+    :config (component.config/new-config "resources/config.json" :prod)
+    :datomic (component/using (component.datomic/new-datomic database.config/schemas) [:config])
     :producer (component/using (producer/new-producer) [:config])
     :routes (component/using (routes/new-routes) [:datomic :producer :config])
     :server (component/using (server/new-server) [:routes :config])))

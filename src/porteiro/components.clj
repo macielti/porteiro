@@ -8,7 +8,7 @@
             [porteiro.diplomatic.http-server :as diplomatic.http-server]
             [porteiro.db.datomic.config :as database.config]))
 
-(defn component-system []
+(def system
   (component/system-map
     :config (component.config/new-config "resources/config.json" :prod)
     :datomic (component/using (component.datomic/new-datomic database.config/schemas) [:config])
@@ -17,4 +17,12 @@
     :service (component/using (component.service/new-service) [:routes :config :datomic])))
 
 (defn start-system! []
-  (component/start (component-system)))
+  (component/start system))
+
+(def system-test
+  (component/system-map
+    :config (component.config/new-config "resources/config.json" :test)
+    :datomic (component/using (component.datomic/new-datomic database.config/schemas) [:config])
+    :producer (component/using (component.producer/new-producer) [:config])
+    :routes (component/using (component.routes/new-routes diplomatic.http-server/routes) [:datomic :config])
+    :service (component/using (component.service/new-service) [:routes :config :datomic])))

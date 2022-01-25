@@ -1,12 +1,13 @@
 (ns integration.healthy
   (:require [clojure.test :refer :all]
+            [com.stuartsierra.component :as component]
             [common-clj.component.helper.core :as component.helper]
             [com.stuartsierra.component :as component]
             [integration.aux.http :as http]
             [porteiro.components :as components]))
 
 (deftest create-user-test
-  (let [system     (components/start-system!)
+  (let [system     (component/start components/system-test)
         service-fn (-> (component.helper/get-component-content :service system)
                        :io.pedestal.http/service-fn)]
 

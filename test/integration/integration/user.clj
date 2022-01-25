@@ -1,6 +1,5 @@
 (ns integration.user
   (:require [clojure.test :refer :all]
-            [schema.test :as s]
             [matcher-combinators.test :refer [match?]]
             [com.stuartsierra.component :as component]
             [common-clj.component.helper.core :as component.helper]
@@ -8,7 +7,7 @@
             [fixtures.user]
             [porteiro.components :as components]))
 
-(s/deftest create-user-test
+(deftest create-user-test
   (let [system     (component/start components/system-test)
         service-fn (-> (component.helper/get-component-content :service system)
                        :io.pedestal.http/service-fn)]
@@ -21,16 +20,16 @@
                   (http/create-user! fixtures.user/user
                                      service-fn))))
 
-    #_(testing "that username must be unique"
-        (is (= {:status 409
-                :body   {:cause "username already in use by other user"}}
-               (http/create-user! fixtures.user/user
-                                  service-fn))))
+    (testing "that username must be unique"
+      (is (= {:status 409
+              :body   {:cause "username already in use by other user"}}
+             (http/create-user! fixtures.user/user
+                                service-fn))))
 
-    #_(testing "request body must respect the schema"
-        (is (= {:status 422, :body {:cause {:username "missing-required-key"}}}
-               (http/create-user! (dissoc fixtures.user/user :username)
-                                  service-fn))))
+    (testing "request body must respect the schema"
+      (is (= {:status 422, :body {:cause {:username "missing-required-key"}}}
+             (http/create-user! (dissoc fixtures.user/user :username)
+                                service-fn))))
 
     (component/stop system)))
 

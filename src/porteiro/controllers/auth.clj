@@ -25,7 +25,7 @@
         (diplomatic.producer/send-success-auth-notification! email producer)
         (-> (adapters.session/->datomic id jw-token-secret)
             (datomic.session/insert! database))
-        {:token (jwt/sign (adapters.user/datomic->wire user) ;TODO: abstract it to a separated function
+        {:token (jwt/sign (adapters.user/internal-user->wire user) ;TODO: abstract it to a separated function
                           (str jw-token-secret)
                           {:exp (-> (t/plus (t/now) (t/days 1)) ;TODO: get the expiration time from config component
                                     c/to-timestamp)})})

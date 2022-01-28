@@ -14,7 +14,7 @@
     :datomic (component/using (component.datomic/new-datomic database.config/schemas) [:config])
     :producer (component/using (component.producer/new-producer) [:config])
     :routes (component/using (component.routes/new-routes diplomatic.http-server/routes) [:datomic :config])
-    :service (component/using (component.service/new-service) [:routes :config :datomic])))
+    :service (component/using (component.service/new-service) [:routes :config :datomic :producer])))
 
 (defn start-system! []
   (component/start system))
@@ -25,4 +25,4 @@
     :datomic (component/using (component.datomic/new-datomic database.config/schemas) [:config])
     :producer (component/using (component.producer/new-producer) [:config])
     :routes (component/using (component.routes/new-routes diplomatic.http-server/routes) [:datomic :config])
-    :service (component/using (component.service/new-service) [:routes :config :datomic])))
+    :service (component/using (component.service/new-service) [:routes :config :datomic :producer])))

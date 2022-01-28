@@ -28,7 +28,7 @@
                                    :route-name :healthy-check]
                                   ["/auth" :post (conj common-interceptors
                                                        (interceptors.common/components-interceptor components)
-                                                       diplomatic.http-server.auth/auth)
+                                                       diplomatic.http-server.auth/authenticate-user!)
                                    :route-name :auth]
                                   ["/user" :post (conj common-interceptors
                                                        (interceptors.common/components-interceptor components)

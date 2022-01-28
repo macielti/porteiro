@@ -82,13 +82,13 @@
 
       (is (match? {:status 200
                    :body   {:token string?}}
-                  (http/auth (assoc fixtures.user/user-auth :password (:newPassword fixtures.user/password-update))
-                             service-fn)))
+                  (http/authenticate-user! (assoc fixtures.user/user-auth :password (:newPassword fixtures.user/password-update))
+                                           service-fn)))
 
       (is (match? {:status 403
                    :body   {:cause "Wrong username or/and password"}}
-                  (http/auth fixtures.user/user-auth
-                             service-fn)))
+                  (http/authenticate-user! fixtures.user/user-auth
+                                           service-fn)))
 
       (component/stop system)))
 

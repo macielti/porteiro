@@ -15,11 +15,11 @@
     {:status status
      :body   (json/decode body true)}))
 
-(defn auth
+(defn authenticate-user!
   [auth
    service-fn]
   (let [{:keys [body status]} (test/response-for service-fn
-                                                 :post "/auth"
+                                                 :post "/users/auth"
                                                  :headers {"Content-Type" "application/json"}
                                                  :body (json/encode auth))]
     {:status status
@@ -35,7 +35,7 @@
 (defn update-password!
   [password-update token service-fn]
   (let [{:keys [body status]} (test/response-for service-fn
-                                                 :put "/user/password"
+                                                 :put "/users/password"
                                                  :headers {"Content-Type"  "application/json"
                                                            "Authorization" (str "Bearer " token)}
                                                  :body (json/encode password-update))]

@@ -34,10 +34,11 @@
     (component/stop system)))
 
 (deftest update-password-test
-  (let [system     (components/start-system!)
-        service-fn (-> system :server :server :io.pedestal.http/service-fn)
+  (let [system     (component/start components/system-test)
+        service-fn (-> (component.helper/get-component-content :service system)
+                       :io.pedestal.http/service-fn)
         _          (http/create-user! fixtures.user/user service-fn)
-        {{:keys [token]} :body} (http/auth fixtures.user/user-auth service-fn)]
+        {{:keys [token]} :body} (http/authenticate-user! fixtures.user/user-auth service-fn)]
 
     (testing "that we can update password"
       (is (match? {:status 204

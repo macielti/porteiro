@@ -9,7 +9,7 @@
   :exclusions [log4j]
 
   :dependencies [[io.pedestal/pedestal.service-tools "0.5.10"]
-                 [net.clojars.macielti/common-clj "5.11.6"]
+                 [net.clojars.macielti/common-clj "5.11.7"]
                  [de.ubercode.clostache/clostache "1.4.0"]
                  [ch.qos.logback/logback-classic "1.2.10"]
                  [org.apache.kafka/kafka-clients "2.8.0"]

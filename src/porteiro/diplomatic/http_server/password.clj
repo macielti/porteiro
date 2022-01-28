@@ -2,7 +2,8 @@
   (:require [schema.core :as s]
             [porteiro.controllers.password-reset :as controllers.password-reset]
             [porteiro.controllers.user :as controllers.user]
-            [porteiro.adapters.user :as adapters.user]))
+            [porteiro.adapters.user :as adapters.user]
+            [taoensso.timbre :as timbre]))
 
 (s/defn consolidate-reset-password!
   [{password-reset    :json-params
@@ -23,5 +24,7 @@
   [{password-update   :json-params
     {:keys [datomic]} :components
     {:keys [id]}      :user-identity}]
-  (controllers.user/update-password! (adapters.user/wire->password-update-internal password-update) id datomic)
+  (controllers.user/update-password! (adapters.user/wire->password-update-internal (timbre/spy password-update))
+                                     id
+                                     (:connection datomic))
   {:status 204 :body nil})

@@ -45,7 +45,7 @@
 (defn reset-password!
   [password-reset service-fn]
   (let [{:keys [body status]} (test/response-for service-fn
-                                                 :post "/user/password-reset"
+                                                 :post "/users/password-reset"
                                                  :headers {"Content-Type" "application/json"}
                                                  :body (json/encode password-reset))]
     {:status status

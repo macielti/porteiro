@@ -11,4 +11,5 @@
                               diplomatic.http-server.user/create-user!] :route-name :create-user]
              ["/users/auth" :post diplomatic.http-server.auth/authenticate-user! :route-name :user-authentication]
              ["/users/password" :put [interceptors.user/auth-interceptor
-                                      diplomatic.http-server.password/update-password!] :route-name :password-update]])
+                                      diplomatic.http-server.password/update-password!] :route-name :password-update]
+             ["/users/password-reset" :post diplomatic.http-server.password/reset-password! :route-name :password-reset]])

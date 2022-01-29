@@ -22,10 +22,11 @@
                         {:status 422
                          :cause  (get-in (h/ex->err e) [:unknown :error])}))))))
 
-(s/defn wire->password-reset-internal :- wire.in.user/PasswordReset
-  [password-reset :- wire.in.user/PasswordReset]
+(s/defn wire->password-reset-internal :- models.user/PasswordReset
+  [{:keys [email] :as password-reset} :- wire.in.user/PasswordReset]
   (try
     (s/validate wire.in.user/PasswordReset password-reset)
+    #:password-reset {:email email}
     (catch ExceptionInfo e
       (if (= (-> e ex-data :type)
              :schema.core/error)

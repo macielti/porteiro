@@ -26,8 +26,8 @@
                       {:status 403
                        :reason "The old password you have entered is incorrect"})))))
 
-(s/defn reset-password!                                     ;TODO: Refactor this operation name to request-password-solicitation
-  [{:keys [email] :as password-reset} :- wire.in.user/PasswordReset
+(s/defn reset-password!
+  [{:password-reset/keys [email]} :- models.user/PasswordReset
    producer
    datomic]
   (let [{:user/keys [id email] :as user} (datomic.user/by-email email datomic)

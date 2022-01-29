@@ -6,13 +6,14 @@
   (ex-info "Invalid/Expired password reset token" {:status 401
                                                    :reason "Invalid/Expired password reset token"}))
 
-(def valid-password-reset-consolidation-token
-  {:name  ::valid-password-reset-consolidation-token
-   :enter (fn [{{password-reset :json-params
-                 {:keys [datomic]}                  :components} :request :as context}]
-            (let [reset-password (datomic.password-reset/valid-and-free-password-reset-by-token
-                                   (adapters.password-reset/wire->password-reset-consolidation-internal password-reset)
-                                   datomic)]
+(def valid-password-reset-execution-token
+  {:name  ::valid-password-reset-execution-token
+   :enter (fn [{{password-reset    :json-params
+                 {:keys [datomic]} :components} :request :as context}]
+            (let [reset-password (datomic.password-reset/valid-password-reset-by-token
+                                   (-> (adapters.password-reset/wire->password-reset-execution-internal password-reset)
+                                       :password-reset-execution/token)
+                                   (:connection datomic))]
               (if (empty? reset-password)
                 (throw invalid-password-reset-token-exception)))
             context)})

@@ -46,8 +46,8 @@
                                    :route-name :reset-password]
                                   ["/user/password-reset" :put (conj common-interceptors
                                                                      (interceptors.common/components-interceptor components)
-                                                                     interceptors.password-reset/valid-password-reset-consolidation-token
-                                                                     diplomatic.http-server.password/consolidate-reset-password!)
+                                                                     interceptors.password-reset/valid-password-reset-execution-token
+                                                                     diplomatic.http-server.password/execute-reset-password!)
                                    :route-name :consolidate-password-reset]})]
       (assoc this :routes routes)))
 

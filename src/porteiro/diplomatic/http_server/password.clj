@@ -3,12 +3,13 @@
             [porteiro.controllers.password-reset :as controllers.password-reset]
             [porteiro.controllers.user :as controllers.user]
             [porteiro.adapters.user :as adapters.user]
-            [taoensso.timbre :as timbre]))
+            [porteiro.adapters.password-reset :as adapters.password-reset]))
 
-(s/defn consolidate-reset-password!
+(s/defn execute-reset-password!
   [{password-reset    :json-params
     {:keys [datomic]} :components}]
-  (controllers.password-reset/consolidate-password-reset! password-reset datomic)
+  (controllers.password-reset/execute-password-reset! (adapters.password-reset/wire->password-reset-execution-internal password-reset)
+                                                      (:connection datomic))
   {:status 204 :body nil})
 
 (s/defn reset-password!

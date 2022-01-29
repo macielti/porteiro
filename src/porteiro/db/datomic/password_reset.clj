@@ -1,9 +1,8 @@
 (ns porteiro.db.datomic.password-reset
-  (:require [porteiro.wire.datomic.password-reset :as wire.datomic.password-reset]
-            [porteiro.models.password-reset :as models.password]
+  (:require [schema.core :as s]
             [clj-time.coerce :as c]
-            [schema.core :as s]
-            [datomic.api :as d])
+            [datomic.api :as d]
+            [porteiro.wire.datomic.password-reset :as wire.datomic.password-reset])
   (:import (java.util Date)))
 
 (s/defn insert! :- wire.datomic.password-reset/PasswordReset
@@ -12,8 +11,8 @@
   (d/transact datomic [password-reset])
   password-reset)
 
-(s/defn valid-and-free-password-reset-by-token
-  [{:keys [token]} :- models.password/PasswordResetConsolidation
+(s/defn valid-password-reset-by-token
+  [token :- uuid?
    datomic]
   (let [expiration (c/to-local-date (Date.))
         {:password-reset/keys [created-at] :as result} (-> (d/q '[:find (pull ?password-reset [*])
@@ -23,3 +22,4 @@
                                                            ffirst)]
     (when (= (c/to-local-date created-at) expiration)
       result)))
+;TODO: Make it into a password-reset-request

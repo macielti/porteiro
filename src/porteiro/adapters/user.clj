@@ -1,10 +1,10 @@
 (ns porteiro.adapters.user
   (:require [schema.core :as s]
             [humanize.schema :as h]
+            [buddy.hashers :as hashers]
             [porteiro.wire.in.user :as wire.in.user]
             [porteiro.wire.out.user :as wire.out.user]
             [porteiro.models.user :as models.user]
-            [buddy.hashers :as hashers]
             [porteiro.wire.datomic.password-reset :as wire.datomic.password-reset])
   (:import (java.util UUID Date)
            (clojure.lang ExceptionInfo)))
@@ -13,8 +13,8 @@
   [{:keys [oldPassword newPassword] :as password-update} :- wire.in.user/PasswordUpdate]
   (try
     (s/validate wire.in.user/PasswordUpdate password-update)
-    {:old-password oldPassword
-     :new-password newPassword}
+    #:password-update{:old-password oldPassword
+                      :new-password newPassword}
     (catch ExceptionInfo e
       (if (= (-> e ex-data :type)
              :schema.core/error)

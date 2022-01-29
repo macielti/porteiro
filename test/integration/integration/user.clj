@@ -1,5 +1,6 @@
 (ns integration.user
   (:require [clojure.test :refer :all]
+            [schema.test :as s]
             [matcher-combinators.test :refer [match?]]
             [com.stuartsierra.component :as component]
             [common-clj.component.helper.core :as component.helper]
@@ -46,21 +47,21 @@
                   (http/update-password! fixtures.user/password-update token service-fn))))
 
     (testing "that i can't update a password if the old one is incorrect"
-      (is (match? {:status 403,
-                   :body   {:cause "The old password you have entered is incorrect"}}
-                  (http/update-password! (assoc fixtures.user/password-update :oldPassword "wrong-old-password") token service-fn))))
+        (is (match? {:status 403,
+                     :body   {:cause "The old password you have entered is incorrect"}}
+                    (http/update-password! (assoc fixtures.user/password-update :oldPassword "wrong-old-password") token service-fn))))
 
     (testing "should return a nice and readable response in case of wrong input"
-      (is (match? {:status 422,
-                   :body   {:cause {:oldPassword "missing-required-key"}}}
-                  (http/update-password! (dissoc fixtures.user/password-update :oldPassword) token service-fn))))
+        (is (match? {:status 422,
+                     :body   {:cause {:oldPassword "missing-required-key"}}}
+                    (http/update-password! (dissoc fixtures.user/password-update :oldPassword) token service-fn))))
 
     ;TODO: This could be separated in to an isolated test for the auth interceptor
     ;but for now i think it is ok
     (testing "shouldn't be able to change update a password with a invalid jwt token"
-      (is (match? {:status 422
-                   :body   {:cause "Invalid token"}}
-                  (http/update-password! fixtures.user/password-update "invalid-jwt-token" service-fn))))
+        (is (match? {:status 422
+                     :body   {:cause "Invalid token"}}
+                    (http/update-password! fixtures.user/password-update "invalid-jwt-token" service-fn))))
 
     (component/stop system)))
 

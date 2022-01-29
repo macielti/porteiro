@@ -9,5 +9,5 @@
 
 (s/defschema PasswordUpdate
   "Schema for password update"
-  {:old-password s/Str
-   :new-password s/Str})
+  #:password-udate {:old-password s/Str
+                    :new-password s/Str})

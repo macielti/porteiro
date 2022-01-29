@@ -14,7 +14,7 @@
   (datomic.user/insert! user datomic))
 
 (s/defn update-password!
-  [{:keys [old-password new-password] :as password-update} :- models.user/PasswordUpdate
+  [{:password-update/keys [old-password new-password] :as password-update} :- models.user/PasswordUpdate
    user-id :- s/Uuid
    datomic]
   (let [{:user/keys [hashed-password] :as user-datomic} (datomic.user/by-id user-id datomic)]

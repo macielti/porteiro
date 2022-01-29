@@ -1,10 +1,8 @@
 (ns porteiro.interceptors.user
-  (:use [clojure pprint])
-  (:require [porteiro.db.datomic.user :as datomic.user]
+  (:require [clojure.string :as str]
+            [porteiro.db.datomic.user :as datomic.user]
             [porteiro.db.datomic.session :as datomic.session]
-            [porteiro.adapters.auth :as adapters.auth]
-            [clojure.string :as str]
-            [taoensso.timbre :as timbre]))
+            [porteiro.adapters.auth :as adapters.auth]))
 
 (def username-already-in-use-interceptor
   {:name  ::user-already-in-use-interceptor
@@ -25,5 +23,5 @@
                                          (str/split #" ")
                                          last)
                             {:keys [id]} (adapters.auth/decoded-jwt jw-token)
-                            {:session/keys [secret]} (datomic.session/valid-session-by-user-id id datomic)]
+                            {:session/keys [secret]} (datomic.session/valid-session-by-user-id id (:connection datomic))]
                         (adapters.auth/jwt-wire->internal jw-token (str secret)))))})

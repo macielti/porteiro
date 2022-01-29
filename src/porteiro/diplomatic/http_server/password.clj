@@ -24,7 +24,7 @@
   [{password-update   :json-params
     {:keys [datomic]} :components
     {:keys [id]}      :user-identity}]
-  (controllers.user/update-password! (adapters.user/wire->password-update-internal (timbre/spy password-update))
+  (controllers.user/update-password! (adapters.user/wire->password-update-internal password-update)
                                      id
                                      (:connection datomic))
   {:status 204 :body nil})

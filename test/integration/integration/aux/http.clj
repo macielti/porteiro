@@ -9,33 +9,33 @@
   [user
    service-fn]
   (let [{:keys [body status]} (test/response-for service-fn
-                                                 :post "/user"
+                                                 :post "/users"
                                                  :headers {"Content-Type" "application/json"}
                                                  :body (json/encode user))]
     {:status status
      :body   (json/decode body true)}))
 
-(defn auth
+(defn authenticate-user!
   [auth
    service-fn]
   (let [{:keys [body status]} (test/response-for service-fn
-                                                 :post "/auth"
+                                                 :post "/users/auth"
                                                  :headers {"Content-Type" "application/json"}
                                                  :body (json/encode auth))]
     {:status status
      :body   (json/decode body true)}))
 
-(defn healthy-check
+(defn health-check
   [service-fn]
   (let [{:keys [body status]} (test/response-for service-fn
-                                                 :get "/healthy")]
+                                                 :get "/health")]
     {:status status
      :body   (json/decode body true)}))
 
 (defn update-password!
   [password-update token service-fn]
   (let [{:keys [body status]} (test/response-for service-fn
-                                                 :put "/user/password"
+                                                 :put "/users/password"
                                                  :headers {"Content-Type"  "application/json"
                                                            "Authorization" (str "Bearer " token)}
                                                  :body (json/encode password-update))]
@@ -45,16 +45,16 @@
 (defn reset-password!
   [password-reset service-fn]
   (let [{:keys [body status]} (test/response-for service-fn
-                                                 :post "/user/password-reset"
+                                                 :post "/users/password-reset"
                                                  :headers {"Content-Type" "application/json"}
                                                  :body (json/encode password-reset))]
     {:status status
      :body   (json/decode body true)}))
 
-(defn consolidate-reset-password!
+(defn execute-reset-password!
   [password-reset service-fn]
   (let [{:keys [status]} (test/response-for service-fn
-                                            :put "/user/password-reset"
+                                            :put "/users/password-reset"
                                             :headers {"Content-Type" "application/json"}
                                             :body (json/encode password-reset))]
     {:status status

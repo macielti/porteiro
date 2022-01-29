@@ -1,6 +1,5 @@
 (ns porteiro.controllers.user
   (:require [schema.core :as s]
-            [porteiro.wire.datomic.user :as wire.datomic.user]
             [porteiro.wire.in.user :as wire.in.user]
             [porteiro.adapters.user :as adapters.user]
             [porteiro.db.datomic.user :as datomic.user]
@@ -9,17 +8,13 @@
             [porteiro.diplomatic.producer :as diplomatic.producer]
             [buddy.hashers :as hashers]))
 
-(s/defn create-user! :- wire.datomic.user/User
-  [user :- wire.in.user/User
+(s/defn create-user! :- models.user/User
+  [user :- models.user/User
    datomic]
-  (-> user
-      adapters.user/wire->create-user-internal
-      adapters.user/internal->create-user-datomic
-      (datomic.user/insert! datomic)
-      adapters.user/datomic->wire))
+  (datomic.user/insert! user datomic))
 
 (s/defn update-password!
-  [{:keys [old-password new-password] :as password-update} :- models.user/PasswordUpdate
+  [{:password-update/keys [old-password new-password] :as password-update} :- models.user/PasswordUpdate
    user-id :- s/Uuid
    datomic]
   (let [{:user/keys [hashed-password] :as user-datomic} (datomic.user/by-id user-id datomic)]
@@ -31,8 +26,8 @@
                       {:status 403
                        :reason "The old password you have entered is incorrect"})))))
 
-(s/defn reset-password!                                     ;TODO: Refactor this operation name to request-password-solicitation
-  [{:keys [email] :as password-reset} :- wire.in.user/PasswordReset
+(s/defn reset-password!
+  [{:password-reset/keys [email]} :- models.user/PasswordReset
    producer
    datomic]
   (let [{:user/keys [id email] :as user} (datomic.user/by-email email datomic)

@@ -5,7 +5,7 @@
   (:import (com.stuartsierra.component SystemMap)))
 
 (deftest start-system!-test
-  (let [system (components/start-system!)]
+  (let [system (component/start components/system-test)]
 
     (testing "that the client is able to verify if the server is up with a get request"
       (is (= SystemMap

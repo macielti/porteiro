@@ -20,10 +20,3 @@
     :db/valueType   :db.type/string
     :db/cardinality :db.cardinality/one
     :db/doc         "Hashed password"}])
-
-(s/defschema User
-  "Schema to represents a user entity"
-  #:user {:id       s/Uuid
-          :username s/Str
-          :email    s/Str
-          :hashed-password s/Str})

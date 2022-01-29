@@ -20,7 +20,7 @@
                          {:exp (-> (t/plus (t/now) (t/days 1))
                                    c/to-timestamp)}))
 
-(s/deftest wire->internal-test
+(s/deftest wire->internal-user-auth-test
   (testing "that we can verify the user schema input from outside"
     (is (= {:user-auth/password "a-very-strong-password"
             :user-auth/username "ednaldo-pereira"}

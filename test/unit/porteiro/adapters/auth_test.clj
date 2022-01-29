@@ -1,15 +1,13 @@
 (ns porteiro.adapters.auth-test
   (:require [clojure.test :refer :all]
-            [porteiro.adapters.auth :as adapters.auth]
-            [matcher-combinators.test :refer [match?]]
             [schema.test :as s]
             [buddy.sign.jwt :as jwt]
             [clj-time.coerce :as c]
-            [clj-time.core :as t])
+            [clj-time.core :as t]
+            [matcher-combinators.test :refer [match?]]
+            [porteiro.adapters.auth :as adapters.auth])
   (:import (clojure.lang ExceptionInfo)
            (java.util UUID)))
-
-(use-fixtures :once s/validate-schemas)
 
 (def jwt-secret "ey5CWUnp9YvYmsZZ66J1IM90LOzuP721")
 (def jw-token-wire (str "Bearer eyJhbGciOiJIUzI1NiJ9.eyJpZCI6IjM4ZDQwYWFjLWI3YmUtNDFjMC04ZDU2LTRlOGJiYWMx"
@@ -24,13 +22,13 @@
 
 (s/deftest wire->internal-test
   (testing "that we can verify the user schema input from outside"
-    (is (= {:username "ednaldo-pereira"
-            :password "a-very-strong-password"}
-           (adapters.auth/wire->internal {:username "ednaldo-pereira"
-                                          :password "a-very-strong-password"}))))
+    (is (= {:user-auth/password "a-very-strong-password"
+            :user-auth/username "ednaldo-pereira"}
+           (adapters.auth/wire->internal-user-auth {:username "ednaldo-pereira"
+                                                    :password "a-very-strong-password"}))))
   (testing "that a invalid input will throws a exception"
-    (is (thrown? ExceptionInfo (adapters.auth/wire->internal {:username "ednaldo-pereira"
-                                                              :name     "Ednaldo Pereira"})))))
+    (is (thrown? ExceptionInfo (adapters.auth/wire->internal-user-auth {:username "ednaldo-pereira"
+                                                                        :name     "Ednaldo Pereira"})))))
 (s/deftest jwt-wire->internal-test
   (testing "that we can internalize jwt tokens"
     (is (match? {:id       uuid?

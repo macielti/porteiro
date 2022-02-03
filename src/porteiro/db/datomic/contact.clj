@@ -11,8 +11,8 @@
 (s/defn by-user-id :- (s/maybe models.contact/Contact)
   [user-id :- s/Uuid
    datomic]
-  (-> (d/q '[:find (pull ?contact [*])
-             :in $ ?user-id
-             :where [?contact :contact/user-id ?user-id]] (d/db datomic) user-id)
-      (map first)
-      (map #(dissoc % :db/id))))
+  (some-> (d/q '[:find (pull ?contact [*])
+                 :in $ ?user-id
+                 :where [?contact :contact/user-id ?user-id]] (d/db datomic) user-id)
+          (->> (map first))
+          (->> (map #(dissoc % :db/id)))))

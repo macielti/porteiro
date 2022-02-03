@@ -5,11 +5,11 @@
   (:import (java.util UUID Date)))
 
 (defmulti wire->internal-contact
-          (fn [{:keys type} :- wire.in.contact/Contact]
+          (s/fn [{:keys [type]} :- wire.in.contact/Contact]
             (keyword type)))
 
 (s/defmethod wire->internal-contact :email :- models.contact/EmailContact
-             [{:keys [user-id email]}]
+             [{:keys [user-id email]} :- wire.in.contact/EmailContact]
              {:contact/id         (UUID/randomUUID)
               :contact/user-id    (UUID/fromString user-id)
               :contact/type       :email
@@ -17,9 +17,9 @@
               :contact/created-at (Date.)})
 
 (s/defmethod wire->internal-contact :telegram :- models.contact/TelegramContact
-             [{:keys [user-id chat-id]}]
+             [{:keys [user-id chat-id]} :- wire.in.contact/TelegramContact]
              {:contact/id         (UUID/randomUUID)
               :contact/user-id    (UUID/fromString user-id)
               :contact/type       :telegram
-              :contact/email      chat-id
+              :contact/chat-id    chat-id
               :contact/created-at (Date.)})

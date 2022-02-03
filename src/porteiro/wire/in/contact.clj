@@ -8,7 +8,7 @@
   {:user-id s/Str
    :type    Type})
 
-(s/defschema Contact (abstract-map/abstract-map-schema :contact/type
+(s/defschema Contact (abstract-map/abstract-map-schema :type
                                                        base-contact))
 
 (abstract-map/extend-schema TelegramContact Contact ["telegram"]

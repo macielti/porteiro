@@ -9,7 +9,7 @@
   :exclusions [log4j]
 
   :dependencies [[io.pedestal/pedestal.service-tools "0.5.10"]
-                 [net.clojars.macielti/common-clj "5.11.7"]
+                 [net.clojars.macielti/common-clj "6.12.7"]
                  [de.ubercode.clostache/clostache "1.4.0"]
                  [ch.qos.logback/logback-classic "1.2.10"]
                  [org.apache.kafka/kafka-clients "2.8.0"]
@@ -27,7 +27,7 @@
                  [camel-snake-kebab "0.4.2"]
                  [buddy/buddy-sign "3.4.1"]
                  [siili/humanize "0.1.1"]
-                 [cheshire "5.10.1"]
+                 [cheshire "5.10.2"]
                  [environ "1.2.0"]]
 
   :resource-paths ["resources"]

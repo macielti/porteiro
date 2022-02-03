@@ -20,3 +20,8 @@
     :db/valueType   :db.type/string
     :db/cardinality :db.cardinality/one
     :db/doc         "Hashed password"}])
+
+(s/defschema User
+  #:user {:id              s/Uuid
+          :username        s/Str
+          :hashed-password s/Str})

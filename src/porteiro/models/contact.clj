@@ -2,10 +2,12 @@
   (:require [schema.core :as s]
             [schema.experimental.abstract-map :as abstract-map]))
 
+(def Type (s/enum :email :telegram))
+
 (def base-contact
   {:contact/id         s/Uuid
    :contact/user-id    s/Uuid
-   :contact/type       (s/enum :email :telegram)
+   :contact/type       Type
    :contact/created-at s/Inst})
 
 (s/defschema Contact (abstract-map/abstract-map-schema :contact/type

@@ -1,16 +1,18 @@
 (ns porteiro.controllers.user
   (:require [schema.core :as s]
-            [porteiro.wire.in.user :as wire.in.user]
             [porteiro.adapters.user :as adapters.user]
             [porteiro.db.datomic.user :as datomic.user]
+            [porteiro.wire.datomic.user :as wire.datomic.user]
             [porteiro.models.user :as models.user]
             [porteiro.db.datomic.password-reset :as datomic.password-reset]
             [porteiro.diplomatic.producer :as diplomatic.producer]
             [buddy.hashers :as hashers]))
 
 (s/defn create-user! :- models.user/User
-  [user :- models.user/User
-   datomic]
+  [user :- wire.datomic.user/User
+   email :- s/Str
+   datomic
+   producer]
   (datomic.user/insert! user datomic))
 
 (s/defn update-password!

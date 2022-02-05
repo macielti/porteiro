@@ -33,7 +33,7 @@
    email :- s/Str
    producer]
   (kafka.producer/produce! {:topic   :porteiro/create-contact
-                            :message {:user-id id
+                            :message {:user-id (str id)
                                       :type    :email
                                       :email   email}}
                            producer))

@@ -2,9 +2,10 @@
   (:require [clojure.test :refer :all]
             [integration.aux.http :as http]
             [matcher-combinators.test :refer [match?]]
+            [matcher-combinators.matchers :as m]
             [com.stuartsierra.component :as component]
             [common-clj.component.helper.core :as component.helper]
-            [common-clj.component.kafka.producer :as kafka.producer]
+            [common-clj.component.kafka.consumer :as kafka.consumer]
             [porteiro.components :as components]
             [fixtures.user]))
 
@@ -15,6 +16,8 @@
         _          (http/create-user! fixtures.user/user
                                       service-fn)]
 
+    (Thread/sleep 5000)
+
     (testing "that users can be authenticated"
       (is (match? {:status 200
                    :body   {:token string?}}
@@ -22,11 +25,12 @@
                                            service-fn))))
 
     (testing "that successful authentication notifications the user"
-      (is (match? [{:topic :notification
-                    :value {:email   (:email fixtures.user/user)
-                            :title   "Authentication Confirmation"
-                            :content string?}}]
-                  (kafka.producer/mock-produced-messages kafka-producer))))
+      (is (match? (m/in-any-order [{:topic   :notification
+                                    :message {:email   (:email fixtures.user/user)
+                                              :title   "Authentication Confirmation"
+                                              :content string?}}])
+                  (filter #(= (:topic %) :notification)
+                          (kafka.consumer/produced-messages kafka-producer)))))
 
     (testing "that users can't be authenticated with wrong credentials"
       (is (match? {:status 403

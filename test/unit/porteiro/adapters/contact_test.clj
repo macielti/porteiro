@@ -7,15 +7,17 @@
 
 (s/deftest wire->internal-contact
   (testing "that we can internalize a contact"
-    (is (match? {:contact/chat-id    "123456789"
-                 :contact/created-at inst?
+    (is (match? {:contact/user-id    uuid?
                  :contact/id         uuid?
                  :contact/type       :telegram
-                 :contact/user-id    uuid?}
+                 :contact/chat-id    "123456789"
+                 :contact/status     :active
+                 :contact/created-at inst?}
                 (adapters.contact/wire->internal-contact fixtures.contact/wire-telegram-contact)))
-    (is (match? {:contact/email      "test@example.com"
-                 :contact/created-at inst?
+    (is (match? {:contact/user-id    uuid?
                  :contact/id         uuid?
                  :contact/type       :email
-                 :contact/user-id    uuid?}
+                 :contact/email      "test@example.com"
+                 :contact/status     :active
+                 :contact/created-at inst?}
                 (adapters.contact/wire->internal-contact fixtures.contact/wire-email-contact)))))

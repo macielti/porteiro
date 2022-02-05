@@ -7,6 +7,11 @@
           :email           s/Str
           :hashed-password s/Str})
 
+(s/defschema UserWithoutEmail
+  #:user {:id              s/Uuid
+          :username        s/Str
+          :hashed-password s/Str})
+
 (s/defschema PasswordUpdate
   "Schema for password update"
   #:password-update {:old-password s/Str

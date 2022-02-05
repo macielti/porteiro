@@ -15,6 +15,16 @@
     {:status status
      :body   (json/decode body true)}))
 
+(defn fetch-contacts
+  [token
+   service-fn]
+  (let [{:keys [body status]} (test/response-for service-fn
+                                                 :get "/users/contacts"
+                                                 :headers {"Content-Type"  "application/json"
+                                                           "Authorization" (str "Bearer " token)})]
+    {:status status
+     :body   (json/decode body true)}))
+
 (defn authenticate-user!
   [auth
    service-fn]

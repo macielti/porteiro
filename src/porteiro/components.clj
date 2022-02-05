@@ -26,7 +26,7 @@
   (component/system-map
     :config (component.config/new-config "resources/config.json" :test)
     :datomic (component/using (component.datomic/new-datomic database.config/schemas) [:config])
-    :consumer (component/using (component.consumer/new-consumer diplomatic.consumer/topic-consumers) [:config :datomic])
-    :producer (component/using (component.producer/new-mock-producer) [:consumer])
+    :consumer (component/using (component.consumer/new-mock-consumer diplomatic.consumer/topic-consumers) [:config :datomic])
+    :producer (component/using (component.producer/new-mock-producer) [:consumer :config])
     :routes (component/using (component.routes/new-routes diplomatic.http-server/routes) [:datomic :config])
     :service (component/using (component.service/new-service) [:routes :config :datomic :producer])))

@@ -7,6 +7,5 @@
 (def schemas (concat []
                      wire.datomic.user/user
                      wire.datomic.contact/contact
-                     wire.datomic.contact/contact-update-passport
                      wire.datomic.password-reset/password-reset
                      wire.datomic.session/session))

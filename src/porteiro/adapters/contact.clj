@@ -13,6 +13,7 @@
              {:contact/id         (UUID/randomUUID)
               :contact/user-id    (UUID/fromString user-id)
               :contact/type       :email
+              :contact/status     :active
               :contact/email      email
               :contact/created-at (Date.)})
 
@@ -21,5 +22,6 @@
              {:contact/id         (UUID/randomUUID)
               :contact/user-id    (UUID/fromString user-id)
               :contact/type       :telegram
+              :contact/status     :active
               :contact/chat-id    chat-id
               :contact/created-at (Date.)})

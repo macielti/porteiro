@@ -5,9 +5,9 @@
             [porteiro.wire.in.contact :as wire.in.contact]))
 
 (s/defn create-contact!
-  [{:keys [value]}
+  [{:keys [message]}
    {:keys [datomic]}]
-  (let [contact (adapters.contact/wire->internal-contact value)]
+  (let [contact (adapters.contact/wire->internal-contact message)]
     (datomic.contact/insert! contact (:connection datomic))))
 
 (def topic-consumers

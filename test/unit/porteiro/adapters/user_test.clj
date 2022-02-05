@@ -26,8 +26,8 @@
                  :email    "example@example.com"}
                 (adapters.user/internal-user->wire #:user{:id              (UUID/randomUUID)
                                                           :username        "ednaldo-pereira"
-                                                          :email           "example@example.com"
-                                                          :hashed-password ""})))))
+                                                          :hashed-password ""}
+                                                   "example@example.com")))))
 
 (s/deftest wire->password-update-internal-test
   (testing "that we can internalise the password update input"

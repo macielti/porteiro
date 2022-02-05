@@ -62,7 +62,8 @@
   (dissoc user :user/email))
 
 (s/defn internal-user->wire :- wire.out.user/User
-  [{:user/keys [id username email]} :- models.user/User]
+  [{:user/keys [id username]} :- models.user/UserWithoutEmail
+   email :- s/Str]
   {:id       (str id)
    :username username
    :email    email})

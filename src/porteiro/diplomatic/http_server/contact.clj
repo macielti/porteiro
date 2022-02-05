@@ -6,4 +6,4 @@
   [{{:keys [id]}      :user-identity
     {:keys [datomic]} :components}]
   {:status 200
-   :body   (controllers.contact/fetch-contacts id datomic)})
+   :body   (controllers.contact/fetch-contacts id (:connection datomic))})

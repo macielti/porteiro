@@ -20,6 +20,7 @@
       (is (match? [{:contact/id         uuid?
                     :contact/user-id    fixtures.user/user-id
                     :contact/chat-id    "123456789"
+                    :contact/status     :active
                     :contact/type       :telegram
                     :contact/created-at inst?}]
                   (database.contact/by-user-id fixtures.user/user-id mock-datomic))))))

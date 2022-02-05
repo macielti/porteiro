@@ -10,6 +10,7 @@
 (def datomic-telegram-contact
   {:contact/chat-id    "123456789"
    :contact/created-at (Date.)
+   :contact/status     :active
    :contact/id         (UUID/randomUUID)
    :contact/type       :telegram
    :contact/user-id    fixtures.user/user-id})

@@ -13,6 +13,7 @@
    datomic]
   (some-> (d/q '[:find (pull ?contact [*])
                  :in $ ?user-id
-                 :where [?contact :contact/user-id ?user-id]] (d/db datomic) user-id)
-          (->> (map first))
-          (->> (map #(dissoc % :db/id)))))
+                 :where [?contact :contact/user-id ?user-id]
+                        [?contact :contact/status :active]] (d/db datomic) user-id)
+          (->> (mapv first))
+          (->> (mapv #(dissoc % :db/id)))))

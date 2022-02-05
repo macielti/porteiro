@@ -11,5 +11,5 @@
     (datomic.contact/insert! contact (:connection datomic))))
 
 (def topic-consumers
-  {:porteiro/create-contact {:schema  wire.in.contact/Contact
+  {:porteiro.create-contact {:schema  wire.in.contact/Contact
                              :handler create-contact!}})

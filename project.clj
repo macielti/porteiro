@@ -8,7 +8,9 @@
 
   :exclusions [log4j]
 
-  :dependencies [[io.pedestal/pedestal.service-tools "0.5.10"]
+  :dependencies [[org.clojure/clojure "1.10.3"]
+                 [ch.qos.logback/logback-classic "1.2.10"]
+                 [io.pedestal/pedestal.service-tools "0.5.10"]
                  [net.clojars.macielti/common-clj "7.12.8"]
                  [de.ubercode.clostache/clostache "1.4.0"]
                  [org.apache.kafka/kafka-clients "2.8.0"]
@@ -19,7 +21,6 @@
                  [com.stuartsierra/component "1.0.0"]
                  [nubank/matcher-combinators "3.3.1"]
                  [fundingcircle/jackdaw "0.9.3"]
-                 [org.clojure/clojure "1.10.3"]
                  [buddy/buddy-hashers "1.8.1"]
                  [prismatic/schema "1.2.0"]
                  [camel-snake-kebab "0.4.2"]

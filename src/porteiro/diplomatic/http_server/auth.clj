@@ -1,8 +1,7 @@
 (ns porteiro.diplomatic.http-server.auth
   (:require [schema.core :as s]
             [porteiro.adapters.auth :as adapters.auth]
-            [porteiro.controllers.auth :as controllers.auth]
-            [taoensso.timbre :as timbre]))
+            [porteiro.controllers.auth :as controllers.auth]))
 
 (s/defn authenticate-user!
   [{auth                       :json-params

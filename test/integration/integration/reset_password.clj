@@ -3,7 +3,7 @@
             [matcher-combinators.test :refer [match?]]
             [com.stuartsierra.component :as component]
             [common-clj.component.helper.core :as component.helper]
-            [common-clj.component.kafka.producer :as kafka.producer]
+            [common-clj.component.kafka.consumer :as kafka.consumer]
             [integration.aux.http :as http]
             [porteiro.components :as components]
             [fixtures.user]))
@@ -27,16 +27,19 @@
           service-fn (-> (component.helper/get-component-content :service system) :io.pedestal.http/service-fn)
           {{:keys [email]} :body} (http/create-user! fixtures.user/user service-fn)]
 
+      (Thread/sleep 5000)
+
       (is (match? {:status 202
                    :body   {:message
                             "If you email is on our system, you should receive a password reset link soon"}}
                   (http/reset-password! {:email email} service-fn)))
 
-      (is (match? [{:topic :notification
-                    :value {:email   email
-                            :title   "Password Reset Solicitation"
-                            :content string?}}]
-                  (kafka.producer/mock-produced-messages kafka-producer)))
+      (is (match? [{:topic   :notification
+                    :message {:email   email
+                              :title   "Password Reset Solicitation"
+                              :content string?}}]
+                  (filter #(= (:topic %) :notification)
+                          (kafka.consumer/produced-messages kafka-producer))))
 
       (component/stop system)))
 
@@ -49,8 +52,10 @@
                             "If you email is on our system, you should receive a password reset link soon"}}
                   (http/reset-password! {:email "nonexistent@example.com"} service-fn)))
 
+      (Thread/sleep 5000)
+
       (is (match? []
-                  (kafka.producer/mock-produced-messages kafka-producer)))
+                  (kafka.consumer/produced-messages kafka-producer)))
 
       (component/stop system))))
 
@@ -70,8 +75,10 @@
     (let [{{kafka-producer :producer} :producer :as system} (component/start components/system-test)
           service-fn (-> (component.helper/get-component-content :service system) :io.pedestal.http/service-fn)
           {{:keys [email]} :body} (http/create-user! fixtures.user/user service-fn)
+          _          (Thread/sleep 5000)
           _          (http/reset-password! {:email email} service-fn)
-          {{:keys [password-reset-id]} :value} (first (kafka.producer/mock-produced-messages kafka-producer))]
+          {{:keys [password-reset-id]} :message} (first (filter #(= (:topic %) :notification)
+                                                                (kafka.consumer/produced-messages kafka-producer)))]
 
       (is (match? {:status 204
                    :body   nil?}
@@ -94,9 +101,12 @@
   (testing "that we can't utilize the same token to consolidate password reset a second time"
     (let [{{kafka-producer :producer} :producer :as system} (component/start components/system-test)
           service-fn (-> (component.helper/get-component-content :service system) :io.pedestal.http/service-fn)
+          consumer   (component.helper/get-component-content :consumer system)
           {{:keys [email]} :body} (http/create-user! fixtures.user/user service-fn)
+          _          (Thread/sleep 5000)
           _          (http/reset-password! {:email email} service-fn)
-          {{:keys [password-reset-id]} :value} (first (kafka.producer/mock-produced-messages kafka-producer))
+          {{:keys [password-reset-id]} :message} (first (filter #(= (:topic %) :notification)
+                                                                (kafka.consumer/produced-messages consumer)))
           _          (http/execute-reset-password! {:token       password-reset-id
                                                     :newPassword (:newPassword fixtures.user/password-update)}
                                                    service-fn)]

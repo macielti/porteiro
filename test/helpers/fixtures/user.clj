@@ -1,4 +1,8 @@
-(ns fixtures.user)
+(ns fixtures.user
+  (:import (java.util UUID)))
+
+(def user-id (UUID/randomUUID))
+(def wire-user-id (str (UUID/randomUUID)))
 
 (def user {:username "ednaldo-pereira"
            :email    "example@example.com"

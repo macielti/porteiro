@@ -17,13 +17,16 @@
              :where [?user :user/username ?username]] (d/db datomic) username)
       ffirst))
 
-(s/defn by-email :- models.user/User
+(s/defn by-email :- (s/maybe models.user/User)
   [email :- s/Str
    datomic]
-  (-> (d/q '[:find (pull ?user [*])
-             :in $ ?email
-             :where [?user :user/email ?email]] (d/db datomic) email)
-      ffirst))
+  (some-> (d/q '[:find (pull ?user [*])
+                 :in $ ?email
+                 :where [?contact :contact/email ?email]
+                 [?contact :contact/status :active]
+                 [?contact :contact/user-id ?user-id]
+                 [?user :user/id ?user-id]] (d/db datomic) email)
+          ffirst))
 
 (s/defn by-id :- models.user/User
   [user-id :- s/Uuid

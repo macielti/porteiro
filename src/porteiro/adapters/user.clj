@@ -5,7 +5,8 @@
             [porteiro.wire.in.user :as wire.in.user]
             [porteiro.wire.out.user :as wire.out.user]
             [porteiro.models.user :as models.user]
-            [porteiro.wire.datomic.password-reset :as wire.datomic.password-reset])
+            [porteiro.wire.datomic.password-reset :as wire.datomic.password-reset]
+            [porteiro.wire.datomic.user :as wire.datomic.user])
   (:import (java.util UUID Date)
            (clojure.lang ExceptionInfo)))
 
@@ -56,8 +57,13 @@
                         {:status 422
                          :cause  (get-in (h/ex->err e) [:unknown :error])}))))))
 
+(s/defn internal-user->wire-datomic-user :- wire.datomic.user/User
+  [user :- models.user/User]
+  (dissoc user :user/email))
+
 (s/defn internal-user->wire :- wire.out.user/User
-  [{:user/keys [id username email]} :- models.user/User]
+  [{:user/keys [id username]} :- models.user/UserWithoutEmail
+   email :- s/Str]
   {:id       (str id)
    :username username
    :email    email})

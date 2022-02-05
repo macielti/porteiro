@@ -3,6 +3,9 @@
     "datomicUri": "datomic:mem://example",
     "bootstrapServer": "http://localhost:9092",
     "passwordResetExpirationDays": 1,
+    "topics": [
+      "porteiro/create-contact"
+    ],
     "service": {
       "host": "0.0.0.0",
       "port": 8888
@@ -12,6 +15,9 @@
     "datomicUri": "datomic:mem://example",
     "bootstrapServer": "http://localhost:9092",
     "passwordResetExpirationDays": 1,
+    "topics": [
+      "porteiro/create-contact"
+    ],
     "service": {
       "host": "0.0.0.0",
       "port": 8888

@@ -1,10 +1,8 @@
 (ns porteiro.diplomatic.producer
   (:require [schema.core :as s]
-            [common-clj.component.kafka.producer :as kafka.producer]
             [clostache.parser :as parser]
-            [porteiro.wire.datomic.user :as wire.datomic.user]
-            [porteiro.models.contact :as models.contact]
-            [medley.core :as medley])
+            [common-clj.component.kafka.producer :as kafka.producer]
+            [porteiro.wire.datomic.user :as wire.datomic.user])
   (:import (java.util Date)))
 
 (s/defn send-password-reset-notification!
@@ -32,7 +30,7 @@
   [{:user/keys [id]} :- wire.datomic.user/User
    email :- s/Str
    producer]
-  (kafka.producer/produce! {:topic   :porteiro/create-contact
+  (kafka.producer/produce! {:topic   :porteiro.create-contact
                             :message {:user-id (str id)
                                       :type    :email
                                       :email   email}}

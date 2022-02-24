@@ -1,13 +1,20 @@
 (ns porteiro.db.datomic.user
   (:require [schema.core :as s]
             [datomic.api :as d]
-            [porteiro.models.user :as models.user]))
+            [porteiro.models.user :as models.user]
+            [porteiro.wire.datomic.user :as wire.datomic.user]))
 
 (s/defn insert! :- models.user/User
   [user :- models.user/User
    datomic]
   (d/transact datomic [user])
   user)
+
+(s/defn add-role!
+  [user-id :- s/Uuid
+   role :- wire.datomic.user/UserRoles
+   datomic-connection]
+  (d/transact datomic-connection [[:db/add [:user/id user-id] :user/roles role]]))
 
 (s/defn by-username :- (s/maybe models.user/User)
   [username :- s/Str
@@ -31,7 +38,8 @@
 (s/defn by-id :- models.user/User
   [user-id :- s/Uuid
    datomic]
-  (-> (d/q '[:find (pull ?e [:user/id :user/username :user/hashed-password])
+  (-> (d/q '[:find (pull ?e [*])
              :in $ ?user-id
              :where [?e :user/id ?user-id]] (d/db datomic) user-id)
-      ffirst))
+      ffirst
+      (dissoc :db/id)))

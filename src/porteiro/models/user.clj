@@ -6,8 +6,8 @@
   {:user/id                     s/Uuid
    :user/username               s/Str
    (s/optional-key :user/roles) wire.datomic.user/UserRoles
-   :user/email                  s/Str
-   :user/hashed-passsword       s/Str})
+   (s/optional-key :user/email) s/Str
+   :user/hashed-password        s/Str})
 
 (s/defschema User
   base-user)

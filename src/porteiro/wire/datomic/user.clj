@@ -25,12 +25,13 @@
     :db/cardinality :db.cardinality/one
     :db/doc         "Hashed password"}])
 
-(def roles [:admin])
+(def roles [:admin :test])
 
 (def UserRoles (apply s/enum roles))
 
 (s/defschema User
   {:user/id                     s/Uuid
    :user/username               s/Str
+   (s/optional-key :user/email) s/Str
    (s/optional-key :user/roles) [UserRoles]
    :user/hashed-password        s/Str})

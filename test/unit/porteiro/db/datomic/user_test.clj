@@ -23,3 +23,11 @@
       (is (match? {:user/roles [:admin]}
                   (database.user/by-id fixtures.user/user-id mock-datomic))))
     (d/release mock-datomic)))
+
+(deftest by-id-test
+  (let [mock-datomic (component.datomic/mocked-datomic database.config/schemas)]
+    (database.user/insert! fixtures.user/datomic-user mock-datomic)
+    (testing "that we can insert a contact entity"
+      (is (match? fixtures.user/datomic-user
+                  (database.user/by-id fixtures.user/user-id mock-datomic))))
+    (d/release mock-datomic)))

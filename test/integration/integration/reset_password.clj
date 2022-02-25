@@ -15,9 +15,8 @@
                          :io.pedestal.http/service-fn)]
 
       (is (match? {:status 422
-                   :body   {:cause
-                            {:email    "missing-required-key",
-                             :nonSense "disallowed-key"}}}
+                   :body   {:cause {:email    "missing-required-key"
+                                    :nonSense "disallowed-key"}}}
                   (http/reset-password! {:nonSense "hi lorena"}
                                         service-fn)))
 
@@ -25,7 +24,7 @@
   (testing "that reset password request will produce a message when existent"
     (let [{{kafka-producer :producer} :producer :as system} (component/start components/system-test)
           service-fn (-> (component.helper/get-component-content :service system) :io.pedestal.http/service-fn)
-          {{:keys [email]} :body} (http/create-user! fixtures.user/user service-fn)]
+          {{:keys [email]} :user} (:body (http/create-user! fixtures.user/user service-fn))]
 
       (Thread/sleep 5000)
 
@@ -74,7 +73,7 @@
   (testing "that we can consolidate the reset password solicitation"
     (let [{{kafka-producer :producer} :producer :as system} (component/start components/system-test)
           service-fn (-> (component.helper/get-component-content :service system) :io.pedestal.http/service-fn)
-          {{:keys [email]} :body} (http/create-user! fixtures.user/user service-fn)
+          {{:keys [email]} :user} (:body (http/create-user! fixtures.user/user service-fn))
           _          (Thread/sleep 5000)
           _          (http/reset-password! {:email email} service-fn)
           {{:keys [password-reset-id]} :message} (first (filter #(= (:topic %) :notification)
@@ -102,7 +101,7 @@
     (let [{{kafka-producer :producer} :producer :as system} (component/start components/system-test)
           service-fn (-> (component.helper/get-component-content :service system) :io.pedestal.http/service-fn)
           consumer   (component.helper/get-component-content :consumer system)
-          {{:keys [email]} :body} (http/create-user! fixtures.user/user service-fn)
+          {{:keys [email]} :user} (:body (http/create-user! fixtures.user/user service-fn))
           _          (Thread/sleep 5000)
           _          (http/reset-password! {:email email} service-fn)
           {{:keys [password-reset-id]} :message} (first (filter #(= (:topic %) :notification)

@@ -3,7 +3,8 @@
             [porteiro.controllers.password-reset :as controllers.password-reset]
             [porteiro.controllers.user :as controllers.user]
             [porteiro.adapters.user :as adapters.user]
-            [porteiro.adapters.password-reset :as adapters.password-reset]))
+            [porteiro.adapters.password-reset :as adapters.password-reset]
+            [taoensso.timbre :as timbre]))
 
 (s/defn execute-reset-password!
   [{password-reset    :json-params
@@ -15,9 +16,9 @@
 (s/defn reset-password!
   [{password-reset             :json-params
     {:keys [producer datomic]} :components}]
-  (controllers.user/reset-password! (adapters.user/wire->password-reset-internal password-reset)
-                                    producer
-                                    (:connection datomic))
+  (timbre/spy (controllers.user/reset-password! (adapters.user/wire->password-reset-internal password-reset)
+                                                producer
+                                                (:connection datomic)))
   {:status 202 :body {:message (str "If you email is on our system, you should "
                                     "receive a password reset link soon")}})
 

@@ -16,9 +16,9 @@
 (s/defn reset-password!
   [{password-reset             :json-params
     {:keys [producer datomic]} :components}]
-  (timbre/spy (controllers.user/reset-password! (adapters.user/wire->password-reset-internal password-reset)
-                                                producer
-                                                (:connection datomic)))
+  (controllers.user/reset-password! (adapters.user/wire->password-reset-internal password-reset)
+                                    producer
+                                    (:connection datomic))
   {:status 202 :body {:message (str "If you email is on our system, you should "
                                     "receive a password reset link soon")}})
 

@@ -1,5 +1,6 @@
 {
   "prod": {
+    "jwtSecret": "9837ed52-87b5-48c4-bd09-1cd06d18c1c5",
     "datomicUri": "datomic:mem://example",
     "bootstrapServer": "http://localhost:9092",
     "serviceName": "porteiro",
@@ -13,6 +14,7 @@
     }
   },
   "test": {
+    "jwtSecret": "9837ed52-87b5-48c4-bd09-1cd06d18c1c5",
     "datomicUri": "datomic:mem://example",
     "bootstrapServer": "http://localhost:9092",
     "serviceName": "porteiro",

@@ -6,7 +6,8 @@
             [porteiro.wire.out.user :as wire.out.user]
             [porteiro.models.user :as models.user]
             [porteiro.wire.datomic.password-reset :as wire.datomic.password-reset]
-            [porteiro.wire.datomic.user :as wire.datomic.user])
+            [porteiro.wire.datomic.user :as wire.datomic.user]
+            [camel-snake-kebab.core :as camel-snake-kebab])
   (:import (java.util UUID Date)
            (clojure.lang ExceptionInfo)))
 
@@ -61,9 +62,10 @@
   [user :- models.user/User]
   (dissoc user :user/email))
 
-(s/defn internal-user->wire :- wire.out.user/User
-  [{:user/keys [id username]} :- models.user/UserWithoutEmail
+(s/defn internal-user->wire :- wire.out.user/UserDocument
+  [{:user/keys [id username roles] :or {roles []}} :- models.user/UserWithoutEmail
    email :- s/Str]
-  {:id       (str id)
-   :username username
-   :email    email})
+  {:user {:id       (str id)
+          :username username
+          :roles    (map camel-snake-kebab/->SCREAMING_SNAKE_CASE_STRING roles)
+          :email    email}})

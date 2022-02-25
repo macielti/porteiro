@@ -5,7 +5,7 @@
 (def base-user
   {:user/id                     s/Uuid
    :user/username               s/Str
-   (s/optional-key :user/roles) wire.datomic.user/UserRoles
+   (s/optional-key :user/roles) [wire.datomic.user/UserRoles]
    (s/optional-key :user/email) s/Str
    :user/hashed-password        s/Str})
 

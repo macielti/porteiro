@@ -3,8 +3,6 @@
             [io.pedestal.test :as test]
             [cheshire.core :as json]))
 
-;TODO: So much repeated code 🤮. This namespace code stinks!
-
 (defn create-user!
   [user
    service-fn]

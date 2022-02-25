@@ -15,9 +15,9 @@
 
     (testing "that users can be created"
       (is (match? {:status 201
-                   :body   {:id       string?
-                            :username "ednaldo-pereira"
-                            :email    "example@example.com"}}
+                   :body   {:user {:id       string?
+                                   :username "ednaldo-pereira"
+                                   :email    "example@example.com"}}}
                   (http/create-user! fixtures.user/user
                                      service-fn))))
 

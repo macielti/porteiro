@@ -22,9 +22,9 @@
                                     "receive a password reset link soon")}})
 
 (s/defn update-password!
-  [{password-update   :json-params
-    {:keys [datomic]} :components
-    {:keys [id]}      :user-identity}]
+  [{password-update            :json-params
+    {:user-identity/keys [id]} :user-identity
+    {:keys [datomic]}          :components}]
   (controllers.user/update-password! (adapters.user/wire->password-update-internal password-update)
                                      id
                                      (:connection datomic))

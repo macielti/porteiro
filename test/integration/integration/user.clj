@@ -78,7 +78,7 @@
     ;but for now i think it is ok
     (testing "shouldn't be able to change update a password with a invalid jwt token"
       (is (match? {:status 422
-                   :body   {:cause "Invalid token"}}
+                   :body   {:cause "Invalid JWT"}}
                   (http/update-password! fixtures.user/password-update "invalid-jwt-token" service-fn))))
 
     (component/stop system)))

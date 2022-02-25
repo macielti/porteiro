@@ -3,8 +3,7 @@
             [porteiro.controllers.password-reset :as controllers.password-reset]
             [porteiro.controllers.user :as controllers.user]
             [porteiro.adapters.user :as adapters.user]
-            [porteiro.adapters.password-reset :as adapters.password-reset]
-            [taoensso.timbre :as timbre]))
+            [porteiro.adapters.password-reset :as adapters.password-reset]))
 
 (s/defn execute-reset-password!
   [{password-reset    :json-params

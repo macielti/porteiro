@@ -65,12 +65,12 @@
                   (http/update-password! fixtures.user/password-update token service-fn))))
 
     (testing "that i can't update a password if the old one is incorrect"
-      (is (match? {:status 403,
+      (is (match? {:status 403
                    :body   {:cause "The old password you have entered is incorrect"}}
                   (http/update-password! (assoc fixtures.user/password-update :oldPassword "wrong-old-password") token service-fn))))
 
     (testing "should return a nice and readable response in case of wrong input"
-      (is (match? {:status 422,
+      (is (match? {:status 422
                    :body   {:cause {:oldPassword "missing-required-key"}}}
                   (http/update-password! (dissoc fixtures.user/password-update :oldPassword) token service-fn))))
 

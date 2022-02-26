@@ -2,12 +2,20 @@
   (:require [schema.core :as s]
             [datomic.api :as d]
             [porteiro.models.user :as models.user]
+            [porteiro.models.contact :as models.contact]
             [porteiro.wire.datomic.user :as wire.datomic.user]))
 
 (s/defn insert! :- models.user/User
   [user :- models.user/User
    datomic]
   (d/transact datomic [user])
+  user)
+
+(s/defn insert-use-with-contact! :- models.user/User
+  [user :- models.user/User
+   contact :- models.contact/Contact
+   datomic]
+  (d/transact datomic [user contact])
   user)
 
 (s/defn add-role!

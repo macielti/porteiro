@@ -2,7 +2,8 @@
   (:require [schema.core :as s]
             [porteiro.adapters.contact :as adapters.contact]
             [porteiro.db.datomic.contact :as datomic.contact]
-            [porteiro.wire.in.contact :as wire.in.contact]))
+            [porteiro.wire.in.contact :as wire.in.contact]
+            [taoensso.timbre :as timbre]))
 
 (s/defn create-contact!
   [{:keys [message]}

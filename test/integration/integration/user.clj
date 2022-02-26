@@ -4,10 +4,14 @@
             [com.stuartsierra.component :as component]
             [clj-uuid]
             [common-clj.component.helper.core :as component.helper]
+            [common-clj.component.kafka.consumer :as component.kafka.consumer]
             [integration.aux.http :as http]
             [fixtures.user]
             [porteiro.components :as components]
-            [schema.test :as s]))
+            [schema.test :as s]
+            [porteiro.db.datomic.user :as database.user]
+            [taoensso.timbre :as timbre])
+  (:import (java.util UUID)))
 
 (deftest create-user-test
   (let [system     (component/start components/system-test)
@@ -84,6 +88,19 @@
 
     (component/stop system)))
 
+;TODO: Use here a users endpoint that only admins can call and returns the user by user-id to depend less on datomic queries on integration tests
 (s/deftest add-role-to-user
   (testing "that only authenticated users that have the admin role can call this endpoint"
-    (let [])))
+    (let [system             (component/start components/system-test)
+          service-fn         (-> (component.helper/get-component-content :service system) :io.pedestal.http/service-fn)
+          datomic-connection (-> (component.helper/get-component-content :datomic system) :connection)
+          consumer           (component.helper/get-component-content :consumer system)
+          {wire-user-id :id} (-> (http/create-user! fixtures.user/user service-fn) :body :user)
+          {wire-admin-user-id :id} (-> (http/create-user! fixtures.user/admin-user service-fn) :body :user)
+          _                  (database.user/add-role! (UUID/fromString wire-admin-user-id) :admin datomic-connection)
+          {{:keys [token]} :body} (http/authenticate-user! fixtures.user/admin-user-auth service-fn)
+          _                  (http/add-role! token wire-user-id "ADMIN" service-fn)]
+
+      (timbre/spy (database.user/by-id (UUID/fromString wire-user-id) datomic-connection))
+
+      (component/stop system))))

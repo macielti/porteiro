@@ -5,6 +5,7 @@
             [porteiro.db.datomic.user :as datomic.user]
             [porteiro.wire.datomic.user :as wire.datomic.user]
             [porteiro.models.user :as models.user]
+            [porteiro.models.contact :as models.contact]
             [porteiro.db.datomic.password-reset :as datomic.password-reset]
             [porteiro.db.datomic.contact :as database.contact]
             [porteiro.diplomatic.producer :as diplomatic.producer]
@@ -12,11 +13,10 @@
 
 (s/defn create-user! :- models.user/User
   [user :- wire.datomic.user/User
-   email :- s/Str
+   email-contact :- models.contact/Contact
    datomic
    producer]
-  (datomic.user/insert! user datomic)
-  (diplomatic.producer/create-email-contact! user email producer)
+  (datomic.user/insert-use-with-contact! user email-contact datomic)
   user)
 
 (s/defn update-password!

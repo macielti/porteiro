@@ -14,12 +14,12 @@
                               diplomatic.http-server.user/create-user!] :route-name :create-user]
              ["/users/contacts" :get [interceptors.user-identity/user-identity-interceptor
                                       diplomatic.http-server.contact/fetch-contacts] :route-name :fetch-contacts]
-             ["/users/:id/roles" :post [interceptors.user-identity/user-identity-interceptor
-                                        (interceptors.user-identity/user-required-roles-interceptor [:admin])
-                                        diplomatic.http-server.user/add-role!] :route-name :add-role-to-user]
              ["/users/auth" :post diplomatic.http-server.auth/authenticate-user! :route-name :user-authentication]
              ["/users/password" :put [interceptors.user-identity/user-identity-interceptor
                                       diplomatic.http-server.password/update-password!] :route-name :password-update]
              ["/users/password-reset" :post diplomatic.http-server.password/reset-password! :route-name :request-password-reset]
              ["/users/password-reset" :put [interceptors.password-reset/valid-password-reset-execution-token
-                                            diplomatic.http-server.password/execute-reset-password!] :route-name :execute-password-reset]])
+                                            diplomatic.http-server.password/execute-reset-password!] :route-name :execute-password-reset]
+             ["/users/roles" :post [interceptors.user-identity/user-identity-interceptor
+                                    (interceptors.user-identity/user-required-roles-interceptor [:admin])
+                                    diplomatic.http-server.user/add-role!] :route-name :add-role-to-user]])

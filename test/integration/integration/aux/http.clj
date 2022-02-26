@@ -3,8 +3,6 @@
             [io.pedestal.test :as test]
             [cheshire.core :as json]))
 
-;TODO: So much repeated code 🤮. This namespace code stinks!
-
 (defn create-user!
   [user
    service-fn]
@@ -69,3 +67,12 @@
                                             :body (json/encode password-reset))]
     {:status status
      :body   nil}))
+
+(defn add-role!
+  [token user-id role service-fn]
+  (let [{:keys [status body]} (test/response-for service-fn
+                                                 :post (format "/users/roles?role=%s&user-id=%s" role user-id)
+                                                 :headers {"Content-Type"  "application/json"
+                                                           "Authorization" (str "Bearer " token)})]
+    {:status status
+     :body   (json/decode body true)}))

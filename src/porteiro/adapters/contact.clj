@@ -1,7 +1,8 @@
 (ns porteiro.adapters.contact
   (:require [schema.core :as s]
             [porteiro.models.contact :as models.contact]
-            [porteiro.wire.in.contact :as wire.in.contact])
+            [porteiro.wire.in.contact :as wire.in.contact]
+            [porteiro.wire.datomic.user :as wire.datomic.user])
   (:import (java.util UUID Date)))
 
 (defmulti wire->internal-contact
@@ -25,3 +26,13 @@
               :contact/status     :active
               :contact/chat-id    chat-id
               :contact/created-at (Date.)})
+
+(s/defn datomic-user-email->internal-email-contact :- models.contact/EmailContact
+  [{:user/keys [id]} :- wire.datomic.user/User
+   email :- s/Str]
+  {:contact/id         (UUID/randomUUID)
+   :contact/user-id    id
+   :contact/type       :email
+   :contact/status     :active
+   :contact/email      email
+   :contact/created-at (Date.)})

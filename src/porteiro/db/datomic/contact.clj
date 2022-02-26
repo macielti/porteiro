@@ -8,7 +8,7 @@
    datomic]
   (d/transact datomic [contact]))
 
-(s/defn by-user-id :- (s/maybe models.contact/Contact)
+(s/defn by-user-id :- (s/maybe [models.contact/Contact])
   [user-id :- s/Uuid
    datomic]
   (some-> (d/q '[:find (pull ?contact [*])

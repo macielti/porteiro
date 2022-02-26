@@ -1,14 +1,9 @@
 (ns porteiro.adapters.auth
   (:require [schema.core :as s]
             [humanize.schema :as h]
-            [clojure.string :as str]
-            [buddy.sign.jwt :as jwt]
-            [cheshire.core :as json]
-            [clojure.tools.logging :as log]
             [porteiro.wire.in.auth :as wire.in.auth]
             [porteiro.models.auth :as models.auth])
-  (:import (clojure.lang ExceptionInfo)
-           (java.util UUID Base64)))
+  (:import (clojure.lang ExceptionInfo)))
 
 (s/defn wire->internal-user-auth :- models.auth/UserAuth
   [{:keys [username password] :as auth} :- wire.in.auth/UserAuth]
@@ -22,26 +17,3 @@
         (throw (ex-info "Schema error"
                         {:status 422
                          :cause  (get-in (h/ex->err e) [:unknown :error])}))))))
-
-(defn jwt-wire->internal
-  ([jw-token jwt-secret]
-   (let [{:keys [id] :as user} (try
-                                 (jwt/unsign jw-token jwt-secret)
-                                 (catch ExceptionInfo _ (throw (ex-info "Invalid token"
-                                                                        {:status 422
-                                                                         :cause  "Invalid token"}))))]
-     (assoc user :id (UUID/fromString id)))))
-
-(defn decoded-jwt
-  [jwt-token]
-  (try
-    (let [[_ payload _] (str/split jwt-token #"\." 3)
-          clj-payload (-> (.decode (Base64/getDecoder) ^String payload)
-                          (String.)
-                          (json/decode true))]
-      (assoc clj-payload :id (UUID/fromString (:id clj-payload))))
-    (catch Exception e (do
-                         (log/warn :invalid-token :exception e {:jwt-token jwt-token})
-                         (throw (ex-info "Invalid token"
-                                         {:status 422
-                                          :cause  "Invalid token"}))))))

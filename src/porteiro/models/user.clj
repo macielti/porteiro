@@ -1,16 +1,19 @@
 (ns porteiro.models.user
-  (:require [schema.core :as s]))
+  (:require [schema.core :as s]
+            [porteiro.wire.datomic.user :as wire.datomic.user]))
+
+(def base-user
+  {:user/id                     s/Uuid
+   :user/username               s/Str
+   (s/optional-key :user/roles) [wire.datomic.user/UserRoles]
+   (s/optional-key :user/email) s/Str
+   :user/hashed-password        s/Str})
 
 (s/defschema User
-  #:user {:id              s/Uuid
-          :username        s/Str
-          :email           s/Str
-          :hashed-password s/Str})
+  base-user)
 
 (s/defschema UserWithoutEmail
-  #:user {:id              s/Uuid
-          :username        s/Str
-          :hashed-password s/Str})
+  (dissoc base-user :user/email))
 
 (s/defschema PasswordUpdate
   "Schema for password update"

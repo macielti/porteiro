@@ -13,3 +13,4 @@ pom.xml.asc
 /.idea/
 /porteiro.iml
 /resources/config.json
+/resources/config.edn

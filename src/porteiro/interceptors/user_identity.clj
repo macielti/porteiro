@@ -7,7 +7,6 @@
   (:import (java.util UUID)
            (clojure.lang ExceptionInfo)))
 
-
 (s/defschema UserIdentity
   {:user-identity/id    s/Uuid
    :user-identity/roles [s/Keyword]})

@@ -9,10 +9,10 @@
 
 (s/defschema User
   "Schema for user creation request"
-  {:id       s/Str
-   :username s/Str
-   :roles    [UserRoles]
-   :email    s/Str})
+  {:id                     s/Str
+   :username               s/Str
+   :roles                  [UserRoles]
+   (s/optional-key :email) s/Str})
 
 (s/defschema UserDocument
   {:user User})

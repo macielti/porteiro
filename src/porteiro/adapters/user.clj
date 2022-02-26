@@ -70,6 +70,12 @@
           :roles    (map camel-snake-kebab/->SCREAMING_SNAKE_CASE_STRING roles)
           :email    email}})
 
+(s/defn internal-user->wire-without-email :- wire.out.user/UserDocument
+  [{:user/keys [id username roles] :or {roles []}} :- models.user/UserWithoutEmail]
+  {:user {:id       (str id)
+          :username username
+          :roles    (map camel-snake-kebab/->SCREAMING_SNAKE_CASE_STRING roles)}})
+
 (s/defn wire->internal-role :- wire.datomic.user/UserRoles
   [wire-role :- wire.in.user/UserRoles]
   (camel-snake-kebab/->kebab-case-keyword wire-role))

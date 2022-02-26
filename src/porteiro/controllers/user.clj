@@ -14,13 +14,12 @@
 (s/defn create-user! :- models.user/User
   [user :- wire.datomic.user/User
    email-contact :- models.contact/Contact
-   datomic
-   producer]
-  (datomic.user/insert-use-with-contact! user email-contact datomic)
+   datomic]
+  (database.user/insert-use-with-contact! user email-contact datomic)
   user)
 
 (s/defn update-password!
-  [{:password-update/keys [old-password new-password] :as password-update} :- models.user/PasswordUpdate
+  [{:password-update/keys [old-password new-password]} :- models.user/PasswordUpdate
    user-id :- s/Uuid
    datomic]
   (let [{:user/keys [hashed-password] :as user-datomic} (datomic.user/by-id user-id datomic)]
@@ -46,12 +45,13 @@
               :password-reset/id
               (diplomatic.producer/send-password-reset-notification! (:contact/email contact) producer)))))
 
-(s/defn add-role!
+(s/defn add-role! :- models.user/User
   [user-id :- s/Uuid
    role :- wire.datomic.user/UserRoles
    datomic-connection]
   (if (database.user/by-id user-id datomic-connection)
-    (database.user/add-role! user-id role datomic-connection)
+    (do (database.user/add-role! user-id role datomic-connection)
+        (database.user/by-id user-id datomic-connection))
     (throw (ex-info "User not found"
                     {:status 404
                      :cause  "User not found"}))))

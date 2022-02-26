@@ -70,9 +70,9 @@
 
 (defn add-role!
   [token user-id role service-fn]
-  (let [{:keys [status]} (test/response-for service-fn
-                                            :post (format "/users/roles?role=%s&user-id=%s" role user-id)
-                                            :headers {"Content-Type"  "application/json"
-                                                      "Authorization" (str "Bearer " token)})]
+  (let [{:keys [status body]} (test/response-for service-fn
+                                                 :post (format "/users/roles?role=%s&user-id=%s" role user-id)
+                                                 :headers {"Content-Type"  "application/json"
+                                                           "Authorization" (str "Bearer " token)})]
     {:status status
-     :body   nil}))
+     :body   (json/decode body true)}))

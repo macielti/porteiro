@@ -11,9 +11,9 @@
            :email    "example@example.com"
            :password "some-strong-password"})
 
-(def admin-user {:username "admin"
-                 :email    "admin@example.com"
-                 :password "admin-password"})
+(def admin-user {:username "admin-da-massa"
+                 :email    "admin-da-massa@example.com"
+                 :password "admin-da-massa-password"})
 
 (def user-auth (dissoc user :email))
 

@@ -27,10 +27,11 @@
 (s/defn by-username :- (s/maybe models.user/User)
   [username :- s/Str
    datomic]
-  (-> (d/q '[:find (pull ?user [:user/id :user/username :user/email :user/hashed-password])
-             :in $ ?username
-             :where [?user :user/username ?username]] (d/db datomic) username)
-      ffirst))
+  (some-> (d/q '[:find (pull ?user [*])
+                 :in $ ?username
+                 :where [?user :user/username ?username]] (d/db datomic) username)
+          ffirst
+          (dissoc :db/id)))
 
 (s/defn by-email :- (s/maybe models.user/User)
   [email :- s/Str

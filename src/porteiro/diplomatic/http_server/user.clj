@@ -17,8 +17,8 @@
 
 (s/defn add-role!
   [{{wire-user-id :user-id
-     wire-role    :role}       :query-params
-    {:keys [datomic producer]} :components}]
+     wire-role    :role} :query-params
+    {:keys [datomic]}    :components}]
   {:status 200
    :body   (-> (controllers.user/add-role! (UUID/fromString wire-user-id)
                                            (adapters.user/wire->internal-role wire-role)

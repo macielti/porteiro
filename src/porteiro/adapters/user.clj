@@ -69,3 +69,7 @@
           :username username
           :roles    (map camel-snake-kebab/->SCREAMING_SNAKE_CASE_STRING roles)
           :email    email}})
+
+(s/defn wire->internal-role :- wire.datomic.user/UserRoles
+  [wire-role :- wire.in.user/UserRoles]
+  (camel-snake-kebab/->kebab-case-keyword wire-role))

@@ -1,7 +1,9 @@
 (ns porteiro.interceptors.user-identity
   (:require [schema.core :as s]
             [buddy.sign.jwt :as jwt]
-            [clojure.string :as str])
+            [clojure.string :as str]
+            [porteiro.wire.datomic.user :as wire.datomic.user]
+            [porteiro.db.datomic.user :as database.user])
   (:import (java.util UUID)
            (clojure.lang ExceptionInfo)))
 
@@ -28,3 +30,15 @@
                            (catch Exception _ (throw (ex-info "Invalid JWT"
                                                               {:status 422
                                                                :cause  "Invalid JWT"}))))))})
+
+(s/defn user-required-roles-interceptor
+  [required-roles :- [wire.datomic.user/UserRoles]]
+  {:name  ::user-required-roles-interceptor
+   :enter (fn [{{{:keys [datomic]}           :components
+                 {user-id :user-identity/id} :user-identity} :request :as context}]
+            (let [{:user/keys [roles]} (database.user/by-id user-id (:connection datomic))]
+              (if (empty? (clojure.set/difference (set required-roles) (set roles)))
+                context
+                (throw (ex-info "Insufficient privileges/roles/permission"
+                                {:status 403
+                                 :cause  "Insufficient privileges/roles/permission"})))))})

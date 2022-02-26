@@ -14,6 +14,9 @@
                               diplomatic.http-server.user/create-user!] :route-name :create-user]
              ["/users/contacts" :get [interceptors.user-identity/user-identity-interceptor
                                       diplomatic.http-server.contact/fetch-contacts] :route-name :fetch-contacts]
+             ["/users/:id/roles" :post [interceptors.user-identity/user-identity-interceptor
+                                        (interceptors.user-identity/user-required-roles-interceptor [:admin])
+                                        diplomatic.http-server.user/add-role!] :route-name :add-role-to-user]
              ["/users/auth" :post diplomatic.http-server.auth/authenticate-user! :route-name :user-authentication]
              ["/users/password" :put [interceptors.user-identity/user-identity-interceptor
                                       diplomatic.http-server.password/update-password!] :route-name :password-update]

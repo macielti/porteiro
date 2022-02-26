@@ -35,11 +35,11 @@
                  [?user :user/id ?user-id]] (d/db datomic) email)
           ffirst))
 
-(s/defn by-id :- models.user/User
+(s/defn by-id :- (s/maybe models.user/User)
   [user-id :- s/Uuid
    datomic]
-  (-> (d/q '[:find (pull ?e [*])
-             :in $ ?user-id
-             :where [?e :user/id ?user-id]] (d/db datomic) user-id)
-      ffirst
-      (dissoc :db/id)))
+  (some-> (d/q '[:find (pull ?e [*])
+                 :in $ ?user-id
+                 :where [?e :user/id ?user-id]] (d/db datomic) user-id)
+          ffirst
+          (dissoc :db/id)))

@@ -7,7 +7,8 @@
             [porteiro.models.user :as models.user]
             [porteiro.db.datomic.password-reset :as datomic.password-reset]
             [porteiro.db.datomic.contact :as database.contact]
-            [porteiro.diplomatic.producer :as diplomatic.producer]))
+            [porteiro.diplomatic.producer :as diplomatic.producer]
+            [porteiro.db.datomic.user :as database.user]))
 
 (s/defn create-user! :- models.user/User
   [user :- wire.datomic.user/User
@@ -44,3 +45,13 @@
       (some-> (datomic.password-reset/insert! password-reset datomic)
               :password-reset/id
               (diplomatic.producer/send-password-reset-notification! (:contact/email contact) producer)))))
+
+(s/defn add-role!
+  [user-id :- s/Uuid
+   role :- wire.datomic.user/UserRoles
+   datomic-connection]
+  (if (database.user/by-id user-id datomic-connection)
+    (database.user/add-role! user-id role datomic-connection)
+    (throw (ex-info "User not found"
+                    {:status 404
+                     :cause  "User not found"}))))

@@ -6,7 +6,8 @@
             [common-clj.component.helper.core :as component.helper]
             [integration.aux.http :as http]
             [fixtures.user]
-            [porteiro.components :as components]))
+            [porteiro.components :as components]
+            [schema.test :as s]))
 
 (deftest create-user-test
   (let [system     (component/start components/system-test)
@@ -83,3 +84,6 @@
 
     (component/stop system)))
 
+(s/deftest add-role-to-user
+  (testing "that only authenticated users that have the admin role can call this endpoint"
+    (let [])))

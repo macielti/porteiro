@@ -1,5 +1,8 @@
 (ns porteiro.wire.in.user
-  (:require [schema.core :as s]))
+  (:require [schema.core :as s]
+            [porteiro.wire.out.user :as wire.out.user]))
+
+(def UserRoles wire.out.user/UserRoles)
 
 (s/defschema User
   "Schema for user creation request"

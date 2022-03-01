@@ -9,7 +9,8 @@
             [porteiro.db.datomic.password-reset :as datomic.password-reset]
             [porteiro.db.datomic.contact :as database.contact]
             [porteiro.diplomatic.producer :as diplomatic.producer]
-            [porteiro.db.datomic.user :as database.user]))
+            [porteiro.db.datomic.user :as database.user]
+            [common-clj.error.core :as common-error]))
 
 (s/defn create-user! :- models.user/User
   [user :- wire.datomic.user/User
@@ -27,9 +28,10 @@
              (:valid (hashers/verify old-password hashed-password)))
       (-> (assoc user-datomic :user/hashed-password (hashers/derive new-password))
           (datomic.user/insert! datomic))
-      (throw (ex-info "Incorrect old password"
-                      {:status 403
-                       :reason "The old password you have entered is incorrect"})))))
+      (common-error/http-friendly-exception 403
+                                            "invalid-credentials"
+                                            "The old password you have entered is incorrect"
+                                            "Incorrect old password"))))
 
 (s/defn reset-password!
   [{:password-reset/keys [email]} :- models.user/PasswordReset

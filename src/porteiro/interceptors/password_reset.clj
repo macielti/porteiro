@@ -1,10 +1,7 @@
 (ns porteiro.interceptors.password-reset
   (:require [porteiro.db.datomic.password-reset :as datomic.password-reset]
-            [porteiro.adapters.password-reset :as adapters.password-reset]))
-
-(def invalid-password-reset-token-exception
-  (ex-info "Invalid/Expired password reset token" {:status 401
-                                                   :reason "Invalid/Expired password reset token"}))
+            [porteiro.adapters.password-reset :as adapters.password-reset]
+            [common-clj.error.core :as common-error]))
 
 (def valid-password-reset-execution-token
   {:name  ::valid-password-reset-execution-token
@@ -14,6 +11,9 @@
                                    (-> (adapters.password-reset/wire->password-reset-execution-internal password-reset)
                                        :password-reset-execution/token)
                                    (:connection datomic))]
-              (if (empty? reset-password)
-                (throw invalid-password-reset-token-exception)))
+              (when (empty? reset-password)
+                (common-error/http-friendly-exception 401
+                                                      "invalid-expired-token"
+                                                      "Invalid/Expired password reset token"
+                                                      "Invalid/Expired password reset token")))
             context)})

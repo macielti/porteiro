@@ -2,6 +2,7 @@
   (:require [schema.core :as s]
             [buddy.sign.jwt :as jwt]
             [clojure.string :as str]
+            [common-clj.error.core :as common-error]
             [porteiro.wire.datomic.user :as wire.datomic.user]
             [camel-snake-kebab.core :as camel-snake-kebab])
   (:import (java.util UUID)
@@ -28,9 +29,10 @@
             (assoc-in context [:request :user-identity]
                       (try (let [jw-token (-> (get headers "authorization") (str/split #" ") last)]
                              (wire-jwt->user-identity jw-token (:jwt-secret config)))
-                           (catch Exception _ (throw (ex-info "Invalid JWT"
-                                                              {:status 422
-                                                               :cause  "Invalid JWT"}))))))})
+                           (catch Exception _ (common-error/http-friendly-exception 422
+                                                                                    "invalid-jwt"
+                                                                                    "Invalid JWT"
+                                                                                    "Invalid JWT")))))})
 
 (s/defn user-required-roles-interceptor
   [required-roles :- [wire.datomic.user/UserRoles]]
@@ -38,6 +40,7 @@
    :enter (fn [{{{user-roles :user-identity/roles} :user-identity} :request :as context}]
             (if (empty? (clojure.set/difference (set required-roles) (set user-roles)))
               context
-              (throw (ex-info "Insufficient privileges/roles/permission"
-                              {:status 403
-                               :cause  "Insufficient privileges/roles/permission"}))))})
+              (common-error/http-friendly-exception 403
+                                                    "insufficient-roles"
+                                                    "Insufficient privileges/roles/permission"
+                                                    "Insufficient privileges/roles/permission")))})

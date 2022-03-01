@@ -34,13 +34,17 @@
 
     (testing "that users can't be authenticated with wrong credentials"
       (is (match? {:status 403
-                   :body   {:cause "Wrong username or/and password"}}
+                   :body   {:error   "invalid-credentials"
+                            :message "Wrong username or/and password"
+                            :detail  "user is trying to login using invalid credentials"}}
                   (http/authenticate-user! (assoc fixtures.user/user-auth :password "wrong-password")
                                            service-fn))))
 
     (testing "that invalid credential schema input return a nice and readable error"
       (is (match? {:status 422
-                   :body   {:cause {:username "missing-required-key"}}}
+                   :body   {:error   "invalid-schema-in"
+                            :message "The system detected that the received data is invalid"
+                            :detail  {:username "missing-required-key"}}}
                   (http/authenticate-user! {:password "wrong-password"}
                                            service-fn))))
 

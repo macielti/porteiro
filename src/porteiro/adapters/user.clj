@@ -45,18 +45,10 @@
 
 (s/defn wire->internal-user :- models.user/User
   [{:keys [username password email] :as user} :- wire.in.user/User]
-  (try
-    (s/validate wire.in.user/User user)
-    #:user{:id              (UUID/randomUUID)
-           :username        username
-           :email           email
-           :hashed-password (hashers/derive password)}
-    (catch ExceptionInfo e
-      (if (= (-> e ex-data :type)
-             :schema.core/error)
-        (throw (ex-info "Schema error"
-                        {:status 422
-                         :cause  (get-in (h/ex->err e) [:unknown :error])}))))))
+  #:user{:id              (UUID/randomUUID)
+         :username        username
+         :email           email
+         :hashed-password (hashers/derive password)})
 
 (s/defn internal-user->wire-datomic-user :- wire.datomic.user/User
   [user :- models.user/User]

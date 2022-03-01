@@ -15,8 +15,10 @@
                          :io.pedestal.http/service-fn)]
 
       (is (match? {:status 422
-                   :body   {:cause {:email    "missing-required-key"
-                                    :nonSense "disallowed-key"}}}
+                   :body   {:error   "invalid-schema-in"
+                            :message "The system detected that the received data is invalid",
+                            :detail  {:email    "missing-required-key"
+                                      :nonSense "disallowed-key"}}}
                   (http/reset-password! {:nonSense "hi lorena"}
                                         service-fn)))
 
@@ -91,7 +93,9 @@
                                            service-fn)))
 
       (is (match? {:status 403
-                   :body   {:cause "Wrong username or/and password"}}
+                   :body   {:error   "invalid-credentials"
+                            :message "Wrong username or/and password"
+                            :detail  "user is trying to login using invalid credentials"}}
                   (http/authenticate-user! fixtures.user/user-auth
                                            service-fn)))
 

@@ -4,6 +4,7 @@
             [clj-time.core :as t]
             [clj-time.coerce :as c]
             [buddy.hashers :as hashers]
+            [common-clj.error.core :as common-error]
             [porteiro.models.auth :as models.auth]
             [porteiro.models.user :as models.user]
             [porteiro.models.contact :as models.contact]
@@ -31,6 +32,7 @@
     (if (and user (:valid (hashers/verify password hashed-password)))
       (do (diplomatic.producer/send-success-auth-notification! email producer)
           {:token (->token user contact jwt-secret)})
-      (throw (ex-info "Wrong username or/and password"
-                      {:status 403
-                       :cause  "Wrong username or/and password"})))))
+      (common-error/http-friendly-exception 403
+                                            "invalid-credentials"
+                                            "Wrong username or/and password"
+                                            "user is trying to login using invalid credentials"))))

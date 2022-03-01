@@ -26,12 +26,17 @@
 
     (testing "that username must be unique"
       (is (= {:status 409
-              :body   {:cause "username already in use by other user"}}
+              :body   {:detail  "username already in use by other user"
+                       :error   "not-unique-user"
+                       :message "Username already in use"}}
              (http/create-user! fixtures.user/user
                                 service-fn))))
 
     (testing "request body must respect the schema"
-      (is (= {:status 422, :body {:cause {:username "missing-required-key"}}}
+      (is (= {:status 422
+              :body   {:detail  {:username "missing-required-key"}
+                       :error   "invalid-schema-in"
+                       :message "The system detected that the received data is invalid"}}
              (http/create-user! (dissoc fixtures.user/user :username)
                                 service-fn))))
 
@@ -69,19 +74,25 @@
 
     (testing "that i can't update a password if the old one is incorrect"
       (is (match? {:status 403
-                   :body   {:cause "The old password you have entered is incorrect"}}
+                   :body   {:error   "invalid-credentials"
+                            :message "The old password you have entered is incorrect"
+                            :detail  "Incorrect old password"}}
                   (http/update-password! (assoc fixtures.user/password-update :oldPassword "wrong-old-password") token service-fn))))
 
     (testing "should return a nice and readable response in case of wrong input"
       (is (match? {:status 422
-                   :body   {:cause {:oldPassword "missing-required-key"}}}
+                   :body   {:error   "invalid-schema-in"
+                            :message "The system detected that the received data is invalid"
+                            :detail  {:oldPassword "missing-required-key"}}}
                   (http/update-password! (dissoc fixtures.user/password-update :oldPassword) token service-fn))))
 
     ;TODO: This could be separated in to an isolated test for the auth interceptor
     ;but for now i think it is ok
     (testing "shouldn't be able to change update a password with a invalid jwt token"
       (is (match? {:status 422
-                   :body   {:cause "Invalid JWT"}}
+                   :body   {:error   "invalid-jwt"
+                            :message "Invalid JWT"
+                            :detail  "Invalid JWT"}}
                   (http/update-password! fixtures.user/password-update "invalid-jwt-token" service-fn))))
 
     (component/stop system)))
@@ -116,7 +127,9 @@
           {{:keys [token]} :body} (http/authenticate-user! fixtures.user/admin-user-auth service-fn)]
 
       (is (match? {:status 403
-                   :body   {:cause "Insufficient privileges/roles/permission"}}
+                   :body   {:error   "insufficient-roles"
+                            :message "Insufficient privileges/roles/permission"
+                            :detail  "Insufficient privileges/roles/permission"}}
                   (http/add-role! token wire-user-id "ADMIN" service-fn)))
 
       (component/stop system))))

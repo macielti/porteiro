@@ -7,5 +7,5 @@
 
 (s/defn wire->password-reset-execution-internal :- models.password/PasswordResetExecution
   [{:keys [token newPassword]} :- wire.in.password-reset/PasswordResetExecution]
-  #:password-reset-execution{:token           (UUID/fromString token)
-                             :hashed-password (hashers/derive newPassword)})
+  {:password-reset-execution/token           (UUID/fromString token)
+   :password-reset-execution/hashed-password (hashers/derive newPassword)})

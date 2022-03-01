@@ -27,9 +27,17 @@
     (testing "that username must be unique"
       (is (= {:status 409
               :body   {:detail  "username already in use by other user"
-                       :error   "not-unique-user"
+                       :error   "not-unique"
                        :message "Username already in use"}}
              (http/create-user! fixtures.user/user
+                                service-fn))))
+
+    (testing "that email must be unique"
+      (is (= {:status 409
+              :body   {:detail  "Email already in use by other user"
+                       :error   "not-unique"
+                       :message "Email already in use"}}
+             (http/create-user! (assoc fixtures.user/user :username "random-username")
                                 service-fn))))
 
     (testing "request body must respect the schema"

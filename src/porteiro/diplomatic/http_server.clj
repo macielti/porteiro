@@ -17,6 +17,7 @@
 
              ["/users" :post [(io.interceptors/schema-body-in-interceptor wire.in.user/User)
                               interceptors.user/username-already-in-use-interceptor
+                              interceptors.user/email-already-in-use-interceptor
                               diplomatic.http-server.user/create-user!] :route-name :create-user]
 
              ["/users/contacts" :get [interceptors.user-identity/user-identity-interceptor

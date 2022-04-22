@@ -44,6 +44,15 @@
           :roles    (map camel-snake-kebab/->SCREAMING_SNAKE_CASE_STRING roles)
           :email    email}})
 
+(s/defn internal-user-authentication->wire :- wire.out.user/UserDocument
+  [{:user/keys [id username roles] :or {roles []}} :- models.user/UserWithoutEmail
+
+   email :- s/Str]
+  {:user {:id       (str id)
+          :username username
+          :roles    (map camel-snake-kebab/->SCREAMING_SNAKE_CASE_STRING roles)
+          :email    email}})
+
 (s/defn internal-user->wire-without-email :- wire.out.user/UserDocument
   [{:user/keys [id username roles] :or {roles []}} :- models.user/UserWithoutEmail]
   {:user {:id       (str id)

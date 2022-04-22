@@ -7,6 +7,12 @@
 (def admin-user-id (UUID/randomUUID))
 (def wire-user-id (str (UUID/randomUUID)))
 
+(def password "random-password")
+
+(def username "ednaldo-pereira")
+
+(def email "ednaldo-pereira@example.com")
+
 (def user {:username "ednaldo-pereira"
            :email    "example@example.com"
            :password "some-strong-password"})

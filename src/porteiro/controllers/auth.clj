@@ -22,7 +22,7 @@
             {:exp (-> (t/plus (t/now) (t/days 1))
                       c/to-timestamp)}))
 
-(s/defn user-authentication!
+(s/defn user-authentication! :- s/Str
   [{:user-auth/keys [username password]} :- models.auth/UserAuth
    {:keys [jwt-secret]}
    producer
@@ -31,7 +31,7 @@
         {:contact/keys [email] :as contact} (first (database.contact/by-user-id id datomic))]
     (if (and user (:valid (hashers/verify password hashed-password)))
       (do (diplomatic.producer/send-success-auth-notification! email producer)
-          {:token (->token user contact jwt-secret)})
+          (->token user contact jwt-secret))
       (common-error/http-friendly-exception 403
                                             "invalid-credentials"
                                             "Wrong username or/and password"

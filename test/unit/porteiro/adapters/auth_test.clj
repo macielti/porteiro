@@ -14,3 +14,8 @@
   (testing "that a invalid input will throws a exception"
     (is (thrown? ExceptionInfo (adapters.auth/wire->internal-user-auth {:username "ednaldo-pereira"
                                                                         :name     "Ednaldo Pereira"})))))
+
+(s/deftest token->wire-test
+  (testing "that we can externalize token value to wire out"
+    (is (= {:token "random-token"}
+           (adapters.auth/token->wire "random-token")))))

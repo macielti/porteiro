@@ -7,7 +7,8 @@
   [{auth                              :json-params
     {:keys [datomic producer config]} :components}]
   {:status 200
-   :body   (controllers.auth/user-authentication! (adapters.auth/wire->internal-user-auth auth)
-                                                  config
-                                                  producer
-                                                  (:connection datomic))})
+   :body   (-> (controllers.auth/user-authentication! (adapters.auth/wire->internal-user-auth auth)
+                                                      config
+                                                      producer
+                                                      (:connection datomic))
+               adapters.auth/token->wire)})

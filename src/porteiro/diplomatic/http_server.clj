@@ -30,12 +30,12 @@
                                       interceptors.user-identity/user-identity-interceptor
                                       diplomatic.http-server.password/update-password!] :route-name :password-update]
 
-             ["/users/password-reset" :post [(io.interceptors/schema-body-in-interceptor wire.in.user/PasswordReset)
-                                             diplomatic.http-server.password/reset-password!] :route-name :request-password-reset]
+             ["/users/request-password-reset" :post [(io.interceptors/schema-body-in-interceptor wire.in.user/PasswordReset)
+                                                     diplomatic.http-server.password/request-reset-password!] :route-name :request-password-reset]
 
-             ["/users/password-reset" :put [(io.interceptors/schema-body-in-interceptor wire.in.password-reset/PasswordResetExecution)
-                                            interceptors.password-reset/valid-password-reset-execution-token
-                                            diplomatic.http-server.password/execute-reset-password!] :route-name :execute-password-reset]
+             ["/users/password-reset" :post [(io.interceptors/schema-body-in-interceptor wire.in.password-reset/PasswordResetExecution)
+                                             interceptors.password-reset/valid-password-reset-execution-token
+                                             diplomatic.http-server.password/reset-password!] :route-name :password-reset]
 
              ["/users/roles" :post [interceptors.user-identity/user-identity-interceptor
                                     (interceptors.user-identity/user-required-roles-interceptor [:admin])

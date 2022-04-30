@@ -19,8 +19,8 @@
                             :message "The system detected that the received data is invalid",
                             :detail  {:email    "missing-required-key"
                                       :nonSense "disallowed-key"}}}
-                  (http/reset-password! {:nonSense "hi lorena"}
-                                        service-fn)))
+                  (http/request-reset-password! {:nonSense "hi lorena"}
+                                                service-fn)))
 
       (component/stop system)))
   (testing "that reset password request will produce a message when existent"
@@ -32,8 +32,8 @@
 
       (is (match? {:status 202
                    :body   {:message
-                            "If you email is on our system, you should receive a password reset link soon"}}
-                  (http/reset-password! {:email email} service-fn)))
+                            "If the email is correct, you should receive a password reset link soon"}}
+                  (http/request-reset-password! {:email email} service-fn)))
 
       (is (match? [{:topic   :notification
                     :message {:email   email
@@ -50,8 +50,8 @@
 
       (is (match? {:status 202
                    :body   {:message
-                            "If you email is on our system, you should receive a password reset link soon"}}
-                  (http/reset-password! {:email "nonexistent@example.com"} service-fn)))
+                            "If the email is correct, you should receive a password reset link soon"}}
+                  (http/request-reset-password! {:email "nonexistent@example.com"} service-fn)))
 
       (Thread/sleep 5000)
 
@@ -67,8 +67,8 @@
 
       (is (match? {:status 422
                    :body   nil?}
-                  (http/execute-reset-password! {:newPassword (:newPassword fixtures.user/password-update)}
-                                                service-fn)))
+                  (http/reset-password! {:newPassword (:newPassword fixtures.user/password-update)}
+                                        service-fn)))
 
       (component/stop system)))
 
@@ -77,15 +77,15 @@
           service-fn (-> (component.helper/get-component-content :service system) :io.pedestal.http/service-fn)
           {{:keys [email]} :user} (:body (http/create-user! fixtures.user/user service-fn))
           _          (Thread/sleep 5000)
-          _          (http/reset-password! {:email email} service-fn)
+          _          (http/request-reset-password! {:email email} service-fn)
           {{:keys [password-reset-id]} :message} (first (filter #(= (:topic %) :notification)
                                                                 (kafka.consumer/produced-messages kafka-producer)))]
 
       (is (match? {:status 204
                    :body   nil?}
-                  (http/execute-reset-password! {:token       password-reset-id
+                  (http/reset-password! {:token               password-reset-id
                                                  :newPassword (:newPassword fixtures.user/password-update)}
-                                                service-fn)))
+                                        service-fn)))
 
       (is (match? {:status 200
                    :body   {:token string?}}
@@ -107,17 +107,17 @@
           consumer   (component.helper/get-component-content :consumer system)
           {{:keys [email]} :user} (:body (http/create-user! fixtures.user/user service-fn))
           _          (Thread/sleep 5000)
-          _          (http/reset-password! {:email email} service-fn)
+          _          (http/request-reset-password! {:email email} service-fn)
           {{:keys [password-reset-id]} :message} (first (filter #(= (:topic %) :notification)
                                                                 (kafka.consumer/produced-messages consumer)))
-          _          (http/execute-reset-password! {:token       password-reset-id
+          _          (http/reset-password! {:token               password-reset-id
                                                     :newPassword (:newPassword fixtures.user/password-update)}
-                                                   service-fn)]
+                                           service-fn)]
 
       (is (match? {:status 401
                    :body   nil?}
-                  (http/execute-reset-password! {:token       password-reset-id
+                  (http/reset-password! {:token               password-reset-id
                                                  :newPassword (:newPassword fixtures.user/password-update)}
-                                                service-fn)))
+                                        service-fn)))
 
       (component/stop system))))

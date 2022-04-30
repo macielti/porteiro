@@ -50,19 +50,19 @@
     {:status status
      :body   (json/decode body true)}))
 
-(defn reset-password!
+(defn request-reset-password!
   [password-reset service-fn]
   (let [{:keys [body status]} (test/response-for service-fn
-                                                 :post "/users/password-reset"
+                                                 :post "/users/request-password-reset"
                                                  :headers {"Content-Type" "application/json"}
                                                  :body (json/encode password-reset))]
     {:status status
      :body   (json/decode body true)}))
 
-(defn execute-reset-password!
+(defn reset-password!
   [password-reset service-fn]
   (let [{:keys [status]} (test/response-for service-fn
-                                            :put "/users/password-reset"
+                                            :post "/users/password-reset"
                                             :headers {"Content-Type" "application/json"}
                                             :body (json/encode password-reset))]
     {:status status

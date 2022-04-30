@@ -5,20 +5,20 @@
             [porteiro.adapters.user :as adapters.user]
             [porteiro.adapters.password-reset :as adapters.password-reset]))
 
-(s/defn execute-reset-password!
+(s/defn reset-password!
   [{password-reset    :json-params
     {:keys [datomic]} :components}]
   (controllers.password-reset/execute-password-reset! (adapters.password-reset/wire->password-reset-execution-internal password-reset)
                                                       (:connection datomic))
   {:status 204 :body nil})
 
-(s/defn reset-password!
+(s/defn request-reset-password!
   [{password-reset             :json-params
     {:keys [producer datomic]} :components}]
   (controllers.user/reset-password! (adapters.user/wire->password-reset-internal password-reset)
                                     producer
                                     (:connection datomic))
-  {:status 202 :body {:message (str "If you email is on our system, you should "
+  {:status 202 :body {:message (str "If the email is correct, you should "
                                     "receive a password reset link soon")}})
 
 (s/defn update-password!

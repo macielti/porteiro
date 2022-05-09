@@ -43,8 +43,7 @@
     (testing "that invalid credential schema input return a nice and readable error"
       (is (match? {:status 422
                    :body   {:error   "invalid-schema-in"
-                            :message "The system detected that the received data is invalid"
-                            :detail  {:username "missing-required-key"}}}
+                            :message "The system detected that the received data is invalid"}}
                   (http/authenticate-user! {:password "wrong-password"}
                                            service-fn))))
 

@@ -1,4 +1,4 @@
-(ns porteiro.diplomatic.http-server.auth
+(ns porteiro.diplomat.http-server.auth
   (:require [schema.core :as s]
             [porteiro.adapters.auth :as adapters.auth]
             [porteiro.controllers.auth :as controllers.auth]))

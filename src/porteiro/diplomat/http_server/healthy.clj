@@ -1,4 +1,4 @@
-(ns porteiro.diplomatic.http-server.healthy
+(ns porteiro.diplomat.http-server.healthy
   (:require [schema.core :as s]
             [porteiro.controllers.healthy :as controllers.healthy]
             [porteiro.adapters.healthy :as adapters.healthy]))

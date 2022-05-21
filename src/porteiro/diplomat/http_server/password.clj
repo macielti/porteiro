@@ -1,4 +1,4 @@
-(ns porteiro.diplomatic.http-server.password
+(ns porteiro.diplomat.http-server.password
   (:require [schema.core :as s]
             [porteiro.controllers.password-reset :as controllers.password-reset]
             [porteiro.controllers.user :as controllers.user]

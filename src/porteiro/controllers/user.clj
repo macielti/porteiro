@@ -8,7 +8,7 @@
             [porteiro.models.contact :as models.contact]
             [porteiro.db.datomic.password-reset :as datomic.password-reset]
             [porteiro.db.datomic.contact :as database.contact]
-            [porteiro.diplomatic.producer :as diplomatic.producer]
+            [porteiro.diplomat.producer :as diplomat.producer]
             [porteiro.db.datomic.user :as database.user]
             [common-clj.error.core :as common-error]))
 
@@ -45,7 +45,7 @@
     (when user
       (some-> (datomic.password-reset/insert! password-reset datomic)
               :password-reset/id
-              (diplomatic.producer/send-password-reset-notification! (:contact/email contact) producer)))))
+              (diplomat.producer/send-password-reset-notification! (:contact/email contact) producer)))))
 
 (s/defn add-role! :- models.user/User
   [user-id :- s/Uuid

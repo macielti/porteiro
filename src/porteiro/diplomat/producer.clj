@@ -1,4 +1,4 @@
-(ns porteiro.diplomatic.producer
+(ns porteiro.diplomat.producer
   (:require [schema.core :as s]
             [clostache.parser :as parser]
             [common-clj.component.kafka.producer :as kafka.producer]

@@ -1,4 +1,4 @@
-(ns porteiro.diplomatic.http-server.contact
+(ns porteiro.diplomat.http-server.contact
   (:require [schema.core :as s]
             [porteiro.controllers.contact :as controllers.contact]))
 

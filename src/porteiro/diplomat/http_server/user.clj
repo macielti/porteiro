@@ -1,4 +1,4 @@
-(ns porteiro.diplomatic.http-server.user
+(ns porteiro.diplomat.http-server.user
   (:require [schema.core :as s]
             [porteiro.controllers.user :as controllers.user]
             [porteiro.adapters.user :as adapters.user]

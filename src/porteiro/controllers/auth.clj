@@ -11,7 +11,7 @@
             [porteiro.adapters.user :as adapters.user]
             [porteiro.db.datomic.contact :as database.contact]
             [porteiro.db.datomic.user :as datomic.user]
-            [porteiro.diplomatic.producer :as diplomatic.producer]))
+            [porteiro.diplomat.producer :as diplomat.producer]))
 
 (s/defn ^:private ->token :- s/Str
   [user :- models.user/User
@@ -30,7 +30,7 @@
   (let [{:user/keys [hashed-password id] :as user} (datomic.user/by-username username datomic)
         {:contact/keys [email] :as contact} (first (database.contact/by-user-id id datomic))]
     (if (and user (:valid (hashers/verify password hashed-password)))
-      (do (diplomatic.producer/send-success-auth-notification! email producer)
+      (do (diplomat.producer/send-success-auth-notification! email producer)
           (->token user contact jwt-secret))
       (common-error/http-friendly-exception 403
                                             "invalid-credentials"

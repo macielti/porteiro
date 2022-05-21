@@ -1,4 +1,4 @@
-(ns porteiro.diplomatic.consumer
+(ns porteiro.diplomat.consumer
   (:require [schema.core :as s]
             [porteiro.adapters.contact :as adapters.contact]
             [porteiro.db.datomic.contact :as datomic.contact]

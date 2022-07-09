@@ -3,16 +3,16 @@
   :license {:name "EPL-2.0 OR GPL-2.0-or-later WITH Classpath-exception-2.0"
             :url  "https://www.eclipse.org/legal/epl-2.0/"}
 
-  :plugins [[lein-cloverage "1.2.2"]
+  :plugins [[lein-cloverage "1.2.3"]
             [lein-environ "1.2.0"]]
 
   :exclusions [log4j]
 
-  :dependencies [[org.clojure/clojure "1.10.3"]
-                 [ch.qos.logback/logback-classic "1.2.10"]
+  :dependencies [[org.clojure/clojure "1.11.1"]
+                 [ch.qos.logback/logback-classic "1.2.11"]
                  [io.pedestal/pedestal.service-tools "0.5.10"]
                  [net.clojars.macielti/common-clj "13.16.12"]
-                 [camel-snake-kebab "0.4.2"]
+                 [camel-snake-kebab "0.4.3"]
                  [danlentz/clj-uuid "0.1.9"]
                  [de.ubercode.clostache/clostache "1.4.0"]
                  [org.apache.kafka/kafka-clients "2.8.0"]
@@ -20,16 +20,16 @@
                  [com.datomic/datomic-free "0.9.5697"]
                  [io.pedestal/pedestal.jetty "0.5.10"]
                  [io.pedestal/pedestal.route "0.5.10"]
-                 [com.stuartsierra/component "1.0.0"]
-                 [nubank/matcher-combinators "3.3.1"]
+                 [com.stuartsierra/component "1.1.0"]
+                 [nubank/matcher-combinators "3.5.0"]
                  [fundingcircle/jackdaw "0.9.3"]
                  [buddy/buddy-hashers "1.8.1"]
-                 [prismatic/schema "1.2.0"]
-                 [camel-snake-kebab "0.4.2"]
+                 [prismatic/schema "1.2.1"]
+                 [camel-snake-kebab "0.4.3"]
                  [danlentz/clj-uuid "0.1.9"]
-                 [buddy/buddy-sign "3.4.1"]
+                 [buddy/buddy-sign "3.4.333"]
                  [siili/humanize "0.1.1"]
-                 [cheshire "5.10.2"]
+                 [cheshire "5.11.0"]
                  [environ "1.2.0"]]
 
   :resource-paths ["resources"]

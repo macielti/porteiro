@@ -1,26 +1,13 @@
 (ns porteiro.controllers.auth
   (:require [schema.core :as s]
-            [buddy.sign.jwt :as jwt]
-            [clj-time.core :as t]
-            [clj-time.coerce :as c]
             [buddy.hashers :as hashers]
             [common-clj.error.core :as common-error]
+            [common-clj.auth.core :as common-auth]
             [porteiro.models.auth :as models.auth]
-            [porteiro.models.user :as models.user]
-            [porteiro.models.contact :as models.contact]
             [porteiro.adapters.user :as adapters.user]
             [porteiro.db.datomic.contact :as database.contact]
             [porteiro.db.datomic.user :as datomic.user]
             [porteiro.diplomat.producer :as diplomat.producer]))
-
-(s/defn ^:private ->token :- s/Str
-  [user :- models.user/User
-   {:contact/keys [email]} :- models.contact/Contact
-   jwt-secret :- s/Str]
-  (jwt/sign (adapters.user/internal-user->wire user email)
-            jwt-secret
-            {:exp (-> (t/plus (t/now) (t/days 1))
-                      c/to-timestamp)}))
 
 (s/defn user-authentication! :- s/Str
   [{:user-auth/keys [username password]} :- models.auth/UserAuth
@@ -31,7 +18,8 @@
         {:contact/keys [email] :as contact} (first (database.contact/by-user-id id datomic))]
     (if (and user (:valid (hashers/verify password hashed-password)))
       (do (diplomat.producer/send-success-auth-notification! email producer)
-          (->token user contact jwt-secret))
+          (-> (adapters.user/internal-user->wire user email)
+              (common-auth/->token jwt-secret)))
       (common-error/http-friendly-exception 403
                                             "invalid-credentials"
                                             "Wrong username or/and password"

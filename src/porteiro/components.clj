@@ -28,8 +28,8 @@
   (component/system-map
     :config (component.config/new-config "resources/config.example.edn" :test :edn)
     :datomic (component/using (component.datomic/new-datomic database.config/schemas) [:config])
-    :consumer (component/using (component.consumer/new-mock-consumer diplomat.consumer/topic-consumers) [:config :datomic])
-    :producer (component/using (component.producer/new-mock-producer) [:consumer :config])
+    :producer (component/using (component.producer/new-mock-producer) [:config])
+    :consumer (component/using (component.consumer/new-mock-consumer diplomat.consumer/topic-consumers) [:config :producer :datomic])
     :routes (component/using (component.routes/new-routes diplomat.http-server/routes) [:datomic :config])
     :admin (component/using (admin/new-admin) [:datomic :config])
     :service (component/using (component.service/new-service) [:routes :config :datomic :producer])))

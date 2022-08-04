@@ -5,7 +5,7 @@
             [matcher-combinators.matchers :as m]
             [com.stuartsierra.component :as component]
             [common-clj.component.helper.core :as component.helper]
-            [common-clj.component.kafka.consumer :as kafka.consumer]
+            [common-clj.component.kafka.producer :as kafka.producer]
             [porteiro.components :as components]
             [fixtures.user]))
 
@@ -13,8 +13,8 @@
   (let [{{kafka-producer :producer} :producer :as system} (component/start components/system-test)
         service-fn (-> (component.helper/get-component-content :service system)
                        :io.pedestal.http/service-fn)
-        _          (http/create-user! fixtures.user/user
-                                      service-fn)]
+        _ (http/create-user! fixtures.user/user
+                             service-fn)]
 
     (Thread/sleep 5000)
 
@@ -25,12 +25,12 @@
                                            service-fn))))
 
     (testing "that successful authentication notifications the user"
-      (is (match? (m/in-any-order [{:topic   :notification
-                                    :message {:email   (:email fixtures.user/user)
-                                              :title   "Authentication Confirmation"
-                                              :content string?}}])
+      (is (match? (m/in-any-order [{:topic :notification
+                                    :data  {:payload {:email   (:email fixtures.user/user)
+                                                      :title   "Authentication Confirmation"
+                                                      :content string?}}}])
                   (filter #(= (:topic %) :notification)
-                          (kafka.consumer/produced-messages kafka-producer)))))
+                          (kafka.producer/produced-messages kafka-producer)))))
 
     (testing "that users can't be authenticated with wrong credentials"
       (is (match? {:status 403

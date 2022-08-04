@@ -16,7 +16,7 @@
         :password-reset-expiration-days 1
         :topics                         ["porteiro.create-contact"]
         :service                        {:host "0.0.0.0"
-                                         :port 8010}
+                                         :port 8099}
         :admin-user-seed                {:username "admin"
                                          :password "very-strong-password"
                                          :email    "brunodonascimento@gmail.com"}}}

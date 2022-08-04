@@ -3,14 +3,14 @@
             [matcher-combinators.test :refer [match?]]
             [com.stuartsierra.component :as component]
             [common-clj.component.helper.core :as component.helper]
-            [common-clj.component.kafka.consumer :as kafka.consumer]
+            [common-clj.component.kafka.producer :as kafka.producer]
             [integration.aux.http :as http]
             [porteiro.components :as components]
             [fixtures.user]))
 
 (deftest reset-password-test
   (testing "request body must respect the schema"
-    (let [system     (component/start components/system-test)
+    (let [system (component/start components/system-test)
           service-fn (-> (component.helper/get-component-content :service system)
                          :io.pedestal.http/service-fn)]
 
@@ -35,12 +35,12 @@
                             "If the email is correct, you should receive a password reset link soon"}}
                   (http/request-reset-password! {:email email} service-fn)))
 
-      (is (match? [{:topic   :notification
-                    :message {:email   email
-                              :title   "Password Reset Solicitation"
-                              :content string?}}]
+      (is (match? [{:topic :notification
+                    :data  {:payload {:email   email
+                                      :title   "Password Reset Solicitation"
+                                      :content string?}}}]
                   (filter #(= (:topic %) :notification)
-                          (kafka.consumer/produced-messages kafka-producer))))
+                          (kafka.producer/produced-messages kafka-producer))))
 
       (component/stop system)))
 
@@ -56,13 +56,13 @@
       (Thread/sleep 5000)
 
       (is (match? []
-                  (kafka.consumer/produced-messages kafka-producer)))
+                  (kafka.producer/produced-messages kafka-producer)))
 
       (component/stop system))))
 
 (deftest execute-password-reset-test
   (testing "request body must respect the schema"
-    (let [system     (component/start components/system-test)
+    (let [system (component/start components/system-test)
           service-fn (-> (component.helper/get-component-content :service system) :io.pedestal.http/service-fn)]
 
       (is (match? {:status 422
@@ -76,15 +76,15 @@
     (let [{{kafka-producer :producer} :producer :as system} (component/start components/system-test)
           service-fn (-> (component.helper/get-component-content :service system) :io.pedestal.http/service-fn)
           {{:keys [email]} :user} (:body (http/create-user! fixtures.user/user service-fn))
-          _          (Thread/sleep 5000)
-          _          (http/request-reset-password! {:email email} service-fn)
-          {{:keys [password-reset-id]} :message} (first (filter #(= (:topic %) :notification)
-                                                                (kafka.consumer/produced-messages kafka-producer)))]
+          _ (Thread/sleep 5000)
+          _ (http/request-reset-password! {:email email} service-fn)
+          {{:keys [payload]} :data} (first (filter #(= (:topic %) :notification)
+                                                                (kafka.producer/produced-messages kafka-producer)))]
 
       (is (match? {:status 204
                    :body   nil?}
-                  (http/reset-password! {:token               password-reset-id
-                                                 :newPassword (:newPassword fixtures.user/password-update)}
+                  (http/reset-password! {:token       (:password-reset-id payload)
+                                         :newPassword (:newPassword fixtures.user/password-update)}
                                         service-fn)))
 
       (is (match? {:status 200
@@ -104,20 +104,20 @@
   (testing "that we can't utilize the same token to consolidate password reset a second time"
     (let [{{kafka-producer :producer} :producer :as system} (component/start components/system-test)
           service-fn (-> (component.helper/get-component-content :service system) :io.pedestal.http/service-fn)
-          consumer   (component.helper/get-component-content :consumer system)
+          consumer (component.helper/get-component-content :consumer system)
           {{:keys [email]} :user} (:body (http/create-user! fixtures.user/user service-fn))
-          _          (Thread/sleep 5000)
-          _          (http/request-reset-password! {:email email} service-fn)
-          {{:keys [password-reset-id]} :message} (first (filter #(= (:topic %) :notification)
-                                                                (kafka.consumer/produced-messages consumer)))
-          _          (http/reset-password! {:token               password-reset-id
-                                                    :newPassword (:newPassword fixtures.user/password-update)}
-                                           service-fn)]
+          _ (Thread/sleep 5000)
+          _ (http/request-reset-password! {:email email} service-fn)
+          {{:keys [payload]} :data} (first (filter #(= (:topic %) :notification)
+                                                                (kafka.producer/produced-messages kafka-producer)))
+          _ (http/reset-password! {:token       (:password-reset-id payload)
+                                   :newPassword (:newPassword fixtures.user/password-update)}
+                                  service-fn)]
 
       (is (match? {:status 401
                    :body   nil?}
-                  (http/reset-password! {:token               password-reset-id
-                                                 :newPassword (:newPassword fixtures.user/password-update)}
+                  (http/reset-password! {:token       (:password-reset-id payload)
+                                         :newPassword (:newPassword fixtures.user/password-update)}
                                         service-fn)))
 
       (component/stop system))))

@@ -10,7 +10,8 @@
             [fixtures.user]))
 
 (deftest auth-test
-  (let [{{kafka-producer :producer} :producer :as system} (component/start components/system-test)
+  (let [system (component/start components/system-test)
+        producer (component.helper/get-component-content :producer system)
         service-fn (-> (component.helper/get-component-content :service system)
                        :io.pedestal.http/service-fn)
         _ (http/create-user! fixtures.user/user
@@ -30,7 +31,7 @@
                                                       :title   "Authentication Confirmation"
                                                       :content string?}}}])
                   (filter #(= (:topic %) :notification)
-                          (kafka.producer/produced-messages kafka-producer)))))
+                          (kafka.producer/produced-messages producer)))))
 
     (testing "that users can't be authenticated with wrong credentials"
       (is (match? {:status 403

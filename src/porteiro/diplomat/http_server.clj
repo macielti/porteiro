@@ -13,30 +13,30 @@
             [porteiro.wire.in.password-reset :as wire.in.password-reset]))
 
 
-(def routes [["/health" :get diplomat.http-server.healthy/healthy-check :route-name :health-check]
+(def routes [["/api/health" :get diplomat.http-server.healthy/healthy-check :route-name :health-check]
 
-             ["/users" :post [(io.interceptors/schema-body-in-interceptor wire.in.user/User)
+             ["/api/users" :post [(io.interceptors/schema-body-in-interceptor wire.in.user/User)
                               interceptors.user/username-already-in-use-interceptor
                               interceptors.user/email-already-in-use-interceptor
                               diplomat.http-server.user/create-user!] :route-name :create-user]
 
-             ["/users/contacts" :get [interceptors.user-identity/user-identity-interceptor
+             ["/api/users/contacts" :get [interceptors.user-identity/user-identity-interceptor
                                       diplomat.http-server.contact/fetch-contacts] :route-name :fetch-contacts]
 
-             ["/users/auth" :post [(io.interceptors/schema-body-in-interceptor wire.in.auth/UserAuth)
+             ["/api/users/auth" :post [(io.interceptors/schema-body-in-interceptor wire.in.auth/UserAuth)
                                    diplomat.http-server.auth/authenticate-user!] :route-name :user-authentication]
 
-             ["/users/password" :put [(io.interceptors/schema-body-in-interceptor wire.in.user/PasswordUpdate)
+             ["/api/users/password" :put [(io.interceptors/schema-body-in-interceptor wire.in.user/PasswordUpdate)
                                       interceptors.user-identity/user-identity-interceptor
                                       diplomat.http-server.password/update-password!] :route-name :password-update]
 
-             ["/users/request-password-reset" :post [(io.interceptors/schema-body-in-interceptor wire.in.user/PasswordReset)
+             ["/api/users/request-password-reset" :post [(io.interceptors/schema-body-in-interceptor wire.in.user/PasswordReset)
                                                      diplomat.http-server.password/request-reset-password!] :route-name :request-password-reset]
 
-             ["/users/password-reset" :post [(io.interceptors/schema-body-in-interceptor wire.in.password-reset/PasswordResetExecution)
+             ["/api/users/password-reset" :post [(io.interceptors/schema-body-in-interceptor wire.in.password-reset/PasswordResetExecution)
                                              interceptors.password-reset/valid-password-reset-execution-token
                                              diplomat.http-server.password/reset-password!] :route-name :password-reset]
 
-             ["/users/roles" :post [interceptors.user-identity/user-identity-interceptor
+             ["/api/users/roles" :post [interceptors.user-identity/user-identity-interceptor
                                     (interceptors.user-identity/user-required-roles-interceptor [:admin])
                                     diplomat.http-server.user/add-role!] :route-name :add-role-to-user]])

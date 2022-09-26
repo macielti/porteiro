@@ -7,7 +7,7 @@
   [user
    service-fn]
   (let [{:keys [body status]} (test/response-for service-fn
-                                                 :post "/users"
+                                                 :post "/api/users"
                                                  :headers {"Content-Type" "application/json"}
                                                  :body (json/encode user))]
     {:status status
@@ -17,7 +17,7 @@
   [token
    service-fn]
   (let [{:keys [body status]} (test/response-for service-fn
-                                                 :get "/users/contacts"
+                                                 :get "/api/users/contacts"
                                                  :headers {"Content-Type"  "application/json"
                                                            "Authorization" (str "Bearer " token)})]
     {:status status
@@ -27,7 +27,7 @@
   [auth
    service-fn]
   (let [{:keys [body status]} (test/response-for service-fn
-                                                 :post "/users/auth"
+                                                 :post "/api/users/auth"
                                                  :headers {"Content-Type" "application/json"}
                                                  :body (json/encode auth))]
     {:status status
@@ -36,14 +36,14 @@
 (defn health-check
   [service-fn]
   (let [{:keys [body status]} (test/response-for service-fn
-                                                 :get "/health")]
+                                                 :get "/api/health")]
     {:status status
      :body   (json/decode body true)}))
 
 (defn update-password!
   [password-update token service-fn]
   (let [{:keys [body status]} (test/response-for service-fn
-                                                 :put "/users/password"
+                                                 :put "/api/users/password"
                                                  :headers {"Content-Type"  "application/json"
                                                            "Authorization" (str "Bearer " token)}
                                                  :body (json/encode password-update))]
@@ -53,7 +53,7 @@
 (defn request-reset-password!
   [password-reset service-fn]
   (let [{:keys [body status]} (test/response-for service-fn
-                                                 :post "/users/request-password-reset"
+                                                 :post "/api/users/request-password-reset"
                                                  :headers {"Content-Type" "application/json"}
                                                  :body (json/encode password-reset))]
     {:status status
@@ -62,7 +62,7 @@
 (defn reset-password!
   [password-reset service-fn]
   (let [{:keys [status]} (test/response-for service-fn
-                                            :post "/users/password-reset"
+                                            :post "/api/users/password-reset"
                                             :headers {"Content-Type" "application/json"}
                                             :body (json/encode password-reset))]
     {:status status
@@ -71,7 +71,7 @@
 (defn add-role!
   [token user-id role service-fn]
   (let [{:keys [status body]} (test/response-for service-fn
-                                                 :post (format "/users/roles?role=%s&user-id=%s" role user-id)
+                                                 :post (format "/api/users/roles?role=%s&user-id=%s" role user-id)
                                                  :headers {"Content-Type"  "application/json"
                                                            "Authorization" (str "Bearer " token)})]
     {:status status

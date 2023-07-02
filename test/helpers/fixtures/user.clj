@@ -25,3 +25,5 @@
 (def datomic-user (c/complete {:user/id              user-id
                                :user/username        "ednaldo-pereira"
                                :user/hashed-password "password-hash"} wire.datomic.user/User))
+
+(def datalevin-user datomic-user)

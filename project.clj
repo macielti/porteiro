@@ -21,7 +21,7 @@
                  [io.pedestal/pedestal.jetty "0.5.10"]
                  [io.pedestal/pedestal.route "0.5.10"]
                  [com.stuartsierra/component "1.1.0"]
-                 [nubank/matcher-combinators "3.8.3"]
+                 [nubank/matcher-combinators "3.5.0"]
                  [fundingcircle/jackdaw "0.9.9"]
                  [buddy/buddy-hashers "1.8.158"]
                  [prismatic/schema "1.4.1"]

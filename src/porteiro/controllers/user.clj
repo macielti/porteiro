@@ -16,7 +16,7 @@
   [user :- wire.datomic.user/User
    email-contact :- models.contact/Contact
    datomic]
-  (database.user/insert-use-with-contact! user email-contact datomic)
+  (database.user/insert-user-with-contact! user email-contact datomic)
   user)
 
 (s/defn update-password!

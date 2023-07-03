@@ -1,17 +1,20 @@
 (ns fixtures.contact
   (:require [fixtures.user])
-  (:import (java.util UUID Date)))
+  (:import (java.util Date)))
+
+(def contact-id (random-uuid))
+(def chat-id "123456789")
 
 (def wire-telegram-contact
   {:user-id fixtures.user/wire-user-id
    :type    "telegram"
-   :chat-id "123456789"})
+   :chat-id chat-id})
 
 (def datomic-telegram-contact
-  {:contact/chat-id    "123456789"
+  {:contact/chat-id    chat-id
    :contact/created-at (Date.)
    :contact/status     :active
-   :contact/id         (UUID/randomUUID)
+   :contact/id         contact-id
    :contact/type       :telegram
    :contact/user-id    fixtures.user/user-id})
 
@@ -19,3 +22,5 @@
   {:user-id fixtures.user/wire-user-id
    :type    "email"
    :email   "test@example.com"})
+
+(def datalevin-contact datomic-telegram-contact)

@@ -11,7 +11,7 @@
   (d/transact datomic [user])
   user)
 
-(s/defn insert-use-with-contact! :- models.user/User
+(s/defn insert-user-with-contact! :- models.user/User
   [user :- models.user/User
    contact :- models.contact/Contact
    datomic]

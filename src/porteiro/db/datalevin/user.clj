@@ -1,5 +1,6 @@
 (ns porteiro.db.datalevin.user
   (:require [datalevin.core :as d]
+            [porteiro.wire.datomic.user :as wire.datomic.user]
             [schema.core :as s]
             [porteiro.models.user :as models.user]
             [porteiro.models.contact :as models.contact]))
@@ -28,3 +29,10 @@
                  :where [?user :user/id ?user-id]] datalevin-db user-id)
           ffirst
           (dissoc :db/id)))
+
+(s/defn add-role!
+  [user-id :- s/Uuid
+   role :- wire.datomic.user/UserRoles
+   datalevin-connection]
+  (s/validate  wire.datomic.user/UserRoles role)
+  (d/transact datalevin-connection [[:db/add [:user/id user-id] :user/roles role]]))

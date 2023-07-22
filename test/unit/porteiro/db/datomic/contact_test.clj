@@ -13,7 +13,7 @@
     (testing "that we can insert a contact entity"
       (database.contact/insert! fixtures.contact/datomic-telegram-contact mock-datomic))))
 
-(deftest by-user-id-test
+(s/deftest by-user-id-test
   (let [mock-datomic (component.datomic/mocked-datomic database.config/schemas)]
     (database.contact/insert! fixtures.contact/datomic-telegram-contact mock-datomic)
     (testing "that we can query contact by user-id"

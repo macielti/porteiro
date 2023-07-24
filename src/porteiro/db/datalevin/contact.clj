@@ -3,6 +3,11 @@
             [schema.core :as s]
             [porteiro.models.contact :as models.contact]))
 
+(s/defn insert!
+  [contact :- models.contact/Contact
+   datomic]
+  (d/transact datomic [contact]))
+
 (s/defn by-user-id :- (s/maybe [models.contact/Contact])
   [user-id :- s/Uuid
    datalevin-db]

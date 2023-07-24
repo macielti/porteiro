@@ -36,3 +36,15 @@
    datalevin-connection]
   (s/validate  wire.datomic.user/UserRoles role)
   (d/transact datalevin-connection [[:db/add [:user/id user-id] :user/roles role]]))
+
+(s/defn by-email :- (s/maybe models.user/User)
+  [email :- s/Str
+   datalevin-db]
+  (some-> (d/q '[:find (pull ?user [*])
+                 :in $ ?email
+                 :where [?contact :contact/email ?email]
+                 [?contact :contact/status :active]
+                 [?contact :contact/user-id ?user-id]
+                 [?user :user/id ?user-id]] datalevin-db email)
+          ffirst
+          (dissoc :db/id)))

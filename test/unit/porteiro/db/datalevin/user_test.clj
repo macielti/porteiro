@@ -51,3 +51,13 @@
                                                database-connection)
       (is (= fixtures.user/datalevin-user
              (database.user/by-email fixtures.contact/email (d/db database-connection)))))))
+
+(s/deftest by-username-test
+  (testing "that we can query a user by it's username"
+    (let [database-uri (datalevin.util/tmp-dir (str "query-or-" (random-uuid)))
+          database-connection (datalevin/get-conn database-uri wire.datalevin.user/user-skeleton)]
+
+      (database.user/insert! fixtures.user/datalevin-user database-connection)
+
+      (is (= fixtures.user/datalevin-user
+             (database.user/by-username fixtures.user/username (d/db database-connection)))))))

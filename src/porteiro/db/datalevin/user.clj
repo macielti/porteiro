@@ -48,3 +48,12 @@
                  [?user :user/id ?user-id]] datalevin-db email)
           ffirst
           (dissoc :db/id)))
+
+(s/defn by-username :- (s/maybe models.user/User)
+  [username :- s/Str
+   datalevin-db]
+  (some-> (d/q '[:find (pull ?user [*])
+                 :in $ ?username
+                 :where [?user :user/username ?username]] datalevin-db username)
+          ffirst
+          (dissoc :db/id)))

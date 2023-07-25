@@ -15,5 +15,3 @@
 
       (is (= fixtures.password-reset/datalevin-password-reset
              (database.password-reset/valid-password-reset-by-token fixtures.password-reset/password-reset-id (d/db database-connection)))))))
-
-

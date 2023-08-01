@@ -8,7 +8,7 @@
             [fixtures.user]
             [porteiro.components :as components]
             [schema.test :as s]
-            [porteiro.db.datomic.user :as database.user])
+            [porteiro.db.datalevin.user :as database.user])
   (:import (java.util UUID)))
 
 (deftest create-user-test
@@ -110,11 +110,10 @@
   (testing "that only authenticated users that have the admin role can call this endpoint"
     (let [system             (component/start components/system-test)
           service-fn         (-> (component.helper/get-component-content :service system) :io.pedestal.http/service-fn)
-          datomic-connection (-> (component.helper/get-component-content :datomic system) :connection)
-          consumer           (component.helper/get-component-content :consumer system)
+          datalevin-connection (component.helper/get-component-content :datalevin system)
           {wire-user-id :id} (-> (http/create-user! fixtures.user/user service-fn) :body :user)
           {wire-admin-user-id :id} (-> (http/create-user! fixtures.user/admin-user service-fn) :body :user)
-          _                  (database.user/add-role! (UUID/fromString wire-admin-user-id) :admin datomic-connection)
+          _                  (database.user/add-role! (UUID/fromString wire-admin-user-id) :admin datalevin-connection)
           {{:keys [token]} :body} (http/authenticate-user! fixtures.user/admin-user-auth service-fn)]
 
       (is (match? {:status 200

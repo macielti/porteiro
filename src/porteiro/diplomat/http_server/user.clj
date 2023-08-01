@@ -6,21 +6,21 @@
   (:import (java.util UUID)))
 
 (s/defn create-user!
-  [{user-wire                  :json-params
-    {:keys [datomic producer]} :components}]
+  [{user-wire           :json-params
+    {:keys [datalevin]} :components}]
   (let [{:user/keys [email] :as user} (adapters.user/wire->internal-user user-wire)
-        datomic-user    (adapters.user/internal-user->wire-datomic-user user)
+        datomic-user (adapters.user/internal-user->wire-datomic-user user)
         datomic-contact (adapters.contact/datomic-user-email->internal-email-contact datomic-user email)]
     {:status 201
-     :body   (-> (controllers.user/create-user! datomic-user datomic-contact (:connection datomic))
+     :body   (-> (controllers.user/create-user! datomic-user datomic-contact datalevin)
                  (adapters.user/internal-user->wire email))}))
 
 (s/defn add-role!
   [{{wire-user-id :user-id
      wire-role    :role} :query-params
-    {:keys [datomic]}    :components}]
+    {:keys [datalevin]}  :components}]
   {:status 200
    :body   (-> (controllers.user/add-role! (UUID/fromString wire-user-id)
                                            (adapters.user/wire->internal-role wire-role)
-                                           (:connection datomic))
+                                           datalevin)
                adapters.user/internal-user->wire-without-email)})

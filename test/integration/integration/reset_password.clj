@@ -25,7 +25,7 @@
       (component/stop system)))
   (testing "that reset password request will produce a message when existent"
     (let [system (component/start components/system-test)
-          producer (component.helper/get-component-content :producer system)
+          producer (component.helper/get-component-content :rabbitmq-producer system)
           service-fn (-> (component.helper/get-component-content :service system) :io.pedestal.http/service-fn)
           {{:keys [email]} :user} (:body (http/create-user! fixtures.user/user service-fn))]
 
@@ -36,18 +36,18 @@
                             "If the email is correct, you should receive a password reset link soon"}}
                   (http/request-reset-password! {:email email} service-fn)))
 
-      (is (match? [{:topic :notification
-                    :data  {:payload {:email   email
-                                      :title   "Password Reset Solicitation"
-                                      :content string?}}}]
+      (is (match? [{:topic   :notification
+                    :payload {:email   email
+                              :title   "Password Reset Solicitation"
+                              :content string?}}]
                   (filter #(= (:topic %) :notification)
-                          (kafka.producer/produced-messages producer))))
+                          @(:produced-messages producer))))
 
       (component/stop system)))
 
   (testing "that trying to reset password with a nonexistent email will not produce any message"
     (let [system (component/start components/system-test)
-          producer (component.helper/get-component-content :producer system)
+          producer (component.helper/get-component-content :rabbitmq-producer system)
           service-fn (-> (component.helper/get-component-content :service system) :io.pedestal.http/service-fn)]
 
       (is (match? {:status 202
@@ -58,7 +58,7 @@
       (Thread/sleep 5000)
 
       (is (match? []
-                  (kafka.producer/produced-messages producer)))
+                  @(:produced-messages producer)))
 
       (component/stop system))))
 
@@ -76,13 +76,13 @@
 
   (testing "that we can consolidate the reset password solicitation"
     (let [system (component/start components/system-test)
-          producer (component.helper/get-component-content :producer system)
+          producer (component.helper/get-component-content :rabbitmq-producer system)
           service-fn (-> (component.helper/get-component-content :service system) :io.pedestal.http/service-fn)
           {{:keys [email]} :user} (:body (http/create-user! fixtures.user/user service-fn))
           _ (Thread/sleep 5000)
           _ (http/request-reset-password! {:email email} service-fn)
-          {{:keys [payload]} :data} (first (filter #(= (:topic %) :notification)
-                                                   (kafka.producer/produced-messages producer)))]
+          {:keys [payload]} (first (filter #(= (:topic %) :notification)
+                                           @(:produced-messages producer)))]
 
       (is (match? {:status 204
                    :body   nil?}
@@ -107,13 +107,12 @@
   (testing "that we can't utilize the same token to consolidate password reset a second time"
     (let [system (component/start components/system-test)
           service-fn (-> (component.helper/get-component-content :service system) :io.pedestal.http/service-fn)
-          consumer (component.helper/get-component-content :consumer system)
-          producer (component.helper/get-component-content :producer system)
+          producer (component.helper/get-component-content :rabbitmq-producer system)
           {{:keys [email]} :user} (:body (http/create-user! fixtures.user/user service-fn))
           _ (Thread/sleep 5000)
           _ (http/request-reset-password! {:email email} service-fn)
-          {{:keys [payload]} :data} (first (filter #(= (:topic %) :notification)
-                                                   (kafka.producer/produced-messages producer)))
+          {:keys [payload]} (first (filter #(= (:topic %) :notification)
+                                                   @(:produced-messages producer)))
           _ (http/reset-password! {:token       (:password-reset-id payload)
                                    :newPassword (:newPassword fixtures.user/password-update)}
                                   service-fn)]

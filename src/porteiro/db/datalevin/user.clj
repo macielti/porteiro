@@ -23,10 +23,10 @@
 
 (s/defn lookup :- (s/maybe models.user/User)
   [user-id :- s/Uuid
-   datalevin-db]
+   datalevin-database]
   (some-> (d/q '[:find (pull ?user [*])
                  :in $ ?user-id
-                 :where [?user :user/id ?user-id]] datalevin-db user-id)
+                 :where [?user :user/id ?user-id]] datalevin-database user-id)
           ffirst
           (dissoc :db/id)))
 
@@ -51,9 +51,9 @@
 
 (s/defn by-username :- (s/maybe models.user/User)
   [username :- s/Str
-   datalevin-db]
+   datalevin-database]
   (some-> (d/q '[:find (pull ?user [*])
                  :in $ ?username
-                 :where [?user :user/username ?username]] datalevin-db username)
+                 :where [?user :user/username ?username]] datalevin-database username)
           ffirst
           (dissoc :db/id)))

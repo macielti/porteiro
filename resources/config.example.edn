@@ -1,6 +1,4 @@
 {:prod {:jwt-secret                     "9837ed52-87b5-48c4-bd09-1cd06d18c1c5"
-        :datomic-uri                    "datomic:mem://example"
-        :bootstrap-server               "http://localhost:9092"
         :service-name                   "porteiro"
         :password-reset-expiration-days 1
         :topics                         ["porteiro.create-contact"]
@@ -10,8 +8,6 @@
                                          :password "very-strong-password"
                                          :email    "brunodonascimento@gmail.com"}}
  :test {:jwt-secret                     "9837ed52-87b5-48c4-bd09-1cd06d18c1c5"
-        :datomic-uri                    "datomic:mem://example"
-        :bootstrap-server               "http://localhost:9092"
         :service-name                   "porteiro"
         :password-reset-expiration-days 1
         :topics                         ["porteiro.create-contact"]

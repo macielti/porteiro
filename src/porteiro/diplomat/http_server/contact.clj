@@ -4,6 +4,6 @@
 
 (s/defn fetch-contacts
   [{{:user-identity/keys [id]} :user-identity
-    {:keys [datomic]}          :components}]
+    {:keys [datalevin]}          :components}]
   {:status 200
-   :body   (controllers.contact/fetch-contacts id (:connection datomic))})
+   :body   (controllers.contact/fetch-contacts id datalevin)})

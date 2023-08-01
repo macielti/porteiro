@@ -5,10 +5,10 @@
 
 (s/defn authenticate-user!
   [{auth                              :json-params
-    {:keys [datomic producer config]} :components}]
+    {:keys [datalevin rabbitmq-producer config]} :components}]
   {:status 200
    :body   (-> (controllers.auth/user-authentication! (adapters.auth/wire->internal-user-auth auth)
                                                       config
-                                                      producer
-                                                      (:connection datomic))
+                                                      rabbitmq-producer
+                                                      datalevin)
                adapters.auth/token->wire)})

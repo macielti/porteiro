@@ -7,25 +7,25 @@
 
 (s/defn reset-password!
   [{password-reset    :json-params
-    {:keys [datomic]} :components}]
+    {:keys [datalevin]} :components}]
   (controllers.password-reset/execute-password-reset! (adapters.password-reset/wire->password-reset-execution-internal password-reset)
-                                                      (:connection datomic))
+                                                      datalevin)
   {:status 204 :body nil})
 
 (s/defn request-reset-password!
   [{password-reset             :json-params
-    {:keys [producer datomic]} :components}]
+    {:keys [rabbitmq-producer datalevin]} :components}]
   (controllers.user/reset-password! (adapters.user/wire->password-reset-internal password-reset)
-                                    producer
-                                    (:connection datomic))
+                                    rabbitmq-producer
+                                    datalevin)
   {:status 202 :body {:message (str "If the email is correct, you should "
                                     "receive a password reset link soon")}})
 
 (s/defn update-password!
   [{password-update            :json-params
     {:user-identity/keys [id]} :user-identity
-    {:keys [datomic]}          :components}]
+    {:keys [datalevin]}          :components}]
   (controllers.user/update-password! (adapters.user/wire->password-update-internal password-update)
                                      id
-                                     (:connection datomic))
+                                     datalevin)
   {:status 204 :body nil})

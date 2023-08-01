@@ -1,25 +1,25 @@
 (ns porteiro.components
   (:require [com.stuartsierra.component :as component]
             [common-clj.component.config :as component.config]
-            [common-clj.component.datomic :as component.datomic]
-            [common-clj.component.kafka.producer :as component.producer]
-            [common-clj.component.kafka.consumer :as component.consumer]
+            [common-clj.component.datalevin :as component.datalevin]
+            [common-clj.component.rabbitmq.consumer :as component.rabbitmq.consumer]
+            [common-clj.component.rabbitmq.producer :as component.rabbitmq.producer]
             [common-clj.component.service :as component.service]
             [common-clj.component.routes :as component.routes]
             [porteiro.admin :as admin]
             [porteiro.diplomat.http-server :as diplomat.http-server]
             [porteiro.diplomat.consumer :as diplomat.consumer]
-            [porteiro.db.datomic.config :as database.config]))
+            [porteiro.db.datalevin.config :as database.config]))
 
 (def system
   (component/system-map
     :config (component.config/new-config "resources/config.edn" :prod :edn)
-    :datomic (component/using (component.datomic/new-datomic database.config/schemas) [:config])
-    :consumer (component/using (component.consumer/new-consumer diplomat.consumer/topic-consumers) [:config :datomic])
-    :producer (component/using (component.producer/new-producer) [:config])
-    :routes (component/using (component.routes/new-routes diplomat.http-server/routes) [:datomic :config])
-    :admin (component/using (admin/new-admin) [:datomic :config])
-    :service (component/using (component.service/new-service) [:routes :config :datomic :producer])))
+    :datalevin (component/using (component.datalevin/new-datalevin database.config/schema) [:config])
+    :rabbitmq-consumer (component/using (component.rabbitmq.consumer/new-consumer diplomat.consumer/topic-consumers) [:config :datalevin])
+    :rabbitmq-producer (component/using (component.rabbitmq.producer/new-producer) [:config])
+    :routes (component.routes/new-routes diplomat.http-server/routes)
+    :admin (component/using (admin/new-admin) [:datalevin :config])
+    :service (component/using (component.service/new-service) [:routes :config :datalevin :rabbitmq-producer])))
 
 (defn start-system! []
   (component/start system))
@@ -27,9 +27,9 @@
 (def system-test
   (component/system-map
     :config (component.config/new-config "resources/config.example.edn" :test :edn)
-    :datomic (component/using (component.datomic/new-datomic database.config/schemas) [:config])
-    :producer (component/using (component.producer/new-mock-producer) [:config])
-    :consumer (component/using (component.consumer/new-mock-consumer diplomat.consumer/topic-consumers) [:config :producer :datomic])
-    :routes (component/using (component.routes/new-routes diplomat.http-server/routes) [:datomic :config])
-    :admin (component/using (admin/new-admin) [:datomic :config])
-    :service (component/using (component.service/new-service) [:routes :config :datomic :producer])))
+    :datalevin (component/using (component.datalevin/new-datalevin database.config/schema) [:config])
+    :rabbitmq-consumer (component/using (component.rabbitmq.consumer/new-consumer diplomat.consumer/topic-consumers) [:config :datalevin])
+    :rabbitmq-producer (component/using (component.rabbitmq.producer/new-producer) [:config])
+    :routes (component/using (component.routes/new-routes diplomat.http-server/routes) [:datalevin :config])
+    :admin (component/using (admin/new-admin) [:datalevin :config])
+    :service (component/using (component.service/new-service) [:routes :config :datalevin :rabbitmq-producer])))

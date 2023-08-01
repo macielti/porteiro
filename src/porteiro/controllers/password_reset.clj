@@ -1,16 +1,17 @@
 (ns porteiro.controllers.password-reset
-  (:require [schema.core :as s]
+  (:require [datalevin.core :as d]
+            [schema.core :as s]
             [porteiro.models.password-reset :as models.password]
-            [porteiro.db.datomic.password-reset :as datomic.password-reset]
-            [porteiro.db.datomic.user :as datomic.user]))
+            [porteiro.db.datalevin.password-reset :as database.password-reset]
+            [porteiro.db.datalevin.user :as database.user]))
 
 
 (s/defn execute-password-reset!
   [{:password-reset-execution/keys [token hashed-password]} :- models.password/PasswordResetExecution
-   datomic]
-  (let [{:password-reset/keys [user-id] :as password-reset-datomic} (datomic.password-reset/valid-password-reset-by-token token
-                                                                                                                          datomic)
-        user (datomic.user/by-id user-id datomic)]
-    (datomic.password-reset/insert! (assoc password-reset-datomic :password-reset/state :used) datomic)
+   datalevin-connection]
+  (let [{:password-reset/keys [id user-id]} (database.password-reset/valid-password-reset-by-token token
+                                                                                                   (d/db datalevin-connection))
+        user (database.user/lookup user-id (d/db datalevin-connection))]
+    (database.password-reset/set-as-used! id datalevin-connection)
     (-> (assoc user :user/hashed-password hashed-password)
-        (datomic.user/insert! datomic))))
+        (database.user/insert! datalevin-connection))))

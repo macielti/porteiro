@@ -16,7 +16,7 @@
               :body   {:isHealth   true
                        :components [{:component "config"
                                      :isHealth  true}
-                                    {:component "datomic"
+                                    {:component "datalevin"
                                      :isHealth  true}]}}
              (http/health-check service-fn))))
     (component/stop system)))

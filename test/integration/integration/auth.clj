@@ -5,13 +5,12 @@
             [matcher-combinators.matchers :as m]
             [com.stuartsierra.component :as component]
             [common-clj.component.helper.core :as component.helper]
-            [common-clj.component.kafka.producer :as kafka.producer]
             [porteiro.components :as components]
             [fixtures.user]))
 
 (deftest auth-test
   (let [system (component/start components/system-test)
-        producer (component.helper/get-component-content :producer system)
+        producer (component.helper/get-component-content :rabbitmq-producer system)
         service-fn (-> (component.helper/get-component-content :service system)
                        :io.pedestal.http/service-fn)
         _ (http/create-user! fixtures.user/user
@@ -26,12 +25,12 @@
                                            service-fn))))
 
     (testing "that successful authentication notifications the user"
-      (is (match? (m/in-any-order [{:topic :notification
-                                    :data  {:payload {:email   (:email fixtures.user/user)
-                                                      :title   "Authentication Confirmation"
-                                                      :content string?}}}])
+      (is (match? (m/in-any-order [{:topic   :notification
+                                    :payload {:email   (:email fixtures.user/user)
+                                              :title   "Authentication Confirmation"
+                                              :content string?}}])
                   (filter #(= (:topic %) :notification)
-                          (kafka.producer/produced-messages producer)))))
+                          @(:produced-messages producer)))))
 
     (testing "that users can't be authenticated with wrong credentials"
       (is (match? {:status 403

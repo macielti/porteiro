@@ -1,33 +1,34 @@
 (ns porteiro.controllers.user
-  (:require [schema.core :as s]
+  (:require [datalevin.core :as d]
+            [schema.core :as s]
             [buddy.hashers :as hashers]
             [porteiro.adapters.user :as adapters.user]
-            [porteiro.db.datomic.user :as datomic.user]
+            [porteiro.db.datalevin.user :as database.user]
             [porteiro.wire.datomic.user :as wire.datomic.user]
             [porteiro.models.user :as models.user]
             [porteiro.models.contact :as models.contact]
-            [porteiro.db.datomic.password-reset :as datomic.password-reset]
-            [porteiro.db.datomic.contact :as database.contact]
+            [porteiro.db.datalevin.password-reset :as database.password-reset]
+            [porteiro.db.datalevin.contact :as database.contact]
             [porteiro.diplomat.producer :as diplomat.producer]
-            [porteiro.db.datomic.user :as database.user]
+            [porteiro.db.datalevin.user :as database.user]
             [common-clj.error.core :as common-error]))
 
 (s/defn create-user! :- models.user/User
   [user :- wire.datomic.user/User
    email-contact :- models.contact/Contact
-   datomic]
-  (database.user/insert-user-with-contact! user email-contact datomic)
+   datalevin-connection]
+  (database.user/insert-user-with-contact! user email-contact datalevin-connection)
   user)
 
 (s/defn update-password!
   [{:password-update/keys [old-password new-password]} :- models.user/PasswordUpdate
    user-id :- s/Uuid
-   datomic]
-  (let [{:user/keys [hashed-password] :as user-datomic} (datomic.user/by-id user-id datomic)]
+   datalevin-connection]
+  (let [{:user/keys [hashed-password] :as user-datomic} (database.user/lookup user-id (d/db datalevin-connection))]
     (if (and user-datomic
              (:valid (hashers/verify old-password hashed-password)))
       (-> (assoc user-datomic :user/hashed-password (hashers/derive new-password))
-          (datomic.user/insert! datomic))
+          (database.user/insert! datalevin-connection))
       (common-error/http-friendly-exception 403
                                             "invalid-credentials"
                                             "The old password you have entered is incorrect"
@@ -36,24 +37,24 @@
 (s/defn reset-password!
   [{:password-reset/keys [email]} :- models.user/PasswordReset
    producer
-   datomic]
-  (let [{:user/keys [id] :as user} (datomic.user/by-email email datomic)
+   datalevin-connection]
+  (let [{:user/keys [id] :as user} (database.user/by-email email (d/db datalevin-connection))
         password-reset (adapters.user/internal->password-reset-datomic id)
-        contact        (some-> id
-                               (database.contact/by-user-id datomic)
-                               first)]
+        contact (some-> id
+                        (database.contact/by-user-id (d/db datalevin-connection))
+                        first)]
     (when user
-      (some-> (datomic.password-reset/insert! password-reset datomic)
+      (some-> (database.password-reset/insert! password-reset datalevin-connection)
               :password-reset/id
               (diplomat.producer/send-password-reset-notification! (:contact/email contact) producer)))))
 
 (s/defn add-role! :- models.user/User
   [user-id :- s/Uuid
    role :- wire.datomic.user/UserRoles
-   datomic-connection]
-  (if (database.user/by-id user-id datomic-connection)
-    (do (database.user/add-role! user-id role datomic-connection)
-        (database.user/by-id user-id datomic-connection))
+   datalevin-connection]
+  (if (database.user/lookup user-id (d/db datalevin-connection))
+    (do (database.user/add-role! user-id role datalevin-connection)
+        (database.user/lookup user-id (d/db datalevin-connection)))
     (throw (ex-info "User not found"
                     {:status 404
                      :cause  "User not found"}))))

@@ -1,0 +1,18 @@
+@startuml
+'https://plantuml.com/sequence-diagram
+
+title
+  Create User Flow
+end title
+
+actor user as "User"
+participant porteiro as "Porteiro"
+database porteirodb as "Porteiro Database"
+
+user -> porteiro: **POST** /api/users
+porteiro -> porteirodb: **QUERY** Check if username is already in use
+porteiro -> porteirodb: **QUERY** Check if email is already in use
+porteiro -> porteirodb: **INSERT** Insert user entity
+porteiro -> user: **200** User entity
+
+@enduml

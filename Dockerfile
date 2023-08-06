@@ -8,4 +8,4 @@ RUN apt-get -y update
 
 RUN lein deps
 
-CMD ["lein", "run"]
+CMD ["lein", "trampoline", "run"]

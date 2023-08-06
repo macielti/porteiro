@@ -45,6 +45,6 @@
   :jvm-opts ^:replace ["--add-opens=java.base/java.nio=ALL-UNNAMED"
                        "--add-opens=java.base/sun.nio.ch=ALL-UNNAMED"
                        "-XX:+UseG1GC"
-                       "-Xmx250m"]
+                       "-Xmx150m"]
 
   :main porteiro.components/start-system!)

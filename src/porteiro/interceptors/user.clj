@@ -1,10 +1,10 @@
 (ns porteiro.interceptors.user
   (:require [datalevin.core :as d]
-            [porteiro.db.datomic.user :as datomic.user]
+            #_[porteiro.db.datomic.user :as datomic.user]
             [porteiro.db.datalevin.user :as datalevin.user]
             [common-clj.error.core :as common-error]))
 
-(def username-already-in-use-interceptor-datomic
+#_(def username-already-in-use-interceptor-datomic
   {:name  ::username-already-in-use-interceptor
    :enter (fn [{{{:keys [username] :or {username ""}} :json-params
                  {:keys [datomic]}                    :components} :request :as context}]
@@ -29,7 +29,7 @@
                                                       "username already in use by other user")))
             context)})
 
-(def email-already-in-use-interceptor-datomic
+#_(def email-already-in-use-interceptor-datomic
   {:name  ::email-already-in-use-interceptor
    :enter (fn [{{{:keys [email] :or {email ""}} :json-params
                  {:keys [datomic]}              :components} :request :as context}]

@@ -1,4 +1,4 @@
-(ns porteiro.db.datomic.user-test
+#_(ns porteiro.db.datomic.user-test
   (:require [clojure.test :refer :all]
             [schema.test :as s]
             [datomic.api :as d]
@@ -9,13 +9,13 @@
             [porteiro.db.datomic.config :as database.config]))
 
 
-(s/deftest insert!-test
+#_(s/deftest insert!-test
   (let [mock-datomic (component.datomic/mocked-datomic database.config/schemas)]
     (testing "that we can insert a contact entity"
       (database.user/insert! fixtures.user/datomic-user mock-datomic))
     (d/release mock-datomic)))
 
-(deftest add-role!-test
+#_(deftest add-role!-test
   (let [mock-datomic (component.datomic/mocked-datomic database.config/schemas)]
     (database.user/insert! fixtures.user/datomic-user mock-datomic)
     (database.user/add-role! fixtures.user/user-id :admin mock-datomic)
@@ -24,7 +24,7 @@
                   (database.user/by-id fixtures.user/user-id mock-datomic))))
     (d/release mock-datomic)))
 
-(deftest by-id-test
+#_(deftest by-id-test
   (let [mock-datomic (component.datomic/mocked-datomic database.config/schemas)]
     (database.user/insert! fixtures.user/datomic-user mock-datomic)
     (testing "that we can insert a contact entity"

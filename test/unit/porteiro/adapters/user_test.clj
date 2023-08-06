@@ -9,12 +9,10 @@
 
 (s/deftest wire->internal-user-test
   (testing "that we can verify the user schema input from outside"
-    (is (match? {:user/email           "example@example.com"
-                 :user/hashed-password string?
+    (is (match? {:user/hashed-password string?
                  :user/id              uuid?
                  :user/username        "ednaldo-pereira"}
                 (adapters.user/wire->internal-user {:username "ednaldo-pereira"
-                                                    :email    "example@example.com"
                                                     :password "a-very-strong-password"}))))
   (testing "that a invalid input will throws a exception"
     (is (thrown? ExceptionInfo (adapters.user/wire->internal-user {:username "ednaldo-pereira"
@@ -22,23 +20,19 @@
 
 (s/deftest internal-user->wire-test
   (testing "externalize datomic query result for user entity"
-    (is (match? {:user {:id       clj-uuid/uuid-string?
-                        :username "ednaldo-pereira"
-                        :roles    []
-                        :email    "example@example.com"}}
+    (is (match? {:id       clj-uuid/uuid-string?
+                 :username "ednaldo-pereira"
+                 :roles    []}
                 (adapters.user/internal-user->wire #:user{:id              (UUID/randomUUID)
                                                           :username        "ednaldo-pereira"
-                                                          :hashed-password ""}
-                                                   "example@example.com")))
-    (is (match? {:user {:id       clj-uuid/uuid-string?
-                        :username "ednaldo-pereira"
-                        :roles    ["ADMIN"]
-                        :email    "example@example.com"}}
+                                                          :hashed-password ""})))
+    (is (match? {:id       clj-uuid/uuid-string?
+                 :username "ednaldo-pereira"
+                 :roles    ["ADMIN"]}
                 (adapters.user/internal-user->wire {:user/id              (UUID/randomUUID)
                                                     :user/roles           [:admin]
                                                     :user/username        "ednaldo-pereira"
-                                                    :user/hashed-password ""}
-                                                   "example@example.com")))))
+                                                    :user/hashed-password ""})))))
 
 (s/deftest wire->password-update-internal-test
   (testing "that we can internalise the password update input"

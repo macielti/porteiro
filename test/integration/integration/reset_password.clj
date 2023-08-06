@@ -3,7 +3,6 @@
             [matcher-combinators.test :refer [match?]]
             [com.stuartsierra.component :as component]
             [common-clj.component.helper.core :as component.helper]
-            [common-clj.component.kafka.producer :as kafka.producer]
             [integration.aux.http :as http]
             [porteiro.components :as components]
             [fixtures.user]))
@@ -27,7 +26,7 @@
     (let [system (component/start components/system-test)
           producer (component.helper/get-component-content :rabbitmq-producer system)
           service-fn (-> (component.helper/get-component-content :service system) :io.pedestal.http/service-fn)
-          {{:keys [email]} :user} (:body (http/create-user! fixtures.user/user service-fn))]
+          {{:keys [email]} :contact} (:body (http/create-user! fixtures.user/wire-user-creation service-fn))]
 
       (Thread/sleep 5000)
 
@@ -78,7 +77,7 @@
     (let [system (component/start components/system-test)
           producer (component.helper/get-component-content :rabbitmq-producer system)
           service-fn (-> (component.helper/get-component-content :service system) :io.pedestal.http/service-fn)
-          {{:keys [email]} :user} (:body (http/create-user! fixtures.user/user service-fn))
+          {{:keys [email]} :contact} (:body (http/create-user! fixtures.user/wire-user-creation service-fn))
           _ (Thread/sleep 5000)
           _ (http/request-reset-password! {:email email} service-fn)
           {:keys [payload]} (first (filter #(= (:topic %) :notification)
@@ -108,11 +107,11 @@
     (let [system (component/start components/system-test)
           service-fn (-> (component.helper/get-component-content :service system) :io.pedestal.http/service-fn)
           producer (component.helper/get-component-content :rabbitmq-producer system)
-          {{:keys [email]} :user} (:body (http/create-user! fixtures.user/user service-fn))
+          {{:keys [email]} :contact} (:body (http/create-user! fixtures.user/wire-user-creation service-fn))
           _ (Thread/sleep 5000)
           _ (http/request-reset-password! {:email email} service-fn)
           {:keys [payload]} (first (filter #(= (:topic %) :notification)
-                                                   @(:produced-messages producer)))
+                                           @(:produced-messages producer)))
           _ (http/reset-password! {:token       (:password-reset-id payload)
                                    :newPassword (:newPassword fixtures.user/password-update)}
                                   service-fn)]

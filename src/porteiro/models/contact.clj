@@ -2,8 +2,13 @@
   (:require [schema.core :as s]
             [schema.experimental.abstract-map :as abstract-map]))
 
-(def Type (s/enum :email :telegram))
-(def Status (s/enum :active :deactivated))
+(def types #{:email :telegram})
+
+(def Type (apply s/enum types))
+
+(def statuses #{:active :deactivated})
+
+(def Status (apply s/enum statuses))
 
 (def base-contact
   {:contact/id         s/Uuid
@@ -16,10 +21,10 @@
                                                        base-contact))
 
 (abstract-map/extend-schema TelegramContact Contact [:telegram]
-  {:contact/chat-id s/Str})
+                            {:contact/chat-id s/Str})
 
 (abstract-map/extend-schema EmailContact Contact [:email]
-  {:contact/email s/Str})
+                            {:contact/email s/Str})
 
 (s/defschema ContactUpdatePassport
   {:contact-update-passport/id         s/Uuid

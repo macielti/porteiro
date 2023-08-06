@@ -15,7 +15,7 @@
 
 (def routes [["/api/health" :get diplomat.http-server.healthy/healthy-check :route-name :health-check]
 
-             ["/api/users" :post [(io.interceptors/schema-body-in-interceptor wire.in.user/User)
+             ["/api/users" :post [(io.interceptors/schema-body-in-interceptor wire.in.user/UserCreationDocument)
                                   interceptors.user/username-already-in-use-interceptor-datalevin
                                   interceptors.user/email-already-in-use-interceptor-datalevin
                                   diplomat.http-server.user/create-user!] :route-name :create-user]

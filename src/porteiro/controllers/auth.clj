@@ -16,10 +16,10 @@
    producer
    datalevin-connection]
   (let [{:user/keys [hashed-password id] :as user} (database.user/by-username username (d/db datalevin-connection))
-        {:contact/keys [email] :as contact} (first (database.contact/by-user-id id (d/db datalevin-connection)))]
+        {:contact/keys [email]} (first (database.contact/by-user-id id (d/db datalevin-connection)))]
     (if (and user (:valid (hashers/verify password hashed-password)))
       (do (diplomat.producer/send-success-auth-notification! email producer)
-          (-> (adapters.user/internal-user->wire user email)
+          (-> {:user (adapters.user/internal-user->wire user)}
               (common-auth/->token jwt-secret)))
       (common-error/http-friendly-exception 403
                                             "invalid-credentials"

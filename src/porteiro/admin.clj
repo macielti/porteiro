@@ -13,13 +13,13 @@
                                         :datalevin (:datalevin datalevin)
                                         :config config-content)]
 
-      (when-not (database.user/by-username (:username admin-user-seed) (-> components :datalevin d/db))
-        (let [wire-user-id (-> (diplomat.http-server.user/create-user! {:json-params  admin-user-seed
-                                                                          :components components})
+      (when-not (database.user/by-username (:username (:user admin-user-seed)) (-> components :datalevin d/db))
+        (let [wire-user-id (-> (diplomat.http-server.user/create-user! {:json-params admin-user-seed
+                                                                        :components  components})
                                :body :user :id)]
           (diplomat.http-server.user/add-role! {:query-params {:user-id wire-user-id
-                                                                 :role  "ADMIN"}
-                                                  :components components})))))
+                                                               :role    "ADMIN"}
+                                                :components   components})))))
 
   (stop [component]))
 

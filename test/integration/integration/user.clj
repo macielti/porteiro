@@ -12,16 +12,22 @@
   (:import (java.util UUID)))
 
 (deftest create-user-test
-  (let [system     (component/start components/system-test)
+  (let [system (component/start components/system-test)
         service-fn (-> (component.helper/get-component-content :service system)
                        :io.pedestal.http/service-fn)]
 
     (testing "that users can be created"
       (is (match? {:status 201
-                   :body   {:user {:id       string?
-                                   :username "ednaldo-pereira"
-                                   :email    "example@example.com"}}}
-                  (http/create-user! fixtures.user/user
+                   :body   {:user    {:id       string?
+                                      :username "ednaldo-pereira"
+                                      :roles    []}
+                            :contact {:id         string?
+                                      :user-id    string?
+                                      :type       "EMAIL",
+                                      :status     "ACTIVE",
+                                      :email      "example@example.com",
+                                      :created-at string?}}}
+                  (http/create-user! fixtures.user/wire-user-creation
                                      service-fn))))
 
     (testing "that username must be unique"
@@ -29,7 +35,7 @@
               :body   {:detail  "username already in use by other user"
                        :error   "not-unique"
                        :message "Username already in use"}}
-             (http/create-user! fixtures.user/user
+             (http/create-user! fixtures.user/wire-user-creation
                                 service-fn))))
 
     (testing "that email must be unique"
@@ -37,24 +43,24 @@
               :body   {:detail  "Email already in use by other user"
                        :error   "not-unique"
                        :message "Email already in use"}}
-             (http/create-user! (assoc fixtures.user/user :username "random-username")
+             (http/create-user! (assoc-in fixtures.user/wire-user-creation [:user :username] "random-username")
                                 service-fn))))
 
     (testing "request body must respect the schema"
       (is (= {:status 422
-              :body   {:detail  {:username "missing-required-key"}
+              :body   {:detail  {:user {:username "missing-required-key"}}
                        :error   "invalid-schema-in"
                        :message "The system detected that the received data is invalid"}}
-             (http/create-user! (dissoc fixtures.user/user :username)
+             (http/create-user! (update fixtures.user/wire-user-creation :user dissoc :username)
                                 service-fn))))
 
     (component/stop system)))
 
 (deftest contact-entity
-  (let [system     (component/start components/system-test)
+  (let [system (component/start components/system-test)
         service-fn (-> (component.helper/get-component-content :service system)
                        :io.pedestal.http/service-fn)
-        _          (http/create-user! fixtures.user/user service-fn)
+        _ (http/create-user! fixtures.user/wire-user-creation service-fn)
         {{:keys [token]} :body} (http/authenticate-user! fixtures.user/user-auth service-fn)]
 
     (testing "that the contact entity is created"
@@ -69,10 +75,10 @@
     (component/stop system)))
 
 (deftest update-password-test
-  (let [system     (component/start components/system-test)
+  (let [system (component/start components/system-test)
         service-fn (-> (component.helper/get-component-content :service system)
                        :io.pedestal.http/service-fn)
-        _          (http/create-user! fixtures.user/user service-fn)
+        _ (http/create-user! fixtures.user/wire-user-creation service-fn)
         {{:keys [token]} :body} (http/authenticate-user! fixtures.user/user-auth service-fn)]
 
     (testing "that we can update password"
@@ -108,12 +114,12 @@
 
 (s/deftest add-role-to-user
   (testing "that only authenticated users that have the admin role can call this endpoint"
-    (let [system             (component/start components/system-test)
-          service-fn         (-> (component.helper/get-component-content :service system) :io.pedestal.http/service-fn)
+    (let [system (component/start components/system-test)
+          service-fn (-> (component.helper/get-component-content :service system) :io.pedestal.http/service-fn)
           datalevin-connection (component.helper/get-component-content :datalevin system)
-          {wire-user-id :id} (-> (http/create-user! fixtures.user/user service-fn) :body :user)
-          {wire-admin-user-id :id} (-> (http/create-user! fixtures.user/admin-user service-fn) :body :user)
-          _                  (database.user/add-role! (UUID/fromString wire-admin-user-id) :admin datalevin-connection)
+          {wire-user-id :id} (-> (http/create-user! fixtures.user/wire-user-creation service-fn) :body :user)
+          {wire-admin-user-id :id} (-> (http/create-user! fixtures.user/wire-admin-user-creation service-fn) :body :user)
+          _ (database.user/add-role! (UUID/fromString wire-admin-user-id) :admin datalevin-connection)
           {{:keys [token]} :body} (http/authenticate-user! fixtures.user/admin-user-auth service-fn)]
 
       (is (match? {:status 200
@@ -125,12 +131,12 @@
       (component/stop system)))
 
   (testing "if you don't have the admin role you can't add role to others"
-    (let [system             (component/start components/system-test)
-          service-fn         (-> (component.helper/get-component-content :service system) :io.pedestal.http/service-fn)
+    (let [system (component/start components/system-test)
+          service-fn (-> (component.helper/get-component-content :service system) :io.pedestal.http/service-fn)
           datomic-connection (-> (component.helper/get-component-content :datomic system) :connection)
-          consumer           (component.helper/get-component-content :consumer system)
+          consumer (component.helper/get-component-content :consumer system)
           {wire-user-id :id} (-> (http/create-user! fixtures.user/user service-fn) :body :user)
-          {wire-admin-user-id :id} (-> (http/create-user! fixtures.user/admin-user service-fn) :body :user)
+          {wire-admin-user-id :id} (-> (http/create-user! fixtures.user/wire-admin-user-creation service-fn) :body :user)
           {{:keys [token]} :body} (http/authenticate-user! fixtures.user/admin-user-auth service-fn)]
 
       (is (match? {:status 403

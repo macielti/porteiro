@@ -18,9 +18,10 @@
 
 (def username-already-in-use-interceptor-datalevin
   {:name  ::username-already-in-use-interceptor
-   :enter (fn [{{{:keys [username] :or {username ""}} :json-params
-                 {:keys [datalevin]}                  :components} :request :as context}]
-            (let [user (datalevin.user/by-username username (d/db datalevin))]
+   :enter (fn [{{json-params         :json-params
+                 {:keys [datalevin]} :components} :request :as context}]
+            (let [username (or (-> json-params :user :username) "")
+                  user (datalevin.user/by-username username (d/db datalevin))]
               (when-not (empty? user)
                 (common-error/http-friendly-exception 409
                                                       "not-unique"
@@ -42,9 +43,10 @@
 
 (def email-already-in-use-interceptor-datalevin
   {:name  ::email-already-in-use-interceptor
-   :enter (fn [{{{:keys [email] :or {email ""}} :json-params
-                 {:keys [datalevin]}              :components} :request :as context}]
-            (let [user (datalevin.user/by-email email (d/db datalevin))]
+   :enter (fn [{{json-params         :json-params
+                 {:keys [datalevin]} :components} :request :as context}]
+            (let [email (or (-> json-params :contact :email) "")
+                  user (datalevin.user/by-email email (d/db datalevin))]
               (when-not (empty? user)
                 (common-error/http-friendly-exception 409
                                                       "not-unique"

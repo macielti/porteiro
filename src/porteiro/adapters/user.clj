@@ -26,23 +26,20 @@
    :password-reset/created-at (Date.)})
 
 (s/defn wire->internal-user :- models.user/User
-  [{:keys [username password email] :as user} :- wire.in.user/User]
-  #:user{:id              (UUID/randomUUID)
-         :username        username
-         :email           email
-         :hashed-password (hashers/derive password)})
+  [{:keys [username password]} :- wire.in.user/User]
+  {:user/id              (UUID/randomUUID)
+   :user/username        username
+   :user/hashed-password (hashers/derive password)})
 
 (s/defn internal-user->wire-datomic-user :- wire.datomic.user/User
   [user :- models.user/User]
   (dissoc user :user/email))
 
-(s/defn internal-user->wire :- wire.out.user/UserDocument
-  [{:user/keys [id username roles] :or {roles []}} :- models.user/UserWithoutEmail
-   email :- s/Str]
-  {:user {:id       (str id)
-          :username username
-          :roles    (map camel-snake-kebab/->SCREAMING_SNAKE_CASE_STRING roles)
-          :email    email}})
+(s/defn internal-user->wire :- wire.out.user/User
+  [{:user/keys [id username roles] :or {roles []}} :- models.user/UserWithoutEmail]
+  {:id       (str id)
+   :username username
+   :roles    (map camel-snake-kebab/->SCREAMING_SNAKE_CASE_STRING roles)})
 
 (s/defn internal-user->wire-without-email :- wire.out.user/UserDocument
   [{:user/keys [id username roles] :or {roles []}} :- models.user/UserWithoutEmail]

@@ -11,8 +11,7 @@
   "Schema for user creation request"
   {:id                     s/Str
    :username               s/Str
-   :roles                  [UserRoles]
-   (s/optional-key :email) s/Str})
+   :roles                  [UserRoles]})
 
 (s/defschema UserDocument
   {:user User})

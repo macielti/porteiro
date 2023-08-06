@@ -1,12 +1,10 @@
-FROM alpine
+FROM clojure
 
 COPY . /usr/src/app
 
 WORKDIR /usr/src/app
 
-RUN apk add clojure
-
-RUN apk add leiningen
+RUN apt-get -y update
 
 RUN lein deps
 

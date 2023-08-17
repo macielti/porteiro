@@ -15,8 +15,8 @@
    {:keys [jwt-secret]}
    producer
    datalevin-connection]
-  (let [{:user/keys [hashed-password id] :as user} (time (database.user/by-username username (d/db datalevin-connection)))
-        {:contact/keys [email]} (first (database.contact/by-user-id id (d/db datalevin-connection)))]
+  (let [{:user/keys [hashed-password id] :as user} (database.user/by-username username (d/db datalevin-connection))
+        {:contact/keys [email]} (first (time (database.contact/by-user-id id (d/db datalevin-connection))))]
     (if (and user (:valid (hashers/verify password hashed-password)))
       (do (diplomat.producer/send-success-auth-notification! email producer)
           (-> {:user (adapters.user/internal-user->wire user)}

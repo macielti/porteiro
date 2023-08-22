@@ -27,7 +27,7 @@
              ["/api/users/auth" :post [(io.interceptors/schema-body-in-interceptor wire.in.auth/UserAuth)
                                        {:name  ::user-authentication
                                         :enter (fn [context]
-                                                 (async/go (assoc context :response (diplomat.http-server.auth/authenticate-user! (:request context)))))}] :route-name :user-authentication]
+                                                 (async/go (assoc context :response (async/<! (diplomat.http-server.auth/authenticate-user! (:request context))))))}] :route-name :user-authentication]
 
              ["/api/users/password" :put [(io.interceptors/schema-body-in-interceptor wire.in.user/PasswordUpdate)
                                           interceptors.user-identity/user-identity-interceptor

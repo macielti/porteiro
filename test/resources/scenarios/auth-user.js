@@ -5,7 +5,7 @@ import { check, fail } from 'k6';
 export default function () {
     const payload = JSON.stringify({
         username: 'admin',
-        password: 'admin',
+        password: '@1udadG5gH4#',
         });
 
     const headers = { 'Content-Type': 'application/json' };

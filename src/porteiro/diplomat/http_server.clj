@@ -10,7 +10,8 @@
             [porteiro.diplomat.http-server.contact :as diplomat.http-server.contact]
             [porteiro.wire.in.user :as wire.in.user]
             [porteiro.wire.in.auth :as wire.in.auth]
-            [porteiro.wire.in.password-reset :as wire.in.password-reset]))
+            [porteiro.wire.in.password-reset :as wire.in.password-reset]
+            [clojure.core.async :as async]))
 
 
 (def routes [["/api/health" :get diplomat.http-server.healthy/healthy-check :route-name :health-check]
@@ -26,7 +27,7 @@
              ["/api/users/auth" :post [(io.interceptors/schema-body-in-interceptor wire.in.auth/UserAuth)
                                        {:name  ::user-authentication
                                         :enter (fn [context]
-                                                 (assoc context :response (diplomat.http-server.auth/authenticate-user! (:request context))))}] :route-name :user-authentication]
+                                                 (async/go (assoc context :response (diplomat.http-server.auth/authenticate-user! (:request context)))))}] :route-name :user-authentication]
 
              ["/api/users/password" :put [(io.interceptors/schema-body-in-interceptor wire.in.user/PasswordUpdate)
                                           interceptors.user-identity/user-identity-interceptor

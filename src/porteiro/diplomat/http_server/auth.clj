@@ -6,7 +6,6 @@
 (s/defn authenticate-user!
   [{auth                                         :json-params
     {:keys [datalevin rabbitmq-producer config]} :components}]
-  (Thread/sleep 5000)
   {:status 200
    :body   (-> (controllers.auth/user-authentication! (adapters.auth/wire->internal-user-auth auth)
                                                       config

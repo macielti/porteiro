@@ -24,7 +24,9 @@
                                           diplomat.http-server.contact/fetch-contacts] :route-name :fetch-contacts]
 
              ["/api/users/auth" :post [(io.interceptors/schema-body-in-interceptor wire.in.auth/UserAuth)
-                                       diplomat.http-server.auth/authenticate-user!] :route-name :user-authentication]
+                                       {:name  ::user-authentication
+                                        :enter (fn [context]
+                                                 (assoc context :response (diplomat.http-server.auth/authenticate-user! (:request context))))}] :route-name :user-authentication]
 
              ["/api/users/password" :put [(io.interceptors/schema-body-in-interceptor wire.in.user/PasswordUpdate)
                                           interceptors.user-identity/user-identity-interceptor

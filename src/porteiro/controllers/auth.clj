@@ -15,7 +15,7 @@
    {:keys [jwt-secret]}
    producer
    datalevin-connection]
-  (let [database-snapshot (time (d/db datalevin-connection))
+  (let [database-snapshot (d/db datalevin-connection)
         {:user/keys [hashed-password id] :as user} (database.user/by-username username database-snapshot)
         {:contact/keys [email]} (first (database.contact/by-user-id id database-snapshot))]
     (if (and user (:valid (hashers/verify password hashed-password)))

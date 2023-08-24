@@ -1,5 +1,6 @@
 (ns porteiro.db.postgres.customer
   (:require [camel-snake-kebab.core :as camel-snake-kebab]
+            [porteiro.models.customer :as models.user]
             [porteiro.wire.datomic.user :as wire.datomic.user]
             [schema.core :as s]
             [porteiro.models.customer :as models.customer]
@@ -17,7 +18,7 @@
                            {:return-keys true})
         adapters.customer/postgresql->internal)))
 
-(s/defn lookup :- (s/maybe models.customer/Customer)        ;TODO: Add unit tests
+(s/defn lookup :- (s/maybe models.customer/Customer)
   [customer-id :- s/Uuid
    database-connection]
   (some-> (jdbc/execute-one! database-connection
@@ -34,3 +35,11 @@
                           (camel-snake-kebab/->SCREAMING_SNAKE_CASE_STRING role) user-id]
                          {:return-keys true})
       adapters.customer/postgresql->internal))
+
+(s/defn by-username :- (s/maybe models.user/Customer)
+  [username :- s/Str
+   database-connection]
+  (some-> (jdbc/execute-one! database-connection
+                             ["SELECT id, username, roles, hashed_password FROM customer WHERE username = ?"
+                              username])
+          adapters.customer/postgresql->internal))

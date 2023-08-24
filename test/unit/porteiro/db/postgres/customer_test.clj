@@ -46,3 +46,19 @@
     (testing "that we can add a role to a customer"
       (is (= fixtures.customer/customer
              (database.customer/add-role! fixtures.customer/customer-id :test connection))))))
+
+(s/deftest by-username-test
+  (let [connection (-> (jdbc/get-connection {:jdbcUrl "jdbc:postgres://localhost:5432/postgres?user=postgres&password=postgres"})
+                       (jdbc/with-options {:builder-fn rs/as-unqualified-maps}))
+        schema-sql (slurp "resources/schema.sql")]
+
+    (jdbc/execute! connection ["DROP TABLE IF EXISTS customer"])
+    (jdbc/execute! connection [schema-sql])
+    (database.customer/insert! fixtures.customer/customer connection)
+
+    (testing "that we can search a existent customer by it's username"
+      (is (= fixtures.customer/customer
+             (database.customer/by-username fixtures.customer/customer-username connection))))
+
+    (testing "that we can search a customer that does not exists"
+      (is (nil? (database.customer/by-username "not-exists" connection))))))

@@ -19,6 +19,7 @@
 (s/defn lookup :- (s/maybe models.customer/Customer)        ;TODO: Add unit tests
   [customer-id :- s/Uuid
    database-connection]
-  (jdbc/execute! database-connection
-                 ["SELECT id, username, roles, hashed_password FROM customer WHERE id = ?"
-                  customer-id]))
+  (some-> (jdbc/execute-one! database-connection
+                             ["SELECT id, username, roles, hashed_password FROM customer WHERE id = ?"
+                              customer-id])
+          adapters.customer/postgresql->internal))

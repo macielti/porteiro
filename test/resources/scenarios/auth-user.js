@@ -16,6 +16,7 @@ export default function () {
     if(!check(res, {
         'is statuscode 200 - endpoint news': (r) => r.status === 200
     })){
+        console.log(res);
         fail(res.status, res.payload);
     }
 

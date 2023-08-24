@@ -5,7 +5,7 @@
             [porteiro.adapters.user :as adapters.user]
             [porteiro.db.datalevin.user :as database.user]
             [porteiro.wire.datomic.user :as wire.datomic.user]
-            [porteiro.models.user :as models.user]
+            [porteiro.models.customer :as models.user]
             [porteiro.models.contact :as models.contact]
             [porteiro.db.datalevin.password-reset :as database.password-reset]
             [porteiro.db.datalevin.contact :as database.contact]
@@ -13,7 +13,7 @@
             [porteiro.db.datalevin.user :as database.user]
             [common-clj.error.core :as common-error]))
 
-(s/defn create-user! :- models.user/User
+(s/defn create-user! :- models.user/Customer
   [user :- wire.datomic.user/User
    email-contact :- models.contact/Contact
    datalevin-connection]
@@ -48,7 +48,7 @@
               :password-reset/id
               (diplomat.producer/send-password-reset-notification! (:contact/email contact) producer)))))
 
-(s/defn add-role! :- models.user/User
+(s/defn add-role! :- models.user/Customer
   [user-id :- s/Uuid
    role :- wire.datomic.user/UserRoles
    datalevin-connection]

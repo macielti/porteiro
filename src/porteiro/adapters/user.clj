@@ -3,7 +3,7 @@
             [buddy.hashers :as hashers]
             [porteiro.wire.in.user :as wire.in.user]
             [porteiro.wire.out.user :as wire.out.user]
-            [porteiro.models.user :as models.user]
+            [porteiro.models.customer :as models.user]
             [porteiro.wire.datomic.password-reset :as wire.datomic.password-reset]
             [porteiro.wire.datomic.user :as wire.datomic.user]
             [camel-snake-kebab.core :as camel-snake-kebab])
@@ -25,14 +25,14 @@
    :password-reset/state      :free
    :password-reset/created-at (Date.)})
 
-(s/defn wire->internal-user :- models.user/User
+(s/defn wire->internal-user :- models.user/Customer
   [{:keys [username password]} :- wire.in.user/User]
   {:user/id              (UUID/randomUUID)
    :user/username        username
    :user/hashed-password (hashers/derive password)})
 
 (s/defn internal-user->wire-datomic-user :- wire.datomic.user/User
-  [user :- models.user/User]
+  [user :- models.user/Customer]
   (dissoc user :user/email))
 
 (s/defn internal-user->wire :- wire.out.user/User

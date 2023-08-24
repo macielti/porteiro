@@ -1,7 +1,7 @@
 #_(ns porteiro.db.datomic.user
   (:require [schema.core :as s]
             [datomic.api :as d]
-            [porteiro.models.user :as models.user]
+            [porteiro.models.customer :as models.user]
             [porteiro.models.contact :as models.contact]
             [porteiro.wire.datomic.user :as wire.datomic.user]))
 

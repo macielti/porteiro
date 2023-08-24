@@ -31,7 +31,8 @@
                  [siili/humanize "0.1.1"]
                  [cheshire "5.11.0"]
                  [environ "1.2.0"]
-                 [org.clojure/java.jdbc "0.3.6"]]
+                 [org.clojure/java.jdbc "0.3.6"]
+                 [clj-pg "0.0.3"]]
 
   :injections [(require 'hashp.core)]
 

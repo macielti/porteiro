@@ -3,7 +3,7 @@
             [schema.test :as s]
             [clj-uuid]
             [matcher-combinators.test :refer [match?]]
-            [porteiro.adapters.user :as adapters.user])
+            [porteiro.adapters.customer :as adapters.user])
   (:import (clojure.lang ExceptionInfo)
            (java.util UUID)))
 

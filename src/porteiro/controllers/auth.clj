@@ -5,7 +5,7 @@
             [common-clj.error.core :as common-error]
             [common-clj.auth.core :as common-auth]
             [porteiro.models.auth :as models.auth]
-            [porteiro.adapters.user :as adapters.user]
+            [porteiro.adapters.customer :as adapters.user]
             [porteiro.db.datalevin.contact :as database.contact]
             [porteiro.db.datalevin.user :as database.user]
             [porteiro.diplomat.producer :as diplomat.producer]))

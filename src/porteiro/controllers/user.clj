@@ -2,7 +2,7 @@
   (:require [datalevin.core :as d]
             [schema.core :as s]
             [buddy.hashers :as hashers]
-            [porteiro.adapters.user :as adapters.user]
+            [porteiro.adapters.customer :as adapters.user]
             [porteiro.db.datalevin.user :as database.user]
             [porteiro.wire.datomic.user :as wire.datomic.user]
             [porteiro.models.customer :as models.user]

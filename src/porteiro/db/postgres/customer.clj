@@ -1,5 +1,6 @@
 (ns porteiro.db.postgres.customer
   (:require [camel-snake-kebab.core :as camel-snake-kebab]
+            [porteiro.wire.datomic.user :as wire.datomic.user]
             [schema.core :as s]
             [porteiro.models.customer :as models.customer]
             [porteiro.adapters.customer :as adapters.customer]
@@ -23,3 +24,13 @@
                              ["SELECT id, username, roles, hashed_password FROM customer WHERE id = ?"
                               customer-id])
           adapters.customer/postgresql->internal))
+
+(s/defn add-role! :- models.customer/Customer
+  [user-id :- s/Uuid
+   role :- wire.datomic.user/UserRoles
+   database-connection]
+  (-> (jdbc/execute-one! database-connection
+                         ["UPDATE customer set roles = array_append(roles, ?) where id=?"
+                          (camel-snake-kebab/->SCREAMING_SNAKE_CASE_STRING role) user-id]
+                         {:return-keys true})
+      adapters.customer/postgresql->internal))

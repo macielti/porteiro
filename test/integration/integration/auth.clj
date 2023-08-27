@@ -13,8 +13,8 @@
         producer (component.helper/get-component-content :rabbitmq-producer system)
         service-fn (-> (component.helper/get-component-content :service system)
                        :io.pedestal.http/service-fn)
-        _ (http/create-user! fixtures.user/wire-user-creation
-                             service-fn)]
+        _ (http/create-customer! fixtures.user/wire-customer-creation
+                                 service-fn)]
 
     (Thread/sleep 5000)
 

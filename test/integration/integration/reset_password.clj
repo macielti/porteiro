@@ -26,7 +26,7 @@
     (let [system (component/start components/system-test)
           producer (component.helper/get-component-content :rabbitmq-producer system)
           service-fn (-> (component.helper/get-component-content :service system) :io.pedestal.http/service-fn)
-          {{:keys [email]} :contact} (:body (http/create-user! fixtures.user/wire-user-creation service-fn))]
+          {{:keys [email]} :contact} (:body (http/create-customer! fixtures.user/wire-customer-creation service-fn))]
 
       (Thread/sleep 5000)
 
@@ -77,7 +77,7 @@
     (let [system (component/start components/system-test)
           producer (component.helper/get-component-content :rabbitmq-producer system)
           service-fn (-> (component.helper/get-component-content :service system) :io.pedestal.http/service-fn)
-          {{:keys [email]} :contact} (:body (http/create-user! fixtures.user/wire-user-creation service-fn))
+          {{:keys [email]} :contact} (:body (http/create-customer! fixtures.user/wire-customer-creation service-fn))
           _ (Thread/sleep 5000)
           _ (http/request-reset-password! {:email email} service-fn)
           {:keys [payload]} (first (filter #(= (:topic %) :notification)
@@ -107,7 +107,7 @@
     (let [system (component/start components/system-test)
           service-fn (-> (component.helper/get-component-content :service system) :io.pedestal.http/service-fn)
           producer (component.helper/get-component-content :rabbitmq-producer system)
-          {{:keys [email]} :contact} (:body (http/create-user! fixtures.user/wire-user-creation service-fn))
+          {{:keys [email]} :contact} (:body (http/create-customer! fixtures.user/wire-customer-creation service-fn))
           _ (Thread/sleep 5000)
           _ (http/request-reset-password! {:email email} service-fn)
           {:keys [payload]} (first (filter #(= (:topic %) :notification)

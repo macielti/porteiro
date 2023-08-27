@@ -3,11 +3,11 @@
             [io.pedestal.test :as test]
             [cheshire.core :as json]))
 
-(defn create-user!
+(defn create-customer!
   [user
    service-fn]
   (let [{:keys [body status]} (test/response-for service-fn
-                                                 :post "/api/users"
+                                                 :post "/api/customers"
                                                  :headers {"Content-Type" "application/json"}
                                                  :body (json/encode user))]
     {:status status

@@ -21,3 +21,22 @@
                  :contact/status     :active
                  :contact/created-at inst?}
                 (adapters.contact/wire->internal-contact fixtures.contact/wire-email-contact)))))
+
+(s/deftest postgresql->contact
+  (testing "that we can internalize a email contact entity coming from postgresql database"
+    (is (= {:contact/id         fixtures.contact/contact-id
+            :contact/user-id    fixtures.user/user-id
+            :contact/type       :email
+            :contact/email      fixtures.contact/email
+            :contact/status     :active
+            :contact/created-at fixtures.contact/created-at}
+           (adapters.contact/postgresql->internal fixtures.contact/postgres-email-contact))))
+
+  (testing "that we can internalize a telegram contact entity coming from postgresql database"
+    (is (= {:contact/id         fixtures.contact/contact-id
+            :contact/user-id    fixtures.user/user-id
+            :contact/chat-id    fixtures.contact/chat-id
+            :contact/type       :telegram
+            :contact/status     :active
+            :contact/created-at fixtures.contact/created-at}
+           (adapters.contact/postgresql->internal fixtures.contact/postgres-telegram-contact)))))

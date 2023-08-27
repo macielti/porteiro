@@ -14,12 +14,12 @@
            :email    email
            :password password})
 
-(def wire-user-for-user-creation {:username username
-                                  :password password})
+(def wire-user-for-customer-creation {:username username
+                                      :password password})
 (def wire-email-contact-for-user-creation {:type  "email"
                                            :email email})
-(def wire-user-creation {:user    wire-user-for-user-creation
-                         :contact wire-email-contact-for-user-creation})
+(def wire-customer-creation {:customer wire-user-for-customer-creation
+                             :contact  wire-email-contact-for-user-creation})
 
 (def wire-admin-user-for-creation
   {:username "admin-da-massa"

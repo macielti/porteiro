@@ -1,24 +1,25 @@
-(ns porteiro.controllers.user
+(ns porteiro.controllers.customer
   (:require [datalevin.core :as d]
+            [porteiro.models.customer :as models.customer]
             [schema.core :as s]
             [buddy.hashers :as hashers]
-            [porteiro.adapters.user :as adapters.user]
+            [porteiro.adapters.customer :as adapters.user]
             [porteiro.db.datalevin.user :as database.user]
             [porteiro.wire.datomic.user :as wire.datomic.user]
-            [porteiro.models.user :as models.user]
+            [porteiro.models.customer :as models.user]
             [porteiro.models.contact :as models.contact]
             [porteiro.db.datalevin.password-reset :as database.password-reset]
             [porteiro.db.datalevin.contact :as database.contact]
             [porteiro.diplomat.producer :as diplomat.producer]
-            [porteiro.db.datalevin.user :as database.user]
+            [porteiro.db.postgres.customer :as database.customer]
             [common-clj.error.core :as common-error]))
 
-(s/defn create-user! :- models.user/User
-  [user :- wire.datomic.user/User
+(s/defn create-customer! :- models.user/Customer
+  [customer :- models.customer/Customer
    email-contact :- models.contact/Contact
-   datalevin-connection]
-  (database.user/insert-user-with-contact! user email-contact datalevin-connection)
-  user)
+   database-connection]
+  (database.customer/insert-user-with-contact! customer email-contact database-connection)
+  customer)
 
 (s/defn update-password!
   [{:password-update/keys [old-password new-password]} :- models.user/PasswordUpdate
@@ -48,13 +49,13 @@
               :password-reset/id
               (diplomat.producer/send-password-reset-notification! (:contact/email contact) producer)))))
 
-(s/defn add-role! :- models.user/User
-  [user-id :- s/Uuid
+(s/defn add-role! :- models.user/Customer
+  [customer-id :- s/Uuid
    role :- wire.datomic.user/UserRoles
-   datalevin-connection]
-  (if (database.user/lookup user-id (d/db datalevin-connection))
-    (do (database.user/add-role! user-id role datalevin-connection)
-        (database.user/lookup user-id (d/db datalevin-connection)))
-    (throw (ex-info "User not found"
+   database-connection]
+  (if (database.customer/lookup customer-id database-connection)
+    (do (database.customer/add-role! customer-id role database-connection)
+        (database.customer/lookup customer-id database-connection))
+    (throw (ex-info "Customer not found"
                     {:status 404
-                     :cause  "User not found"}))))
+                     :cause  "Customer not found"}))))

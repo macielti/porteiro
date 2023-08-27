@@ -11,5 +11,5 @@
     (database.contact/insert! contact datalevin)))
 
 (def topic-consumers
-  {:porteiro.create-contact {#_:schema  #_wire.in.contact/Contact
+  {:porteiro.create-contact {:schema  wire.in.contact/Contact
                              :handler-fn create-contact!}})

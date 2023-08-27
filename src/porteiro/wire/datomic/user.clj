@@ -16,10 +16,6 @@
     :db/valueType   :db.type/keyword
     :db/cardinality :db.cardinality/many
     :db/doc         "User roles"}
-   {:db/ident       :user/email
-    :db/valueType   :db.type/string
-    :db/cardinality :db.cardinality/one
-    :db/doc         "E-mail address"}
    {:db/ident       :user/hashed-password
     :db/valueType   :db.type/string
     :db/cardinality :db.cardinality/one

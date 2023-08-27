@@ -6,7 +6,7 @@
 (def Type (s/enum "email" "telegram"))
 
 (def base-contact
-  {:user-id s/Str
+  {:customer-id s/Str
    :type    Type})
 
 (s/defschema Contact (abstract-map/abstract-map-schema :type
@@ -18,11 +18,11 @@
 (abstract-map/extend-schema EmailContact Contact ["email"]
                             {:email s/Str})
 
-(s/defschema ContactWithoutUserId (abstract-map/abstract-map-schema :type
-                                                                    (dissoc base-contact :user-id)))
+(s/defschema ContactWithoutCustomerId (abstract-map/abstract-map-schema :type
+                                                                        (dissoc base-contact :customer-id)))
 
-(abstract-map/extend-schema TelegramContactWithoutUserId ContactWithoutUserId ["telegram"]
+(abstract-map/extend-schema TelegramContactWithoutUserId ContactWithoutCustomerId ["telegram"]
                             {:chat-id s/Str})
 
-(abstract-map/extend-schema EmailContactWithoutUserId ContactWithoutUserId ["email"]
+(abstract-map/extend-schema EmailContactWithoutUserId ContactWithoutCustomerId ["email"]
                             {:email s/Str})

@@ -12,24 +12,24 @@
     (is (match? {:user/hashed-password string?
                  :user/id              uuid?
                  :user/username        "ednaldo-pereira"}
-                (adapters.user/wire->internal-user {:username "ednaldo-pereira"
-                                                    :password "a-very-strong-password"}))))
+                (adapters.user/wire->internal-customer {:username "ednaldo-pereira"
+                                                    :password     "a-very-strong-password"}))))
   (testing "that a invalid input will throws a exception"
-    (is (thrown? ExceptionInfo (adapters.user/wire->internal-user {:username "ednaldo-pereira"
-                                                                   :name     "Ednaldo Pereira"})))))
+    (is (thrown? ExceptionInfo (adapters.user/wire->internal-customer {:username "ednaldo-pereira"
+                                                                   :name         "Ednaldo Pereira"})))))
 
 (s/deftest internal-user->wire-test
   (testing "externalize datomic query result for user entity"
     (is (match? {:id       clj-uuid/uuid-string?
                  :username "ednaldo-pereira"
                  :roles    []}
-                (adapters.user/internal-user->wire #:user{:id              (UUID/randomUUID)
+                (adapters.user/internal-customer->wire #:user{:id          (UUID/randomUUID)
                                                           :username        "ednaldo-pereira"
                                                           :hashed-password ""})))
     (is (match? {:id       clj-uuid/uuid-string?
                  :username "ednaldo-pereira"
                  :roles    ["ADMIN"]}
-                (adapters.user/internal-user->wire {:user/id              (UUID/randomUUID)
+                (adapters.user/internal-customer->wire {:user/id          (UUID/randomUUID)
                                                     :user/roles           [:admin]
                                                     :user/username        "ednaldo-pereira"
                                                     :user/hashed-password ""})))))

@@ -5,7 +5,8 @@
             [porteiro.wire.in.contact :as wire.in.contact]
             [porteiro.wire.datomic.user :as wire.datomic.user]
             [porteiro.wire.out.contact :as wire.out.contact]
-            [common-clj.time.parser.core :as time.parser])
+            [common-clj.time.parser.core :as time.parser]
+            [porteiro.wire.postgresql.contact :as wire.postgresql.contact])
   (:import (java.util UUID Date)))
 
 (defmulti wire->internal-contact
@@ -13,9 +14,9 @@
     (keyword type)))
 
 (s/defmethod wire->internal-contact :email :- models.contact/EmailContact
-  [{:keys [user-id email]} :- wire.in.contact/EmailContact]
+  [{:keys [customer-id email]} :- wire.in.contact/EmailContact]
   {:contact/id         (UUID/randomUUID)
-   :contact/user-id    (UUID/fromString user-id)
+   :contact/user-id    (UUID/fromString customer-id)
    :contact/type       :email
    :contact/status     :active
    :contact/email      email
@@ -43,12 +44,34 @@
    :email      email
    :created-at (time.parser/date->wire created-at)})
 
-(s/defn datomic-user-email->internal-email-contact :- models.contact/EmailContact
-  [{:user/keys [id]} :- wire.datomic.user/User
-   email :- s/Str]
-  {:contact/id         (UUID/randomUUID)
-   :contact/user-id    id
+#_(s/defn datomic-user-email->internal-email-contact :- models.contact/EmailContact
+    [{:user/keys [id]} :- wire.datomic.user/User
+     email :- s/Str]
+    {:contact/id         (UUID/randomUUID)
+     :contact/user-id    id
+     :contact/type       :email
+     :contact/status     :active
+     :contact/email      email
+     :contact/created-at (Date.)})
+
+(defmulti postgresql->internal
+  (s/fn [{:keys [type]} :- wire.postgresql.contact/Contact]
+    type))
+
+(s/defmethod postgresql->internal "EMAIL" :- models.contact/EmailContact
+  [{:keys [id user_id status email created_at]}]
+  {:contact/id         id
+   :contact/user-id    user_id
    :contact/type       :email
-   :contact/status     :active
+   :contact/status     (camel-snake-kebab/->kebab-case-keyword status)
    :contact/email      email
-   :contact/created-at (Date.)})
+   :contact/created-at created_at})
+
+(s/defmethod postgresql->internal "TELEGRAM" :- models.contact/TelegramContact
+  [{:keys [id user_id status chat_id created_at]}]
+  {:contact/id         id
+   :contact/user-id    user_id
+   :contact/type       :telegram
+   :contact/status     (camel-snake-kebab/->kebab-case-keyword status)
+   :contact/chat-id    chat_id
+   :contact/created-at created_at})

@@ -20,7 +20,7 @@
         {:contact/keys [email]} (first (database.contact/by-user-id id database-snapshot))]
     (if (and user (:valid (hashers/verify password hashed-password)))
       (do (diplomat.producer/send-success-auth-notification! email producer)
-          (-> {:user (adapters.user/internal-user->wire user)}
+          (-> {:user (adapters.user/internal-customer->wire user)}
               (common-auth/->token jwt-secret)))
       (common-error/http-friendly-exception 403
                                             "invalid-credentials"

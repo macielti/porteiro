@@ -6,53 +6,60 @@
             [common-clj.component.helper.core :as component.helper]
             [integration.aux.http :as http]
             [fixtures.user]
+            [next.jdbc :as jdbc]
             [porteiro.components :as components]
             [schema.test :as s]
             [porteiro.db.datalevin.user :as database.user])
   (:import (java.util UUID)))
 
-(deftest create-user-test
+(s/deftest create-customer-test
   (let [system (component/start components/system-test)
         service-fn (-> (component.helper/get-component-content :service system)
-                       :io.pedestal.http/service-fn)]
+                       :io.pedestal.http/service-fn)
+        database-connection (component.helper/get-component-content :postgresql system)]
+
+    (jdbc/execute-one! database-connection
+                       ["TRUNCATE contact"])
+    (jdbc/execute-one! database-connection
+                       ["TRUNCATE customer"])
 
     (testing "that users can be created"
       (is (match? {:status 201
-                   :body   {:user    {:id       string?
-                                      :username "ednaldo-pereira"
-                                      :roles    []}
-                            :contact {:id         string?
-                                      :user-id    string?
-                                      :type       "EMAIL",
-                                      :status     "ACTIVE",
-                                      :email      "example@example.com",
-                                      :created-at string?}}}
-                  (http/create-user! fixtures.user/wire-user-creation
-                                     service-fn))))
+                   :body   {:customer {:id       string?
+                                       :username "ednaldo-pereira"
+                                       :roles    []}
+                            :contact  {:id         string?
+                                       :user-id    string?
+                                       :type       "EMAIL",
+                                       :status     "ACTIVE",
+                                       :email      "example@example.com",
+                                       :created-at string?}}}
+                  (http/create-customer! fixtures.user/wire-customer-creation
+                                         service-fn))))
 
     (testing "that username must be unique"
       (is (= {:status 409
-              :body   {:detail  "username already in use by other user"
+              :body   {:detail  "username already in use by other customer"
                        :error   "not-unique"
                        :message "Username already in use"}}
-             (http/create-user! fixtures.user/wire-user-creation
-                                service-fn))))
+             (http/create-customer! fixtures.user/wire-customer-creation
+                                    service-fn))))
 
     (testing "that email must be unique"
       (is (= {:status 409
-              :body   {:detail  "Email already in use by other user"
+              :body   {:detail  "Email already in use as contact by another user"
                        :error   "not-unique"
                        :message "Email already in use"}}
-             (http/create-user! (assoc-in fixtures.user/wire-user-creation [:user :username] "random-username")
-                                service-fn))))
+             (http/create-customer! (assoc-in fixtures.user/wire-customer-creation [:customer :username] "random-username")
+                                    service-fn))))
 
     (testing "request body must respect the schema"
       (is (= {:status 422
-              :body   {:detail  {:user {:username "missing-required-key"}}
+              :body   {:detail  {:customer {:username "missing-required-key"}}
                        :error   "invalid-schema-in"
                        :message "The system detected that the received data is invalid"}}
-             (http/create-user! (update fixtures.user/wire-user-creation :user dissoc :username)
-                                service-fn))))
+             (http/create-customer! (update fixtures.user/wire-customer-creation :customer dissoc :username)
+                                    service-fn))))
 
     (component/stop system)))
 
@@ -60,7 +67,7 @@
   (let [system (component/start components/system-test)
         service-fn (-> (component.helper/get-component-content :service system)
                        :io.pedestal.http/service-fn)
-        _ (http/create-user! fixtures.user/wire-user-creation service-fn)
+        _ (http/create-customer! fixtures.user/wire-customer-creation service-fn)
         {{:keys [token]} :body} (http/authenticate-user! fixtures.user/user-auth service-fn)]
 
     (testing "that the contact entity is created"
@@ -78,7 +85,7 @@
   (let [system (component/start components/system-test)
         service-fn (-> (component.helper/get-component-content :service system)
                        :io.pedestal.http/service-fn)
-        _ (http/create-user! fixtures.user/wire-user-creation service-fn)
+        _ (http/create-customer! fixtures.user/wire-customer-creation service-fn)
         {{:keys [token]} :body} (http/authenticate-user! fixtures.user/user-auth service-fn)]
 
     (testing "that we can update password"
@@ -117,8 +124,8 @@
     (let [system (component/start components/system-test)
           service-fn (-> (component.helper/get-component-content :service system) :io.pedestal.http/service-fn)
           datalevin-connection (component.helper/get-component-content :datalevin system)
-          {wire-user-id :id} (-> (http/create-user! fixtures.user/wire-user-creation service-fn) :body :user)
-          {wire-admin-user-id :id} (-> (http/create-user! fixtures.user/wire-admin-user-creation service-fn) :body :user)
+          {wire-user-id :id} (-> (http/create-customer! fixtures.user/wire-customer-creation service-fn) :body :user)
+          {wire-admin-user-id :id} (-> (http/create-customer! fixtures.user/wire-admin-user-creation service-fn) :body :user)
           _ (database.user/add-role! (UUID/fromString wire-admin-user-id) :admin datalevin-connection)
           {{:keys [token]} :body} (http/authenticate-user! fixtures.user/admin-user-auth service-fn)]
 
@@ -135,8 +142,8 @@
           service-fn (-> (component.helper/get-component-content :service system) :io.pedestal.http/service-fn)
           datomic-connection (-> (component.helper/get-component-content :datomic system) :connection)
           consumer (component.helper/get-component-content :consumer system)
-          {wire-user-id :id} (-> (http/create-user! fixtures.user/user service-fn) :body :user)
-          {wire-admin-user-id :id} (-> (http/create-user! fixtures.user/wire-admin-user-creation service-fn) :body :user)
+          {wire-user-id :id} (-> (http/create-customer! fixtures.user/user service-fn) :body :user)
+          {wire-admin-user-id :id} (-> (http/create-customer! fixtures.user/wire-admin-user-creation service-fn) :body :user)
           {{:keys [token]} :body} (http/authenticate-user! fixtures.user/admin-user-auth service-fn)]
 
       (is (match? {:status 403

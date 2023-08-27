@@ -5,6 +5,8 @@
             [schema.core :as s]
             [porteiro.models.customer :as models.customer]
             [porteiro.adapters.customer :as adapters.customer]
+            [porteiro.models.contact :as models.contact]
+            [next.jdbc.date-time]
             [next.jdbc :as jdbc]))
 
 (s/defn insert! :- models.customer/Customer
@@ -43,3 +45,29 @@
                              ["SELECT id, username, roles, hashed_password FROM customer WHERE username = ?"
                               username])
           adapters.customer/postgresql->internal))
+
+(s/defn insert-user-with-contact!
+  [customer :- models.user/Customer
+   contact :- models.contact/Contact
+   database-connection]
+  (jdbc/with-transaction [tx database-connection]
+    (let [customer-roles (some->> (:customer/roles customer)
+                                  (map camel-snake-kebab/->SCREAMING_SNAKE_CASE_STRING)
+                                  into-array)]
+      (jdbc/execute-one! tx
+                         ["INSERT INTO customer (id, username, roles, hashed_password) VALUES (?, ?, ?, ?)"
+                          (:customer/id customer)
+                          (:customer/username customer)
+                          customer-roles
+                          (:customer/hashed-password customer)]))
+    (let [contact-type (camel-snake-kebab/->SCREAMING_SNAKE_CASE_STRING (:contact/type contact))
+          contact-status (camel-snake-kebab/->SCREAMING_SNAKE_CASE_STRING (:contact/status contact))]
+      (jdbc/execute-one! tx
+                         ["INSERT INTO contact (id, user_id, type, status, created_at, chat_id, email) VALUES (?, ?, ?, ?, ?, ?, ?)"
+                          (:contact/id contact)
+                          (:contact/user-id contact)
+                          contact-type
+                          contact-status
+                          (:contact/created-at contact)
+                          (:contact/chat-id contact)
+                          (:contact/email contact)]))))

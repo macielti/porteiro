@@ -11,7 +11,7 @@
   :dependencies [[org.clojure/clojure "1.11.1"]
                  [ch.qos.logback/logback-classic "1.4.7"]
                  [io.pedestal/pedestal.service-tools "0.5.10"]
-                 [net.clojars.macielti/common-clj "20.31.36"]
+                 [net.clojars.macielti/common-clj "20.32.37"]
                  [camel-snake-kebab "0.4.3"]
                  [danlentz/clj-uuid "0.1.9"]
                  [de.ubercode.clostache/clostache "1.4.0"]

@@ -1,7 +1,7 @@
 (ns porteiro.diplomat.http-server.password
   (:require [schema.core :as s]
             [porteiro.controllers.password-reset :as controllers.password-reset]
-            [porteiro.controllers.user :as controllers.user]
+            [porteiro.controllers.customer :as controllers.user]
             [porteiro.adapters.customer :as adapters.user]
             [porteiro.adapters.password-reset :as adapters.password-reset]))
 

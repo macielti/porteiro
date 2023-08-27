@@ -4,17 +4,18 @@
         :topics                         ["porteiro.create-contact"]
         :service                        {:host "0.0.0.0"
                                          :port 8010}
-        :admin-user-seed                {:user    {:username "admin"
-                                                   :password "very-strong-password"}
-                                         :contact {:type  "email"
-                                                   :email "brunodonascimentomaciel@gmail.com"}}}
+        :admin-customer-seed            {:customer {:username "admin"
+                                                    :password "very-strong-password"}
+                                         :contact  {:type  "email"
+                                                    :email "brunodonascimentomaciel@gmail.com"}}}
  :test {:jwt-secret                     "9837ed52-87b5-48c4-bd09-1cd06d18c1c5"
         :service-name                   "porteiro"
         :password-reset-expiration-days 1
         :topics                         ["porteiro.create-contact"]
         :service                        {:host "0.0.0.0"
                                          :port 8099}
-        :admin-user-seed                {:user    {:username "admin"
-                                                   :password "very-strong-password"}
-                                         :contact {:type  "email"
-                                                   :email "brunodonascimentomaciel@gmail.com"}}}}
+        :postgresql-uri                 "jdbc:postgres://localhost:5432/postgres?user=postgres&password=postgres"
+        :admin-customer-seed            {:customer {:username "admin"
+                                                    :password "very-strong-password"}
+                                         :contact  {:type  "email"
+                                                    :email "brunodonascimentomaciel@gmail.com"}}}}

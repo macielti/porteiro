@@ -34,3 +34,29 @@
    :contact/type       :email
    :contact/email      email
    :contact/user-id    fixtures.user/user-id})
+
+;---PostgreSQL---
+(def created-at (Date.))
+(def contact
+  {:contact/chat-id    chat-id
+   :contact/created-at created-at
+   :contact/status     :active
+   :contact/id         contact-id
+   :contact/type       :telegram
+   :contact/user-id    fixtures.customer/customer-id})
+
+(def postgres-telegram-contact
+  {:chat_id    chat-id
+   :created_at created-at
+   :status     "ACTIVE"
+   :id         contact-id
+   :type       "TELEGRAM"
+   :user_id    fixtures.user/user-id})
+
+(def postgres-email-contact
+  {:created_at created-at
+   :status     "ACTIVE"
+   :id         contact-id
+   :type       "EMAIL"
+   :email      email
+   :user_id    fixtures.user/user-id})

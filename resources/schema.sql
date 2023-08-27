@@ -18,7 +18,7 @@ CREATE TABLE IF NOT EXISTS password_reset (
 
 CREATE TABLE IF NOT EXISTS contact (
     id UUID PRIMARY KEY,
-    user_id TEXT NOT NULL,
+    user_id UUID NOT NULL,
     type TEXT NOT NULL,
     status TEXT NOT NULL,
     created_at TIMESTAMP NOT NULL,

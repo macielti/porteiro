@@ -3,7 +3,7 @@
             [porteiro.interceptors.contact :as interceptors.contact]
             [common-clj.io.interceptors :as io.interceptors]
             [porteiro.interceptors.password-reset :as interceptors.password-reset]
-            [porteiro.interceptors.user-identity :as interceptors.user-identity]
+            [porteiro.interceptors.customer-identity :as interceptors.user-identity]
             [porteiro.diplomat.http-server.healthy :as diplomat.http-server.healthy]
             [porteiro.diplomat.http-server.password :as diplomat.http-server.password]
             [porteiro.diplomat.http-server.customer :as diplomat.http-server.user]
@@ -21,14 +21,14 @@
                                       interceptors.contact/email-already-in-use-interceptor
                                       diplomat.http-server.user/create-user!] :route-name :create-customer]
 
-             ["/api/customers/contacts" :get [interceptors.user-identity/user-identity-interceptor
+             ["/api/customers/contacts" :get [interceptors.user-identity/customer-identity-interceptor
                                               diplomat.http-server.contact/fetch-contacts] :route-name :fetch-contacts]
 
              ["/api/customers/auth" :post [(io.interceptors/schema-body-in-interceptor wire.in.auth/CustomerAuth)
                                        diplomat.http-server.auth/authenticate-customer!] :route-name :customer-authentication]
 
              ["/api/users/password" :put [(io.interceptors/schema-body-in-interceptor wire.in.customer/PasswordUpdate)
-                                          interceptors.user-identity/user-identity-interceptor
+                                          interceptors.user-identity/customer-identity-interceptor
                                           diplomat.http-server.password/update-password!] :route-name :password-update]
 
              ["/api/users/request-password-reset" :post [(io.interceptors/schema-body-in-interceptor wire.in.customer/PasswordReset)
@@ -38,6 +38,6 @@
                                                  interceptors.password-reset/valid-password-reset-execution-token
                                                  diplomat.http-server.password/reset-password!] :route-name :password-reset]
 
-             ["/api/users/roles" :post [interceptors.user-identity/user-identity-interceptor
+             ["/api/users/roles" :post [interceptors.user-identity/customer-identity-interceptor
                                         (interceptors.user-identity/user-required-roles-interceptor [:admin])
                                         diplomat.http-server.user/add-role!] :route-name :add-role-to-user]])

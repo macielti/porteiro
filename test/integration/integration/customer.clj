@@ -90,6 +90,11 @@
   (let [system (component/start components/system-test)
         service-fn (-> (component.helper/get-component-content :service system)
                        :io.pedestal.http/service-fn)
+        database-connection (component.helper/get-component-content :postgresql system)
+        _ (do (jdbc/execute-one! database-connection
+                                 ["TRUNCATE contact"])
+              (jdbc/execute-one! database-connection
+                                 ["TRUNCATE customer"]))
         _ (http/create-customer! fixtures.user/wire-customer-creation service-fn)
         {{:keys [token]} :body} (http/authenticate-user! fixtures.user/user-auth service-fn)]
 

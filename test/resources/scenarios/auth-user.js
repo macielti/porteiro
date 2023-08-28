@@ -9,7 +9,7 @@ export default function () {
         });
 
     const headers = { 'Content-Type': 'application/json' };
-    let res = http.post('https://porteiro.nullab.com.br/api/users/auth', payload, { headers });
+    let res = http.post('https://porteiro.nullab.com.br/api/customers/auth', payload, { headers });
 
     let durationMsg = 'Falha na execução do cenário de teste news';
 

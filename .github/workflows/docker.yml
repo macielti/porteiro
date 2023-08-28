@@ -15,7 +15,7 @@ jobs:
         run: |
           VERSION=$(date +%s)
           docker login docker.pkg.github.com --username macielti --password ${{ secrets.GITHUB_TOKEN }}
-          docker build -t docker.pkg.github.com/macielti/porteiro/porteiro:${VERSION} -t docker.pkg.github.com/macielti/porteiro/porteiro:latest
-          docker push docker.pkg.github.com/macielti/porteiro/porteiro --all-tags
+          docker build . --tag docker.pkg.github.com/macielti/porteiro:latest
+          docker push docker.pkg.github.com/macielti/porteiro:latest
         env:
           CI: true

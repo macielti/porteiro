@@ -8,7 +8,7 @@
 (s/defn create-user!
   [{{:keys [customer contact]} :json-params
     {:keys [postgresql]}       :components}]
-  (let [{:customer/keys [id] :as internal-customer} (adapters.customer/wire->internal-customer customer)
+  (let [{:customer/keys [id] :as internal-customer} (adapters.customer/wire->internal-customer #p customer)
         internal-contact (-> contact
                              (assoc :customer-id (str id))
                              adapters.contact/wire->internal-contact)]

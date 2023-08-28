@@ -6,13 +6,20 @@
             [com.stuartsierra.component :as component]
             [common-clj.component.helper.core :as component.helper]
             [porteiro.components :as components]
-            [fixtures.user]))
+            [fixtures.user]
+            [next.jdbc :as jdbc]
+            [schema.test :as s]))
 
-(deftest auth-test
+(s/deftest auth-test
   (let [system (component/start components/system-test)
         producer (component.helper/get-component-content :rabbitmq-producer system)
         service-fn (-> (component.helper/get-component-content :service system)
                        :io.pedestal.http/service-fn)
+        database-connection (component.helper/get-component-content :postgresql system)
+        _ (do (jdbc/execute-one! database-connection
+                                 ["TRUNCATE contact"])
+              (jdbc/execute-one! database-connection
+                                 ["TRUNCATE customer"]))
         _ (http/create-customer! fixtures.user/wire-customer-creation
                                  service-fn)]
 
@@ -36,7 +43,7 @@
       (is (match? {:status 403
                    :body   {:error   "invalid-credentials"
                             :message "Wrong username or/and password"
-                            :detail  "user is trying to login using invalid credentials"}}
+                            :detail  "Customer is trying to login using invalid credentials"}}
                   (http/authenticate-user! (assoc fixtures.user/user-auth :password "wrong-password")
                                            service-fn))))
 

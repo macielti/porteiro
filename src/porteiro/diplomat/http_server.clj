@@ -21,11 +21,11 @@
                                       interceptors.contact/email-already-in-use-interceptor
                                       diplomat.http-server.user/create-user!] :route-name :create-customer]
 
-             ["/api/users/contacts" :get [interceptors.user-identity/user-identity-interceptor
-                                          diplomat.http-server.contact/fetch-contacts] :route-name :fetch-contacts]
+             ["/api/customers/contacts" :get [interceptors.user-identity/user-identity-interceptor
+                                              diplomat.http-server.contact/fetch-contacts] :route-name :fetch-contacts]
 
-             ["/api/users/auth" :post [(io.interceptors/schema-body-in-interceptor wire.in.auth/UserAuth)
-                                       diplomat.http-server.auth/authenticate-user!] :route-name :user-authentication]
+             ["/api/customers/auth" :post [(io.interceptors/schema-body-in-interceptor wire.in.auth/CustomerAuth)
+                                       diplomat.http-server.auth/authenticate-customer!] :route-name :customer-authentication]
 
              ["/api/users/password" :put [(io.interceptors/schema-body-in-interceptor wire.in.customer/PasswordUpdate)
                                           interceptors.user-identity/user-identity-interceptor

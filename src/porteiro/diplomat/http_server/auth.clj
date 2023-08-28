@@ -3,12 +3,12 @@
             [porteiro.adapters.auth :as adapters.auth]
             [porteiro.controllers.auth :as controllers.auth]))
 
-(s/defn authenticate-user!
-  [{auth                                         :json-params
-    {:keys [datalevin rabbitmq-producer config]} :components}]
+(s/defn authenticate-customer!
+  [{auth                                          :json-params
+    {:keys [postgresql rabbitmq-producer config]} :components}]
   {:status 200
-   :body   (-> (controllers.auth/user-authentication! (adapters.auth/wire->internal-user-auth auth)
-                                                      config
-                                                      rabbitmq-producer
-                                                      datalevin)
+   :body   (-> (controllers.auth/customer-authentication! (adapters.auth/wire->internal-customer-auth auth)
+                                                          config
+                                                          rabbitmq-producer
+                                                          postgresql)
                adapters.auth/token->wire)})

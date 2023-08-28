@@ -1,6 +1,6 @@
 (ns porteiro.models.auth
   (:require [schema.core :as s]))
 
-(s/defschema UserAuth
-  #:user-auth {:username s/Str
-               :password s/Str})
+(s/defschema CustomerAuth
+  {:customer-auth/username s/Str
+   :customer-auth/password s/Str})

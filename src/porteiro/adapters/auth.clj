@@ -4,10 +4,10 @@
             [porteiro.wire.out.auth :as wire.out.auth]
             [porteiro.models.auth :as models.auth]))
 
-(s/defn wire->internal-user-auth :- models.auth/UserAuth
-  [{:keys [username password]} :- wire.in.auth/UserAuth]
-  {:user-auth/username username
-   :user-auth/password password})
+(s/defn wire->internal-customer-auth :- models.auth/CustomerAuth
+  [{:keys [username password]} :- wire.in.auth/CustomerAuth]
+  {:customer-auth/username username
+   :customer-auth/password password})
 
 (s/defn token->wire :- wire.out.auth/Token
   [token :- s/Str]

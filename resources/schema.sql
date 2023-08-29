@@ -11,7 +11,7 @@ CREATE INDEX IF NOT EXISTS id_index ON customer (id);
 
 CREATE TABLE IF NOT EXISTS password_reset (
     id UUID PRIMARY KEY,
-    user_id TEXT NOT NULL,
+    user_id UUID NOT NULL,
     state TEXT NOT NULL,
     created_at TIMESTAMP NOT NULL
 );

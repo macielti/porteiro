@@ -4,7 +4,7 @@
             [datomic.api :as d]
             [matcher-combinators.test :refer [match?]]
             [fixtures.user]
-            [porteiro.db.datomic.user :as database.user]
+            [porteiro.db.datomic.customer :as database.user]
             [common-clj.component.datomic :as component.datomic]
             [porteiro.db.datomic.config :as database.config]))
 

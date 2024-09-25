@@ -7,7 +7,7 @@
             [porteiro.wire.out.customer :as wire.out.customer]
             [porteiro.models.customer :as models.customer]
             [porteiro.wire.datomic.password-reset :as wire.datomic.password-reset]
-            [porteiro.wire.datomic.user :as wire.datomic.user]
+            [porteiro.wire.datomic.customer :as wire.datomic.user]
             [camel-snake-kebab.core :as camel-snake-kebab]
             [porteiro.wire.postgresql.customer :as wire.postgresql.customer])
   (:import (java.util UUID Date)))

@@ -1,7 +1,7 @@
 (ns porteiro.db.postgres.customer
   (:require [camel-snake-kebab.core :as camel-snake-kebab]
             [porteiro.models.customer :as models.user]
-            [porteiro.wire.datomic.user :as wire.datomic.user]
+            [porteiro.wire.datomic.customer :as wire.datomic.user]
             [schema.core :as s]
             [porteiro.models.customer :as models.customer]
             [porteiro.adapters.customer :as adapters.customer]

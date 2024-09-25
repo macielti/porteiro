@@ -1,6 +1,6 @@
 (ns fixtures.user
   (:require [schema-generators.complete :as c]
-            [porteiro.wire.datomic.user :as wire.datomic.user])
+            [porteiro.wire.datomic.customer :as wire.datomic.user])
   (:import (java.util UUID)))
 
 (def user-id (UUID/randomUUID))

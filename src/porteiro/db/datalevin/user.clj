@@ -1,6 +1,6 @@
 (ns porteiro.db.datalevin.user
   (:require [datalevin.core :as d]
-            [porteiro.wire.datomic.user :as wire.datomic.user]
+            [porteiro.wire.datomic.customer :as wire.datomic.user]
             [schema.core :as s]
             [porteiro.models.customer :as models.user]
             [porteiro.models.contact :as models.contact]))

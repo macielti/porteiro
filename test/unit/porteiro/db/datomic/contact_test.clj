@@ -1,26 +1,27 @@
-#_(ns porteiro.db.datomic.contact-test
+(ns porteiro.db.datomic.contact-test
   (:require [clojure.test :refer :all]
+            [datomic.api :as d]
+            [matcher-combinators.matchers :as matchers]
             [schema.test :as s]
             [matcher-combinators.test :refer [match?]]
             [porteiro.db.datomic.contact :as database.contact]
             [porteiro.db.datomic.config :as database.config]
-            [fixtures.user]
             [fixtures.contact]
-            [common-clj.component.datomic :as component.datomic]))
+            [common-clj.integrant-components.datomic :as component.datomic]))
 
-#_(s/deftest insert!-test
-  (let [mock-datomic (component.datomic/mocked-datomic database.config/schemas)]
-    (testing "that we can insert a contact entity"
-      (database.contact/insert! fixtures.contact/datomic-telegram-contact mock-datomic))))
+(s/deftest insert-test
+  (testing "That we can insert a contact"
+    (let [database-conn (component.datomic/mocked-datomic database.config/schemas)]
+      (is (= fixtures.contact/contact
+             (database.contact/insert! fixtures.contact/contact database-conn)))
+      (d/release database-conn))))
 
-#_(s/deftest by-user-id-test
-  (let [mock-datomic (component.datomic/mocked-datomic database.config/schemas)]
-    (database.contact/insert! fixtures.contact/datomic-telegram-contact mock-datomic)
-    (testing "that we can query contact by user-id"
-      (is (match? [{:contact/id         uuid?
-                    :contact/user-id    fixtures.user/user-id
-                    :contact/chat-id    "123456789"
-                    :contact/status     :active
-                    :contact/type       :telegram
-                    :contact/created-at inst?}]
-                  (database.contact/by-user-id fixtures.user/user-id mock-datomic))))))
+(s/deftest by-customer-id-test
+  (testing "That we can find a contact by customer-id"
+    (let [database-conn (component.datomic/mocked-datomic database.config/schemas)]
+      (database.contact/insert! fixtures.contact/contact database-conn)
+      (is (match? [fixtures.contact/contact]
+                  (database.contact/by-customer-id fixtures.customer/customer-id database-conn)))
+      (d/release database-conn))))
+
+

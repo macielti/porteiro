@@ -8,8 +8,7 @@
             [common-clj.component.routes :as component.routes]
             [porteiro.admin :as admin]
             [porteiro.diplomat.http-server :as diplomat.http-server]
-            [porteiro.diplomat.consumer :as diplomat.consumer]
-            [porteiro.db.datalevin.config :as database.config]))
+            [porteiro.diplomat.consumer :as diplomat.consumer]))
 
 (def system
   (component/system-map

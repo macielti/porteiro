@@ -1,4 +1,5 @@
-(ns porteiro.wire.datomic.contact)
+(ns porteiro.wire.datomic.contact
+  (:require [porteiro.models.contact :as models.contact]))
 
 (def contact
   [{:db/ident       :contact/id
@@ -6,10 +7,10 @@
     :db/cardinality :db.cardinality/one
     :db/unique      :db.unique/identity
     :db/doc         "Contact Id"}
-   {:db/ident       :contact/user-id
+   {:db/ident       :contact/customer-id
     :db/valueType   :db.type/uuid
     :db/cardinality :db.cardinality/one
-    :db/doc         "User id that owns this contact entity"}
+    :db/doc         "Customer id that owns this contact entity"}
    {:db/ident       :contact/type
     :db/valueType   :db.type/keyword
     :db/cardinality :db.cardinality/one
@@ -30,3 +31,5 @@
     :db/valueType   :db.type/string
     :db/cardinality :db.cardinality/one
     :db/doc         "Email"}])
+
+(def Contact models.contact/Contact)

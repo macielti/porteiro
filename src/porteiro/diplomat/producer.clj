@@ -2,7 +2,7 @@
   (:require [schema.core :as s]
             [clostache.parser :as parser]
             [common-clj.component.rabbitmq.producer :as rabbitmq.producer]
-            [porteiro.wire.datomic.user :as wire.datomic.user])
+            [porteiro.wire.datomic.customer :as wire.datomic.user])
   (:import (java.util Date)))
 
 (s/defn send-password-reset-notification!

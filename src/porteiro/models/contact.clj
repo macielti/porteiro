@@ -11,11 +11,11 @@
 (def Status (apply s/enum statuses))
 
 (def base-contact
-  {:contact/id         s/Uuid
-   :contact/user-id    s/Uuid
-   :contact/type       Type
-   :contact/status     Status
-   :contact/created-at s/Inst})
+  {:contact/id          s/Uuid
+   :contact/customer-id s/Uuid
+   :contact/type        Type
+   :contact/status      Status
+   :contact/created-at  s/Inst})
 
 (s/defschema Contact (abstract-map/abstract-map-schema :contact/type
                                                        base-contact))

@@ -3,7 +3,7 @@
             [schema.core :as s]
             [porteiro.models.contact :as models.contact]
             [porteiro.wire.in.contact :as wire.in.contact]
-            [porteiro.wire.datomic.user :as wire.datomic.user]
+            [porteiro.wire.datomic.customer :as wire.datomic.user]
             [porteiro.wire.out.contact :as wire.out.contact]
             [common-clj.time.parser.core :as time.parser]
             [porteiro.wire.postgresql.contact :as wire.postgresql.contact])

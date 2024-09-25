@@ -5,7 +5,7 @@
             [buddy.hashers :as hashers]
             [porteiro.adapters.customer :as adapters.user]
             [porteiro.db.datalevin.user :as database.user]
-            [porteiro.wire.datomic.user :as wire.datomic.user]
+            [porteiro.wire.datomic.customer :as wire.datomic.user]
             [porteiro.models.customer :as models.user]
             [porteiro.models.contact :as models.contact]
             [porteiro.db.datalevin.password-reset :as database.password-reset]

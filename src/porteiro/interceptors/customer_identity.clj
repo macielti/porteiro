@@ -3,7 +3,7 @@
             [buddy.sign.jwt :as jwt]
             [clojure.string :as str]
             [common-clj.error.core :as common-error]
-            [porteiro.wire.datomic.user :as wire.datomic.user]
+            [porteiro.wire.datomic.customer :as wire.datomic.user]
             [camel-snake-kebab.core :as camel-snake-kebab])
   (:import (java.util UUID)
            (clojure.lang ExceptionInfo)))

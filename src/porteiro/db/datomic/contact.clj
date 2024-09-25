@@ -1,19 +1,21 @@
 (ns porteiro.db.datomic.contact
-  (:require [schema.core :as s]
+  (:require [common-clj.integrant-components.datomic :as component.datomic]
+            [schema.core :as s]
             [datomic.api :as d]
             [porteiro.models.contact :as models.contact]))
 
 (s/defn insert!
   [contact :- models.contact/Contact
    datomic]
-  (d/transact datomic [contact]))
+  (-> (component.datomic/transact-and-lookup-entity! :contact/id contact datomic)
+      :entity))
 
-(s/defn by-user-id :- (s/maybe [models.contact/Contact])
-  [user-id :- s/Uuid
+(s/defn by-customer-id :- (s/maybe [models.contact/Contact])
+  [customer-id :- s/Uuid
    datomic]
   (some-> (d/q '[:find (pull ?contact [*])
-                 :in $ ?user-id
-                 :where [?contact :contact/user-id ?user-id]
-                        [?contact :contact/status :active]] (d/db datomic) user-id)
+                 :in $ ?customer-id
+                 :where [?contact :contact/customer-id ?customer-id]
+                 [?contact :contact/status :active]] (d/db datomic) customer-id)
           (->> (mapv first))
           (->> (mapv #(dissoc % :db/id)))))

@@ -4,11 +4,11 @@
             [porteiro.controllers.auth :as controllers.auth]))
 
 (s/defn authenticate-customer!
-  [{auth                                          :json-params
-    {:keys [postgresql rabbitmq-producer config]} :components}]
+  [{auth                              :json-params
+    {:keys [datomic producer config]} :components}]
   {:status 200
    :body   (-> (controllers.auth/customer-authentication! (adapters.auth/wire->internal-customer-auth auth)
                                                           config
-                                                          rabbitmq-producer
-                                                          postgresql)
+                                                          producer
+                                                          datomic)
                adapters.auth/token->wire)})

@@ -1,9 +1,8 @@
 (ns fixtures.customer
   (:require [clojure.test :refer :all]
-            [clj-pg.coerce :as sut]
             [schema-generators.complete :as c]))
 
-(def customer-id (random-uuid))
+(defonce customer-id (random-uuid))
 (def customer-username "manoel-gomes")
 (def hashed-password "password-hash")
 

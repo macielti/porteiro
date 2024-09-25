@@ -2,7 +2,6 @@
   (:require [schema.core :as s]))
 
 (def roles #{:admin :test})
-
 (def CustomerRoles (apply s/enum roles))
 
 (def base-customer

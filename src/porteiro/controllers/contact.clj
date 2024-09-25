@@ -1,8 +1,9 @@
 (ns porteiro.controllers.contact
-  (:require [schema.core :as s]
-            [porteiro.db.postgres.contact :as database.contact]))
+  (:require [datomic.api :as d]
+            [schema.core :as s]
+            [porteiro.db.datomic.contact :as database.contact]))
 
 (s/defn fetch-contacts
   [customer-id :- s/Uuid
-   database-connection]
-  (database.contact/by-customer-id customer-id database-connection))
+   datomic]
+  (database.contact/by-customer-id customer-id (d/db datomic)))

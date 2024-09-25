@@ -12,10 +12,10 @@
 
 (s/defn by-customer-id :- (s/maybe [models.contact/Contact])
   [customer-id :- s/Uuid
-   datomic]
+   database]
   (some-> (d/q '[:find (pull ?contact [*])
                  :in $ ?customer-id
                  :where [?contact :contact/customer-id ?customer-id]
-                 [?contact :contact/status :active]] (d/db datomic) customer-id)
+                 [?contact :contact/status :active]] database customer-id)
           (->> (mapv first))
           (->> (mapv #(dissoc % :db/id)))))

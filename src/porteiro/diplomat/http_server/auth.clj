@@ -1,5 +1,6 @@
 (ns porteiro.diplomat.http-server.auth
-  (:require [schema.core :as s]
+  (:require [datomic.api :as d]
+            [schema.core :as s]
             [porteiro.adapters.auth :as adapters.auth]
             [porteiro.controllers.auth :as controllers.auth]))
 
@@ -10,5 +11,5 @@
    :body   (-> (controllers.auth/customer-authentication! (adapters.auth/wire->internal-customer-auth auth)
                                                           config
                                                           producer
-                                                          datomic)
+                                                          (d/db datomic))
                adapters.auth/token->wire)})

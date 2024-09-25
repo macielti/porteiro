@@ -1,5 +1,6 @@
 (ns porteiro.controllers.auth
-  (:require [schema.core :as s]
+  (:require [datomic.api :as d]
+            [schema.core :as s]
             [buddy.hashers :as hashers]
             [common-clj.error.core :as common-error]
             [common-clj.auth.core :as common-auth]
@@ -13,9 +14,9 @@
   [{:customer-auth/keys [username password]} :- models.auth/CustomerAuth
    {:keys [jwt-secret]}
    producer
-   datomic]
-  (let [{:customer/keys [hashed-password id] :as customer} (database.customer/by-username username datomic)
-        {:contact/keys [email]} (first (database.contact/by-customer-id id datomic))]
+   database]
+  (let [{:customer/keys [hashed-password id] :as customer} (database.customer/by-username username database)
+        {:contact/keys [email]} (first (database.contact/by-customer-id id database))]
     (if (and customer (:valid (hashers/verify password hashed-password)))
       (do (diplomat.producer/send-success-auth-notification! email producer)
           (-> {:customer (adapters.customer/internal-customer->wire customer)}

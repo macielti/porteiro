@@ -1,8 +1,8 @@
 (ns porteiro.adapters.auth
-  (:require [schema.core :as s]
+  (:require [porteiro.models.auth :as models.auth]
             [porteiro.wire.in.auth :as wire.in.auth]
             [porteiro.wire.out.auth :as wire.out.auth]
-            [porteiro.models.auth :as models.auth]))
+            [schema.core :as s]))
 
 (s/defn wire->internal-customer-auth :- models.auth/CustomerAuth
   [{:keys [username password]} :- wire.in.auth/CustomerAuth]

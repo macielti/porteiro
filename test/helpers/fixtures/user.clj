@@ -1,6 +1,4 @@
 (ns fixtures.user
-  (:require [schema-generators.complete :as c]
-            [porteiro.wire.datomic.customer :as wire.datomic.user])
   (:import (java.util UUID)))
 
 (def user-id (UUID/randomUUID))
@@ -39,8 +37,3 @@
 (def password-update {:oldPassword (:password user)
                       :newPassword "new-strong-password"})
 
-(def datomic-user (c/complete {:user/id              user-id
-                               :user/username        username
-                               :user/hashed-password "password-hash"} wire.datomic.user/User))
-
-(def datalevin-user datomic-user)

@@ -8,10 +8,10 @@
     :db/cardinality :db.cardinality/one
     :db/unique      :db.unique/identity
     :db/doc         "Password reset registry Id"}
-   {:db/ident       :password-reset/user-id
+   {:db/ident       :password-reset/customer-id
     :db/valueType   :db.type/uuid
     :db/cardinality :db.cardinality/one
-    :db/doc         "User id that own this password reset request"}
+    :db/doc         "Customer id that own this password reset request"}
    {:db/ident       :password-reset/state
     :db/valueType   :db.type/keyword
     :db/cardinality :db.cardinality/one
@@ -24,7 +24,7 @@
 (s/defschema PasswordResetState (s/enum :free :used))
 
 (s/defschema PasswordReset
-  {:password-reset/id         s/Uuid
-   :password-reset/user-id    s/Uuid
-   :password-reset/state      PasswordResetState
-   :password-reset/created-at Date})
+  {:password-reset/id          s/Uuid
+   :password-reset/customer-id s/Uuid
+   :password-reset/state       PasswordResetState
+   :password-reset/created-at  Date})

@@ -7,10 +7,10 @@
 
 (def email "test@example.com")
 
-#_(def wire-telegram-contact
-    {:user-id fixtures.user/wire-user-id
-     :type    "telegram"
-     :chat-id chat-id})
+(def wire-telegram-contact
+  {:customer-id (str fixtures.customer/customer-id)
+   :type    "telegram"
+   :chat-id chat-id})
 
 #_(def datomic-telegram-contact
     {:contact/chat-id    chat-id
@@ -20,10 +20,10 @@
      :contact/type       :telegram
      :contact/user-id    fixtures.user/user-id})
 
-#_(def wire-email-contact
-    {:user-id fixtures.user/wire-user-id
-     :type    "email"
-     :email   email})
+(def wire-email-contact
+  {:customer-id (str fixtures.customer/customer-id)
+   :type    "email"
+   :email   email})
 
 #_(def datalevin-telegram-contact datomic-telegram-contact)
 
@@ -44,6 +44,11 @@
    :contact/id          contact-id
    :contact/type        :telegram
    :contact/customer-id fixtures.customer/customer-id})
+
+(def email-contact
+  (-> (assoc contact :contact/type :email
+             :contact/email email)
+      (dissoc :contact/chat-id)))
 
 #_(def postgres-telegram-contact
     {:chat_id    chat-id

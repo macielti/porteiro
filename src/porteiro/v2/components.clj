@@ -1,8 +1,16 @@
 (ns porteiro.v2.components
-  (:require [porteiro.db.datomic.config :as database.config]
+  (:require [common-clj.integrant-components.config]
+            [common-clj.integrant-components.datomic]
+            [common-clj.integrant-components.prometheus]
+            [common-clj.integrant-components.routes]
+            [common-clj.integrant-components.service]
+            [common-clj.integrant-components.sqs-consumer]
+            [common-clj.integrant-components.sqs-producer]
+            [integrant.core :as ig]
+            [porteiro.db.datomic.config :as database.config]
             [porteiro.diplomat.consumer :as diplomat.consumer]
             [porteiro.diplomat.http-server :as diplomat.http-server]
-            [integrant.core :as ig]
+            [porteiro.v2.admin]
             [taoensso.timbre :as timbre]))
 
 (def config
@@ -15,6 +23,9 @@
                                                                :components {:config  (ig/ref :common-clj.integrant-components.config/config)
                                                                             :datomic (ig/ref :common-clj.integrant-components.datomic/datomic)}}
    :common-clj.integrant-components.routes/routes             {:routes diplomat.http-server/routes}
+   :common-clj.integrant-components.prometheus/prometheus     {:metrics []}
+   :porteiro.v2.admin/admin                                   {:components {:config  (ig/ref :common-clj.integrant-components.config/config)
+                                                                            :datomic (ig/ref :common-clj.integrant-components.datomic/datomic)}}
    :common-clj.integrant-components.service/service           {:components {:prometheus (ig/ref :common-clj.integrant-components.prometheus/prometheus)
                                                                             :config     (ig/ref :common-clj.integrant-components.config/config)
                                                                             :routes     (ig/ref :common-clj.integrant-components.routes/routes)

@@ -1,8 +1,8 @@
 (ns porteiro.diplomat.http-server.auth
   (:require [datomic.api :as d]
-            [schema.core :as s]
             [porteiro.adapters.auth :as adapters.auth]
-            [porteiro.controllers.auth :as controllers.auth]))
+            [porteiro.controllers.auth :as controllers.auth]
+            [schema.core :as s]))
 
 (s/defn authenticate-customer!
   [{auth                              :json-params

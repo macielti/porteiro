@@ -1,14 +1,13 @@
 (ns porteiro.controllers.auth
-  (:require [datomic.api :as d]
-            [schema.core :as s]
-            [buddy.hashers :as hashers]
-            [common-clj.error.core :as common-error]
+  (:require [buddy.hashers :as hashers]
             [common-clj.auth.core :as common-auth]
-            [porteiro.models.auth :as models.auth]
+            [common-clj.error.core :as common-error]
             [porteiro.adapters.customer :as adapters.customer]
-            [porteiro.db.datomic.customer :as database.customer]
             [porteiro.db.datomic.contact :as database.contact]
-            [porteiro.diplomat.producer :as diplomat.producer]))
+            [porteiro.db.datomic.customer :as database.customer]
+            [porteiro.diplomat.producer :as diplomat.producer]
+            [porteiro.models.auth :as models.auth]
+            [schema.core :as s]))
 
 (s/defn customer-authentication! :- s/Str
   [{:customer-auth/keys [username password]} :- models.auth/CustomerAuth

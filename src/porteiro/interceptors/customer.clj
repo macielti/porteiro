@@ -1,13 +1,14 @@
 (ns porteiro.interceptors.customer
-  (:require [porteiro.db.postgres.customer :as database.customer]
-            [common-clj.error.core :as common-error]))
+  (:require [common-clj.error.core :as common-error]
+            [datomic.api :as d]
+            [porteiro.db.datomic.customer :as database.customer]))
 
 (def username-already-in-use-interceptor
   {:name  ::username-already-in-use-interceptor
-   :enter (fn [{{json-params          :json-params
-                 {:keys [postgresql]} :components} :request :as context}]
-            (let [username (or (-> json-params :customer :username) "")
-                  customer (database.customer/by-username username postgresql)]
+   :enter (fn [{{json-params       :json-params
+                 {:keys [datomic]} :components} :request :as context}]
+            (let [username (get-in json-params [:customer :username] "")
+                  customer (database.customer/by-username username (d/db datomic))]
               (when-not (empty? customer)
                 (common-error/http-friendly-exception 409
                                                       "not-unique"

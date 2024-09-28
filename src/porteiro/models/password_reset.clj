@@ -11,7 +11,7 @@
 (s/defschema PasswordResetState (apply s/enum password-reset-statuses))
 
 (s/defschema PasswordReset
-  {:password-reset/id         s/Uuid
-   :password-reset/user-id    s/Uuid
-   :password-reset/state      PasswordResetState
-   :password-reset/created-at Date})
+  {:password-reset/id          s/Uuid
+   :password-reset/customer-id s/Uuid
+   :password-reset/state       PasswordResetState
+   :password-reset/created-at  Date})

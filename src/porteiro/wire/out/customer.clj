@@ -1,18 +1,11 @@
 (ns porteiro.wire.out.customer
-  (:require [porteiro.models.customer :as models.customer]
-            [schema.core :as s]
-            [camel-snake-kebab.core :as camel-snake-kebab]
-            [porteiro.wire.datomic.customer :as wire.datomic.user]))
-
-(def CustomerRoles (->> models.customer/roles
-                        (map camel-snake-kebab/->SCREAMING_SNAKE_CASE_STRING)
-                        (apply s/enum)))
+  (:require [schema.core :as s]))
 
 (s/defschema Customer
   "Schema for user creation request"
   {:id       s/Str
    :username s/Str
-   :roles    [CustomerRoles]})
+   :roles    [s/Str]})
 
 (s/defschema CustomerDocument
   {:customer Customer})

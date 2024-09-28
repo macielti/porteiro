@@ -2,12 +2,11 @@
   (:require [schema.core :as s]))
 
 (def roles #{:admin :test})
-(def CustomerRoles (apply s/enum roles))
 
 (def base-customer
   {:customer/id                     s/Uuid
    :customer/username               s/Str
-   (s/optional-key :customer/roles) [CustomerRoles]
+   (s/optional-key :customer/roles) [s/Keyword]
    :customer/hashed-password        s/Str})
 
 (s/defschema Customer

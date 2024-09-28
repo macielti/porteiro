@@ -1,6 +1,6 @@
 (ns porteiro.db.datomic.config
-  (:require [porteiro.wire.datomic.customer :as wire.datomic.customer]
-            [porteiro.wire.datomic.contact :as wire.datomic.contact]
+  (:require [porteiro.wire.datomic.contact :as wire.datomic.contact]
+            [porteiro.wire.datomic.customer :as wire.datomic.customer]
             [porteiro.wire.datomic.password-reset :as wire.datomic.password-reset]
             [porteiro.wire.datomic.session :as wire.datomic.session]))
 

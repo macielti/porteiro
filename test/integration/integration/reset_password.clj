@@ -1,17 +1,15 @@
 (ns integration.reset-password
   (:require [clojure.test :refer :all]
-            [matcher-combinators.test :refer [match?]]
-            [com.stuartsierra.component :as component]
-            [common-clj.component.helper.core :as component.helper]
+            [fixtures.customer]
+            [integrant.core :as ig]
             [integration.aux.http :as http]
-            [porteiro.components :as components]
-            [fixtures.user]))
+            [matcher-combinators.test :refer [match?]]
+            [porteiro.v2.components :as v2.components]))
 
 (deftest reset-password-test
   (testing "request body must respect the schema"
-    (let [system (component/start components/system-test)
-          service-fn (-> (component.helper/get-component-content :service system)
-                         :io.pedestal.http/service-fn)]
+    (let [system (ig/init v2.components/config-test)
+          service-fn (get-in system [:common-clj.integrant-components.service/service :io.pedestal.http/service-fn])]
 
       (is (match? {:status 422
                    :body   {:error   "invalid-schema-in"
@@ -21,12 +19,13 @@
                   (http/request-reset-password! {:nonSense "hi lorena"}
                                                 service-fn)))
 
-      (component/stop system)))
+      (ig/halt! system)))
+
   (testing "that reset password request will produce a message when existent"
-    (let [system (component/start components/system-test)
-          producer (component.helper/get-component-content :rabbitmq-producer system)
-          service-fn (-> (component.helper/get-component-content :service system) :io.pedestal.http/service-fn)
-          {{:keys [email]} :contact} (:body (http/create-customer! fixtures.user/wire-customer-creation service-fn))]
+    (let [system (ig/init v2.components/config-test)
+          producer (-> system :common-clj.integrant-components.sqs-producer/sqs-producer)
+          service-fn (get-in system [:common-clj.integrant-components.service/service :io.pedestal.http/service-fn])
+          {{:keys [email]} :contact} (:body (http/create-customer! fixtures.customer/wire-customer-creation service-fn))]
 
       (Thread/sleep 5000)
 
@@ -35,19 +34,18 @@
                             "If the email is correct, you should receive a password reset link soon"}}
                   (http/request-reset-password! {:email email} service-fn)))
 
-      (is (match? [{:topic   :notification
+      (is (match? [{:queue   "notification"
                     :payload {:email   email
                               :title   "Password Reset Solicitation"
                               :content string?}}]
-                  (filter #(= (:topic %) :notification)
-                          @(:produced-messages producer))))
+                  @(:produced-messages producer)))
 
-      (component/stop system)))
+      (ig/halt! system)))
 
   (testing "that trying to reset password with a nonexistent email will not produce any message"
-    (let [system (component/start components/system-test)
-          producer (component.helper/get-component-content :rabbitmq-producer system)
-          service-fn (-> (component.helper/get-component-content :service system) :io.pedestal.http/service-fn)]
+    (let [system (ig/init v2.components/config-test)
+          producer (-> system :common-clj.integrant-components.sqs-producer/sqs-producer)
+          service-fn (get-in system [:common-clj.integrant-components.service/service :io.pedestal.http/service-fn])]
 
       (is (match? {:status 202
                    :body   {:message
@@ -59,67 +57,67 @@
       (is (match? []
                   @(:produced-messages producer)))
 
-      (component/stop system))))
+      (ig/halt! system))))
 
 (deftest execute-password-reset-test
   (testing "request body must respect the schema"
-    (let [system (component/start components/system-test)
-          service-fn (-> (component.helper/get-component-content :service system) :io.pedestal.http/service-fn)]
+    (let [system (ig/init v2.components/config-test)
+          service-fn (get-in system [:common-clj.integrant-components.service/service :io.pedestal.http/service-fn])]
 
       (is (match? {:status 422
                    :body   nil?}
-                  (http/reset-password! {:newPassword (:newPassword fixtures.user/password-update)}
+                  (http/reset-password! {:newPassword (:newPassword fixtures.customer/password-update)}
                                         service-fn)))
 
-      (component/stop system)))
+      (ig/halt! system)))
 
   (testing "that we can consolidate the reset password solicitation"
-    (let [system (component/start components/system-test)
-          producer (component.helper/get-component-content :rabbitmq-producer system)
-          service-fn (-> (component.helper/get-component-content :service system) :io.pedestal.http/service-fn)
-          {{:keys [email]} :contact} (:body (http/create-customer! fixtures.user/wire-customer-creation service-fn))
+    (let [system (ig/init v2.components/config-test)
+          producer (-> system :common-clj.integrant-components.sqs-producer/sqs-producer)
+          service-fn (get-in system [:common-clj.integrant-components.service/service :io.pedestal.http/service-fn])
+          {{:keys [email]} :contact} (:body (http/create-customer! fixtures.customer/wire-customer-creation service-fn))
           _ (Thread/sleep 5000)
           _ (http/request-reset-password! {:email email} service-fn)
-          {:keys [payload]} (first (filter #(= (:topic %) :notification)
+          {:keys [payload]} (first (filter #(= (:queue %) "notification")
                                            @(:produced-messages producer)))]
 
       (is (match? {:status 204
                    :body   nil?}
                   (http/reset-password! {:token       (:password-reset-id payload)
-                                         :newPassword (:newPassword fixtures.user/password-update)}
+                                         :newPassword (:newPassword fixtures.customer/password-update)}
                                         service-fn)))
 
       (is (match? {:status 200
                    :body   {:token string?}}
-                  (http/authenticate-user! (assoc fixtures.user/user-auth :password (:newPassword fixtures.user/password-update))
+                  (http/authenticate-user! (assoc fixtures.customer/wire-customer-auth :password (:newPassword fixtures.customer/password-update))
                                            service-fn)))
 
       (is (match? {:status 403
                    :body   {:error   "invalid-credentials"
                             :message "Wrong username or/and password"
-                            :detail  "user is trying to login using invalid credentials"}}
-                  (http/authenticate-user! fixtures.user/user-auth
+                            :detail  "Customer is trying to login using invalid credentials"}}
+                  (http/authenticate-user! fixtures.customer/wire-customer-auth
                                            service-fn)))
 
-      (component/stop system)))
+      (ig/halt! system)))
 
   (testing "that we can't utilize the same token to consolidate password reset a second time"
-    (let [system (component/start components/system-test)
-          service-fn (-> (component.helper/get-component-content :service system) :io.pedestal.http/service-fn)
-          producer (component.helper/get-component-content :rabbitmq-producer system)
-          {{:keys [email]} :contact} (:body (http/create-customer! fixtures.user/wire-customer-creation service-fn))
+    (let [system (ig/init v2.components/config-test)
+          service-fn (get-in system [:common-clj.integrant-components.service/service :io.pedestal.http/service-fn])
+          producer (-> system :common-clj.integrant-components.sqs-producer/sqs-producer)
+          {{:keys [email]} :contact} (:body (http/create-customer! fixtures.customer/wire-customer-creation service-fn))
           _ (Thread/sleep 5000)
           _ (http/request-reset-password! {:email email} service-fn)
-          {:keys [payload]} (first (filter #(= (:topic %) :notification)
+          {:keys [payload]} (first (filter #(= (:queue %) "notification")
                                            @(:produced-messages producer)))
           _ (http/reset-password! {:token       (:password-reset-id payload)
-                                   :newPassword (:newPassword fixtures.user/password-update)}
+                                   :newPassword (:newPassword fixtures.customer/password-update)}
                                   service-fn)]
 
       (is (match? {:status 401
                    :body   nil?}
                   (http/reset-password! {:token       (:password-reset-id payload)
-                                         :newPassword (:newPassword fixtures.user/password-update)}
+                                         :newPassword (:newPassword fixtures.customer/password-update)}
                                         service-fn)))
 
-      (component/stop system))))
+      (ig/halt! system))))

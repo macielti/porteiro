@@ -1,8 +1,8 @@
 (ns porteiro.diplomat.consumer
-  (:require [schema.core :as s]
-            [porteiro.adapters.contact :as adapters.contact]
+  (:require [porteiro.adapters.contact :as adapters.contact]
             [porteiro.db.datomic.contact :as database.contact]
-            [porteiro.wire.in.contact :as wire.in.contact]))
+            [porteiro.wire.in.contact :as wire.in.contact]
+            [schema.core :as s]))
 
 (s/defn create-contact!
   [{contact           :message

@@ -1,26 +1,20 @@
 (ns integration.components-test
   (:require [clojure.test :refer :all]
-            [datalevin.core :as d]
+            [datomic.api :as d]
+            [integrant.core :as ig]
             [matcher-combinators.test :refer [match?]]
-            [com.stuartsierra.component :as component]
-            [common-clj.component.helper.core :as component.helper]
-            [porteiro.components :as components]
-            [porteiro.db.datalevin.user :as datalevin.user])
-  (:import (com.stuartsierra.component SystemMap)))
+            [porteiro.db.datomic.customer :as database.customer]
+            [porteiro.v2.components :as v2.components]))
 
 (deftest start-system!-test
-  (let [system (component/start components/system-test)
-        datalevin-connection (component.helper/get-component-content :datalevin system)]
-
-    (testing "that the client is able to verify if the server is up with a get request"
-      (is (= SystemMap
-             (type system))))
+  (let [system (ig/init v2.components/config-test)
+        datomic (-> system :common-clj.integrant-components.datomic/datomic)]
 
     (testing "that the default admin user was created"
-      (is (match? {:user/hashed-password string?
-                   :user/id              uuid?
-                   :user/roles           [:admin]
-                   :user/username        string?}
-                  (datalevin.user/by-username "admin" (d/db datalevin-connection)))))
+      (is (match? {:customer/hashed-password string?
+                   :customer/id              uuid?
+                   :customer/roles           [:admin]
+                   :customer/username        string?}
+                  (database.customer/by-username "admin" (d/db datomic)))))
 
-    (component/stop system)))
+    (ig/halt! system)))

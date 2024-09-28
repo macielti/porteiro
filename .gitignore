@@ -14,3 +14,5 @@ pom.xml.asc
 /porteiro.iml
 /resources/config.json
 /resources/config.edn
+/.lsp/.cache/
+/.clj-kondo/

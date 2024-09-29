@@ -1,17 +1,15 @@
 name: Clojure CI - Unit and Integration Tests
 
-on: [ push, pull_request ]
+on: [ push ]
 
 jobs:
   test:
-    name: Running Tests
+    name: Run Tests
     runs-on: ubuntu-latest
 
     steps:
       - uses: actions/checkout@v2
       - name: Install dependencies
         run: lein deps
-      - name: Run tests
-        run: |
-          docker-compose -f test/resources/docker-compose.yml up -d
-          lein test
+      - name: Run unit and integration tests
+        run: lein test

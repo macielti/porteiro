@@ -14,8 +14,8 @@
         :topics                         ["porteiro.create-contact"]
         :service                        {:host "0.0.0.0"
                                          :port 8099}
-        :postgresql-uri                 "jdbc:postgres://localhost:5432/postgres?user=postgres&password=postgres"
         :admin-customer-seed            {:customer {:username "admin"
                                                     :password "very-strong-password"}
                                          :contact  {:type  "email"
-                                                    :email "brunodonascimentomaciel@gmail.com"}}}}
+                                                    :email "brunodonascimentomaciel@gmail.com"}}
+        :features                       {:contact-verification {:enabled? true}}}}

@@ -1,21 +1,23 @@
 (ns porteiro.diplomat.http-server.customer
-  (:require [porteiro.adapters.contact :as adapters.contact]
+  (:require [medley.core :as medley]
+            [porteiro.adapters.contact :as adapters.contact]
             [porteiro.adapters.customer :as adapters.customer]
             [porteiro.controllers.customer :as controllers.customer]
             [schema.core :as s])
   (:import (java.util UUID)))
 
-(s/defn create-user!
+(s/defn create-customer!
   [{{:keys [customer contact]} :json-params
     {:keys [datomic]}          :components}]
-  (let [{:customer/keys [id] :as internal-customer} (adapters.customer/wire->internal-customer customer)
-        internal-contact (-> contact
-                             (assoc :customer-id (str id))
-                             adapters.contact/wire->internal-contact)]
-    (controllers.customer/create-customer! internal-customer internal-contact datomic)
+  (let [{:customer/keys [id] :as customer'} (adapters.customer/wire->internal-customer customer)
+        contact' (some-> contact
+                         (assoc :customer-id (str id))
+                         adapters.contact/wire->internal-contact)]
+    (controllers.customer/create-customer! customer' contact' datomic)
     {:status 201
-     :body   {:customer (adapters.customer/internal-customer->wire internal-customer)
-              :contact  (adapters.contact/internal->wire internal-contact)}}))
+     :body   (medley/assoc-some {:customer (adapters.customer/internal-customer->wire customer')}
+                                :contact (some-> contact'
+                                                 adapters.contact/internal->wire))}))
 
 (s/defn add-role!
   [{{wire-customer-id :customer-id

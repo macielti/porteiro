@@ -9,8 +9,8 @@
 
 (s/defschema CustomerCreationDocument
   "Schema for customer creation request"
-  {:customer Customer
-   :contact  wire.in.contact/ContactWithoutCustomerId})
+  {:customer                 Customer
+   (s/optional-key :contact) wire.in.contact/ContactWithoutCustomerId})
 
 (s/defschema PasswordUpdate
   "Schema for password update request"

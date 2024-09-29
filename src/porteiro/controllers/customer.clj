@@ -13,9 +13,11 @@
 
 (s/defn create-customer! :- models.customer/Customer
   [customer :- models.customer/Customer
-   email-contact :- models.contact/Contact
+   contact :- (s/maybe models.contact/Contact)
    datomic]
-  (database.customer/insert-customer-with-contact! customer email-contact datomic)
+  (if contact
+    (database.customer/insert-customer-with-contact! customer contact datomic)
+    (database.customer/insert! customer datomic))
   customer)
 
 (s/defn update-password!

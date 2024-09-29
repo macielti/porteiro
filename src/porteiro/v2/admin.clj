@@ -10,8 +10,8 @@
   (log/info :starting ::admin)
   (let [{:keys [admin-customer-seed]} (:config components)]
     (when-not (database.customer/by-username (get-in admin-customer-seed [:customer :username]) (-> components :datomic d/db))
-      (let [wire-customer-id (-> (diplomat.http-server.user/create-user! {:json-params admin-customer-seed
-                                                                          :components  components})
+      (let [wire-customer-id (-> (diplomat.http-server.user/create-customer! {:json-params admin-customer-seed
+                                                                          :components      components})
                                  (get-in [:body :customer :id]))]
         (diplomat.http-server.user/add-role! {:query-params {:customer-id wire-customer-id
                                                              :role        "ADMIN"}

@@ -15,7 +15,7 @@
 (def routes [["/api/customers" :post [(io.interceptors/schema-body-in-interceptor wire.in.customer/CustomerCreationDocument)
                                       interceptors.customer/username-already-in-use-interceptor
                                       interceptors.contact/email-already-in-use-interceptor
-                                      diplomat.http-server.user/create-user!] :route-name :create-customer]
+                                      diplomat.http-server.user/create-customer!] :route-name :create-customer]
 
              ["/api/customers/contacts" :get [interceptors.user-identity/customer-identity-interceptor
                                               diplomat.http-server.contact/fetch-contacts] :route-name :fetch-contacts]

@@ -17,5 +17,4 @@
         :admin-customer-seed            {:customer {:username "admin"
                                                     :password "very-strong-password"}
                                          :contact  {:type  "email"
-                                                    :email "brunodonascimentomaciel@gmail.com"}}
-        :features                       {:contact-verification {:enabled? true}}}}
+                                                    :email "brunodonascimentomaciel@gmail.com"}}}}

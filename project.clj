@@ -43,4 +43,4 @@
 
   :aot :all
 
-  :main porteiro.v2.components/start-system!)
+  :main porteiro.v2.components)
